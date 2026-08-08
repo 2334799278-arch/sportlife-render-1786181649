@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>数据报告 - SportLife</title> <style id="theme-vars"> :root { --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-active: #15803D; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4; --sf-accent: #F97316; --sf-accent-hover: #EA580C; --sf-accent-light: #FFF7ED; --sf-accent-surface: #FED7AA; --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF; --sf-sky-surface: #BAE6FD; --sf-purple: #A78BFA; --sf-purple-light: #F5F3FF; --sf-red: #EF4444; --sf-red-light: #FEF2F2; --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9; --sf-bg-elevated: #FFFFFF; --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8; --sf-text-inverse: #FFFFFF; --sf-text-brand: #22C55E; --sf-border-light: #E2E8F0; --sf-border-default: #CBD5E1; --sf-border-brand: #22C55E; --sf-success: #22C55E; --sf-success-light: #DCFCE7; --sf-warning: #F59E0B; --sf-warning-light: #FEF3C7; --sf-error: #EF4444; --sf-error-light: #FEE2E2; --sf-info: #38BDF8; --sf-info-light: #E0F2FE; --sf-font-sans: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-font-display: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-radius-sm: 6px; --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px; --sf-space-xs: 4px; --sf-space-sm: 8px; --sf-space-md: 12px; --sf-space-lg: 16px; --sf-space-xl: 24px; --sf-space-2xl: 32px; --sf-space-3xl: 48px; --sf-shadow-xs: 0 1px 2px rgba(0,0,0,0.04); --sf-shadow-sm: 0 2px 4px rgba(0,0,0,0.04); --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05); --sf-shadow-lg: 0 8px 24px rgba(0,0,0,0.06); --sf-shadow-xl: 0 16px 40px rgba(0,0,0,0.08); --sf-transition-fast: 150ms ease; --sf-transition-normal: 250ms ease; --sf-transition-slow: 400ms ease; --sf-z-dropdown: 100; --sf-z-sticky: 200; --sf-z-overlay: 300; --sf-z-modal: 400; --sf-z-toast: 500; } html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-bg-elevated: #1E293B; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155; --sf-border-default: #475569; } </style> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script> <script src="tab-prefetch.js"></script> <script src="/assets/vendor/tailwind.js" defer></script> <style> *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: var(--sf-font-sans); background: var(--sf-bg-secondary); color: var(--sf-text-primary); max-width: 430px; margin: 0 auto !important; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); } ::-webkit-scrollbar { width: 0; height: 0; }
+to { opacity: 1; transform: translateY(0); } } /* ============ SKELETON ============ */ @keyframes skeletonPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } .skeleton { background: var(--sf-bg-tertiary); border-radius: var(--sf-radius-md); animation: skeletonPulse 1.5s ease-in-out infinite; } /* ============ HEADER ============ */ .app-header { position: sticky; top: 0; z-index: var(--sf-z-sticky); display: flex; align-items: center; gap: var(--sf-space-md); padding: var(--sf-space-lg) var(--sf-space-xl); background: rgba(255,255,255,0.72); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(0,0,0,0.04); transition: background var(--sf-transition-normal); } html.dark .app-header { background: rgba(15,23,42,0.78); border-bottom-color: rgba(255,255,255,0.06); } .back-btn { width: 36px; height: 36px; border-radius: var(--sf-radius-md); border: 1px solid var(--sf-border-light); background: var(--sf-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--sf-transition-fast); -webkit-tap-highlight-color: transparent; text-decoration: none; color: var(--sf-text-primary); } .back-btn:active { background: var(--sf-bg-tertiary); transform: scale(0.94); } .header-title { font-size: 18px; font-weight: 700; color: var(--sf-text-primary); font-family: var(--sf-font-display); } /* ============ WEEK RANGE ============ */ .week-range { padding: var(--sf-space-md) var(--sf-space-xl) 0; font-size: 13px; font-weight: 500; color: var(--sf-text-tertiary); } /* ============ SUMMARY CARDS GRID ============ */ .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sf-space-md); padding: var(--sf-space-lg) var(--sf-space-xl); } .summary-card { border-radius: var(--sf-radius-lg); padding: var(--sf-space-lg); position: relative; overflow: hidden; min-height: 100px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease; } .summary-card:active { transform: scale(0.97); } .summary-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 100% 0%, rgba(255,255,255,0.2) 0%, transparent 60%); pointer-events: none; } .summary-card--green { background: linear-gradient(135deg, #15803D 0%, #22C55E 60%, #4ADE80 100%); box-shadow: 0 4px 16px rgba(34,197,94,0.2); } .summary-card--orange { background: linear-gradient(135deg, #C2410C 0%, #F97316 60%, #FB923C 100%); box-shadow: 0 4px 16px rgba(249,115,22,0.2); } .summary-card--blue { background: linear-gradient(135deg, #0369A1 0%, #38BDF8 60%, #7DD3FC 100%); box-shadow: 0 4px 16px rgba(56,189,248,0.2); } .summary-card--purple { background: linear-gradient(135deg, #6D28D9 0%, #A78BFA 60%, #C4B5FD 100%); box-shadow: 0 4px 16px rgba(167,139,250,0.2); } .summary-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: var(--sf-space-sm); } .summary-icon svg { color: #fff; } .summary-value { font-size: 28px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.1; } .summary-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75); margin-top: 2px; } .summary-trend { position: absolute; top: var(--sf-space-md); right: var(--sf-space-md); display: flex; align-items: center; gap: 2px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: var(--sf-radius-full); } .summary-trend--down { color: rgba(255,255,255,0.9); } /* ============ CHART SECTIONS ============ */ .section-card { margin: 0 var(--sf-space-xl) var(--sf-space-lg); padding: var(--sf-space-xl); border-radius: var(--sf-radius-xl); background: var(--sf-bg-elevated); box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease; } .section-title { font-size: 16px; font-weight: 700; color: var(--sf-text-primary); font-family: var(--sf-font-display); margin-bottom: var(--sf-space-lg); } .chart-canvas-wrap { position: relative; width: 100%; } .chart-canvas-wrap canvas { width: 100%; display: block; } /* ============ TOOLTIP ============ */ .chart-tooltip { position: absolute; pointer-events: none; background: var(--sf-text-primary); color: var(--sf-text-inverse); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--sf-radius-md); white-space: nowrap; opacity: 0; transition: opacity 150ms ease; z-index: 50; box-shadow: var(--sf-shadow-lg); } .chart-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--sf-text-primary); } .chart-tooltip.show { opacity: 1; } /* ============ DONUT LEGEND ============ */ .donut-legend { display: flex; flex-wrap: wrap; gap: var(--sf-space-md); margin-top: var(--sf-space-lg); justify-content: center; } .donut-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--sf-text-secondary); } .donut-legend-dot { width: 10px; height: 10px; border-radius: var(--sf-radius-full); flex-shrink: 0; } /* ============ XP & LEVEL SECTION ============ */ .level-card { margin: 0 var(--sf-space-xl) var(--sf-space-lg); padding: var(--sf-space-xl); border-radius: var(--sf-radius-xl); background: var(--sf-bg-elevated); box-shadow: var(--sf-shadow-sm); } .level-header { display: flex; align-items: center; gap: var(--sf-space-lg); margin-bottom: var(--sf-space-xl); } .level-badge { width: 56px; height: 56px; border-radius: var(--sf-radius-lg); background: linear-gradient(135deg, #D97706, #FBBF24); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #fff; box-shadow: 0 4px 12px rgba(251,191,36,0.3); flex-shrink: 0; position: relative; } .level-badge::after { content: ''; position: absolute; inset: -3px; border-radius: calc(var(--sf-radius-lg) + 3px); background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.5) 100%); z-index: -1; } .level-info { flex: 1; } .level-title { font-size: 16px; font-weight: 700; color: var(--sf-text-primary); } .level-subtitle { font-size: 12px; font-weight: 500; color: var(--sf-text-tertiary); margin-top: 2px; } .xp-bar-wrap { margin-bottom: var(--sf-space-lg); } .xp-bar-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--sf-text-secondary); margin-bottom: var(--sf-space-sm); } .xp-bar-track { width: 100%; height: 10px; border-radius: var(--sf-radius-full); background: var(--sf-bg-tertiary); overflow: hidden; } .xp-bar-fill { height: 100%; border-radius: var(--sf-radius-full); background: linear-gradient(90deg, #D97706, #FBBF24); transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); width: 0%; } .xp-stats { display: flex; gap: var(--sf-space-xl); } .xp-stat { flex: 1; text-align: center; padding: var(--sf-space-md); background: var(--sf-bg-secondary); border-radius: var(--sf-radius-lg); } .xp-stat-value { font-size: 20px; font-weight: 800; color: var(--sf-text-primary); font-variant-numeric: tabular-nums; } .xp-stat-label { font-size: 11px; font-weight: 500; color: var(--sf-text-tertiary); margin-top: 2px; } /* ============ TAB BAR ============ */ .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 430px; background: var(--sf-bg); border-top: 1px solid rgba(0,0,0,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.04); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 8px)); z-index: 200; transition: background 0.3s ease, border-color 0.3s ease; } html.dark .tab-bar { background: var(--sf-bg); border-top-color: rgba(255,255,255,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.2); } .tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; position: relative; padding: 4px 16px; transition: all 150ms ease; user-select: none; -webkit-tap-highlight-color: transparent; text-decoration: none; } .tab-item:active { transform: scale(0.9); } .tab-icon { color: var(--sf-text-tertiary); transition: color 150ms ease; } .tab-label { font-size: 10px; font-weight: 500; color: var(--sf-text-tertiary); transition: all 150ms ease; } .tab-item.active .tab-icon { color: var(--sf-primary); } .tab-item.active .tab-label { color: var(--sf-primary); font-weight: 700; } @media (min-width: 768px) { body { max-width: 768px; } .tab-bar { max-width: 768px; } } </style>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body> <!-- ===== HEADER ===== --> <header class="app-header"> <a href="home.html" class="back-btn" aria-label="返回"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <polyline points="15 18 9 12 15 6"/> </svg> </a> <span class="header-title">数据报告</span> </header> <div class="page-content" style="padding-bottom: 24px;"> <!-- ===== WEEK RANGE ===== --> <div class="week-range" id="week-range">加载中...</div> <!-- ===== SECTION 1: SUMMARY CARDS ===== --> <section class="summary-grid" id="summary-section"> <!-- Card 1: Total Workouts --> <div class="summary-card summary-card--green"> <div> <div class="summary-icon"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 10.5h2M3 13.5h2M19 10.5h2M19 13.5h2M7.5 3v2M16.5 3v2M7.5 19v2M16.5 19v2"/></svg> </div> <div class="summary-value" id="stat-workouts">--</div> <div class="summary-label">运动次数</div> </div> <div class="summary-trend" id="trend-workouts" style="display:none;"> <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l8 12H4z"/></svg> <span></span> </div> </div> <!-- Card 2: Calories --> <div class="summary-card summary-card--orange"> <div> <div class="summary-icon"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c.5 4-1.5 6-3 8s-2 4.5 0 7a6 6 0 0012 0c2-2.5 1-5-1-7s-3.5-4-3-8a8 8 0 00-5 0z"/></svg> </div> <div class="summary-value" id="stat-calories">--</div> <div class="summary-label">消耗千卡</div> </div> <div class="summary-trend" id="trend-calories" style="display:none;"> <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l8 12H4z"/></svg> <span></span> </div> </div> <!-- Card 3: Distance --> <div class="summary-card summary-card--blue"> <div> <div class="summary-icon"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg> </div> <div class="summary-value" id="stat-distance">--</div> <div class="summary-label">公里 (km)</div> </div> <div class="summary-trend" id="trend-distance" style="display:none;"> <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l8 12H4z"/></svg> <span></span> </div> </div> <!-- Card 4: Duration --> <div class="summary-card summary-card--purple"> <div> <div class="summary-icon"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> </div> <div class="summary-value" id="stat-duration">--</div> <div class="summary-label">时长 (时:分)</div> </div> <div class="summary-trend" id="trend-duration" style="display:none;"> <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l8 12H4z"/></svg> <span></span> </div> </div> </section> <!-- ===== SECTION 2: DAILY ACTIVITY BAR CHART ===== --> <section class="section-card" id="bar-section"> <div class="section-title">每日活动时长</div> <div class="chart-canvas-wrap"> <canvas id="barChart"></canvas> <div class="chart-tooltip" id="barTooltip"></div> </div> </section> <!-- ===== SECTION 3: CALORIES TREND LINE CHART ===== --> <section class="section-card" id="line-section"> <div class="section-title">卡路里消耗趋势</div> <div class="chart-canvas-wrap"> <canvas id="lineChart"></canvas> <div class="chart-tooltip" id="lineTooltip"></div> </div> </section> <!-- ===== SECTION 4: WORKOUT TYPE DISTRIBUTION ===== --> <section class="section-card" id="donut-section"> <div class="section-title">运动类型分布</div> <div class="chart-canvas-wrap" style="display:flex;justify-content:center;"> <canvas id="donutChart" style="max-width:220px;"></canvas> </div> <div class="donut-legend" id="donutLegend"></div> </section> <!-- ===== SECTION 5: XP & LEVEL PROGRESS ===== --> <section class="level-card" id="level-section"> <div class="section-title">等级与经验</div> <div class="level-header"> <div class="level-badge" id="level-badge">--</div> <div class="level-info"> <div class="level-title" id="level-title">加载中...</div> <div class="level-subtitle" id="level-subtitle">--</div> </div> </div> <div class="xp-bar-wrap"> <div class="xp-bar-label"> <span>经验进度</span> <span id="xp-progress-text">0 / 0 XP</span> </div> <div class="xp-bar-track"> <div class="xp-bar-fill" id="xp-bar-fill"></div> </div> </div> <div class="xp-stats"> <div class="xp-stat"> <div class="xp-stat-value" id="total-xp">--</div> <div class="xp-stat-label">总经验值</div> </div> <div class="xp-stat"> <div class="xp-stat-value" id="streak-days">--</div> <div class="xp-stat-label">连续打卡</div> </div> </div> </section> </div> <!-- ===== BOTTOM TAB BAR ===== --> <nav class="tab-bar"> <a href="home.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> <span class="tab-label">首页</span> </a> <a href="training-plan.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span class="tab-label">训练</span> </a> <a href="course-detail.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> <span class="tab-label">课程</span> </a> <a href="community.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="tab-label">社区</span> </a> <a href="profile.html" class="tab-item active" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span class="tab-label">我的</span> </a> </nav> <!-- ===== JAVASCRIPT ===== --> <script>
+(function() { 'use strict';
+
+  function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem('sportlife_user')); }
+    catch (e) { return null; }
+  }
+  if (!getCurrentUser()) { navigateTo('login.html'); }
+  var user = getCurrentUser();
+
+  var DEMO_STATS = {
+    weekLabel: '7\u67088\u65E5 - 7\u670814\u65E5',
+    summary: {
+      workouts: 8, workoutsTrend: 2,
+      calories: 3240, caloriesTrend: 12,
+      distance: 28.5, distanceTrend: -3,
+      durationMinutes: 385, durationTrend: 15
+    },
+    daily: [
+      { day: '\u5468\u4E00', duration: 45, calories: 380 },
+      { day: '\u5468\u4E8C', duration: 60, calories: 520 },
+      { day: '\u5468\u4E09', duration: 0, calories: 0 },
+      { day: '\u5468\u56DB', duration: 30, calories: 260 },
+      { day: '\u5468\u4E94', duration: 75, calories: 650 },
+      { day: '\u5468\u516D', duration: 90, calories: 780 },
+      { day: '\u5468\u65E5', duration: 85, calories: 650 }
+    ],
+    types: [
+      { name: '\u8DD1\u6B65', count: 3, color: '#22C55E' },
+      { name: '\u529B\u91CF\u8BAD\u7EC3', count: 2, color: '#38BDF8' },
+      { name: 'HIIT', count: 1, color: '#F97316' },
+      { name: '\u745C\u4F3D', count: 1, color: '#A78BFA' },
+      { name: '\u62C9\u4F38', count: 1, color: '#FBBF24' }
+    ]
+  };
+
+  var DEMO_XP = {
+    level: 12, title: '\u5065\u8EAB\u8FBE\u4EBA',
+    currentXp: 2680, nextLevelXp: 3500, totalXp: 18540, streakDays: 14
+  };
+
+  var statsData = null;
+  var xpData = null;
+
+  function getCSS(varName) {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  }
+
+  function setupHiDPICanvas(canvas, width, height) {
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    var ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    return ctx;
+  }
+
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+  function formatDuration(totalMinutes) {
+    var h = Math.floor(totalMinutes / 60);
+    var m = totalMinutes % 60;
+    return h + ':' + (m < 10 ? '0' : '') + m;
+  }
+
+  function renderSummary(data) {
+    var s = data.summary || data.week_total || {};
+    var workouts = s.total_workouts || s.workouts || 0;
+    var calories = s.total_calories || s.calories || 0;
+    var distance = s.total_distance || s.distance || 0;
+    var duration = s.total_duration || s.durationMinutes || 0;
+
+    document.getElementById('stat-workouts').textContent = workouts;
+    document.getElementById('stat-calories').textContent = calories.toLocaleString();
+    document.getElementById('stat-distance').textContent = parseFloat(distance).toFixed(1);
+    document.getElementById('stat-duration').textContent = formatDuration(duration);
+
+    setTrend('trend-workouts', s.workoutsTrend || 0);
+    setTrend('trend-calories', s.caloriesTrend || 0);
+    setTrend('trend-distance', s.distanceTrend || 0);
+    setTrend('trend-duration', s.durationTrend || 0);
+
+    var weekLabel = data.weekLabel || '';
+    if (!weekLabel) {
+      var now = new Date();
+      var from = new Date(now.getTime() - 6 * 86400000);
+      weekLabel = (from.getMonth() + 1) + '/' + from.getDate() + ' - ' + (now.getMonth() + 1) + '/' + now.getDate();
+    }
+    document.getElementById('week-range').textContent = weekLabel;
+  }
+
+  function setTrend(id, val) {
+    var el = document.getElementById(id);
+    if (!el || val === 0) return;
+    el.style.display = 'flex';
+    var isUp = val > 0;
+    var svg = el.querySelector('svg');
+    var span = el.querySelector('span');
+    if (isUp) {
+      el.classList.remove('summary-trend--down');
+      svg.innerHTML = '<path d="M12 4l8 12H4z"/>';
+      span.textContent = '+' + Math.abs(val) + '%';
+    } else {
+      el.classList.add('summary-trend--down');
+      svg.innerHTML = '<path d="M20 18L12 6l-8 12z"/>';
+      span.textContent = '-' + Math.abs(val) + '%';
+    }
+  }
+
+  function renderLevel(data) {
+    if (!data) return;
+    data.level = data.level || 1;
+    data.title = data.title || '新手';
+    data.currentXp = data.currentXp || 0;
+    data.nextLevelXp = data.nextLevelXp || 100;
+    data.totalXp = data.totalXp || 0;
+    data.streakDays = data.streakDays || 0;
+    document.getElementById('level-badge').textContent = data.level;
+    document.getElementById('level-title').textContent = 'Lv.' + data.level + ' ' + data.title;
+    document.getElementById('level-subtitle').textContent = '\u8DDD\u79BB\u4E0B\u4E00\u7EA7\u8FD8\u9700 ' + (data.nextLevelXp - data.currentXp) + ' XP';
+    document.getElementById('xp-progress-text').textContent = data.currentXp + ' / ' + data.nextLevelXp + ' XP';
+    document.getElementById('total-xp').textContent = (data.totalXp || 0).toLocaleString();
+    document.getElementById('streak-days').textContent = data.streakDays;
+    var pct = Math.min(100, (data.currentXp / data.nextLevelXp) * 100);
+    setTimeout(function() {
+      document.getElementById('xp-bar-fill').style.width = pct + '%';
+    }, 300);
+  }
+
+  function drawBarChart(data) {
+    var canvas = document.getElementById('barChart');
+    var wrap = canvas.parentElement;
+    var w = wrap.clientWidth;
+    var h = 200;
+    var ctx = setupHiDPICanvas(canvas, w, h);
+    var daily = data.daily;
+    var maxVal = Math.max.apply(null, daily.map(function(d) { return d.duration; }));
+    if (maxVal === 0) maxVal = 60;
+    maxVal = Math.ceil(maxVal / 15) * 15;
+    var padLeft = 36, padRight = 12, padTop = 10, padBottom = 28;
+    var chartW = w - padLeft - padRight;
+    var chartH = h - padTop - padBottom;
+    var barCount = daily.length;
+    var gap = 10;
+    var barW = Math.max(8, (chartW - gap * (barCount + 1)) / barCount);
+    var totalBarsW = barW * barCount + gap * (barCount - 1);
+    var offsetX = padLeft + (chartW - totalBarsW) / 2;
+    var textTertiary = getCSS('--sf-text-tertiary') || '#94A3B8';
+    var borderLight = getCSS('--sf-border-light') || '#E2E8F0';
+    var bgTertiary = getCSS('--sf-bg-tertiary') || '#F1F5F9';
+    var barRects = [];
+
+    function draw(progress) {
+      ctx.clearRect(0, 0, w, h);
+      barRects = [];
+      var gridCount = 4;
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (var g = 0; g <= gridCount; g++) {
+        var yVal = (maxVal / gridCount) * g;
+        var yPos = padTop + chartH - (chartH * (g / gridCount));
+        ctx.strokeStyle = borderLight;
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(padLeft, yPos);
+        ctx.lineTo(w - padRight, yPos);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = textTertiary;
+        ctx.fillText(Math.round(yVal) + '', padLeft - 6, yPos);
+      }
+      var easedP = easeOutCubic(Math.min(1, progress));
+      for (var i = 0; i < barCount; i++) {
+        var x = offsetX + i * (barW + gap);
+        var val = daily[i].duration;
+        var barH = (val / maxVal) * chartH * easedP;
+        var y = padTop + chartH - barH;
+        barRects.push({ x: x, y: y, w: barW, h: barH, index: i });
+        if (val > 0) {
+          var grad = ctx.createLinearGradient(x, padTop + chartH, x, y);
+          grad.addColorStop(0, '#16A34A');
+          grad.addColorStop(1, '#4ADE80');
+          ctx.fillStyle = grad;
+          var r = Math.min(6, barW / 2);
+          if (barH > r) {
+            ctx.beginPath();
+            ctx.moveTo(x, padTop + chartH);
+            ctx.lineTo(x, y + r);
+            ctx.arcTo(x, y, x + r, y, r);
+            ctx.lineTo(x + barW - r, y);
+            ctx.arcTo(x + barW, y, x + barW, y + r, r);
+            ctx.lineTo(x + barW, padTop + chartH);
+            ctx.closePath();
+            ctx.fill();
+          } else { ctx.fillRect(x, y, barW, Math.max(2, barH)); }
+        } else {
+          ctx.fillStyle = bgTertiary;
+          roundRect(ctx, x, padTop + chartH - 4, barW, 4, Math.min(4, barW / 2));
+          ctx.fill();
+        }
+        ctx.fillStyle = textTertiary;
+        ctx.font = '11px Inter, PingFang SC, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(daily[i].day, x + barW / 2, padTop + chartH + 8);
+      }
+    }
+    var animStart = null;
+    function animate(ts) {
+      if (!animStart) animStart = ts;
+      var progress = Math.min(1, (ts - animStart) / 900);
+      draw(progress);
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    var tooltip = document.getElementById('barTooltip');
+    function showTip(idx) {
+      tooltip.innerHTML = daily[idx].day + ' \u00B7 ' + daily[idx].duration + ' \u5206\u949F';
+      tooltip.classList.add('show');
+      var r = barRects[idx];
+      tooltip.style.left = (r.x + r.w / 2) + 'px';
+      tooltip.style.top = r.y + 'px';
+      tooltip.style.transform = 'translate(-50%, -100%)';
+    }
+    function hideTip() { tooltip.classList.remove('show'); }
+    function getIdx(cx, cy) {
+      var cr = canvas.getBoundingClientRect();
+      var x = (cx - cr.left) * (w / cr.width);
+      var y = (cy - cr.top) * (h / cr.height);
+      for (var i = 0; i < barRects.length; i++) {
+        var r = barRects[i];
+        if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h + 10) return i;
+      }
+      return -1;
+    }
+    canvas.addEventListener('mousemove', function(e) { var i = getIdx(e.clientX, e.clientY); if (i >= 0) showTip(i); else hideTip(); });
+    canvas.addEventListener('mouseleave', hideTip);
+    canvas.addEventListener('touchstart', function(e) { var t = e.touches[0]; var i = getIdx(t.clientX, t.clientY); if (i >= 0) { showTip(i); e.preventDefault(); } }, { passive: false });
+    canvas.addEventListener('touchend', function() { setTimeout(hideTip, 1200); });
+  }
+
+  function drawLineChart(data) {
+    var canvas = document.getElementById('lineChart');
+    var wrap = canvas.parentElement;
+    var w = wrap.clientWidth;
+    var h = 200;
+    var ctx = setupHiDPICanvas(canvas, w, h);
+    var daily = data.daily;
+    var maxVal = Math.max.apply(null, daily.map(function(d) { return d.calories; }));
+    if (maxVal === 0) maxVal = 500;
+    maxVal = Math.ceil(maxVal / 100) * 100;
+    var padLeft = 44, padRight = 12, padTop = 16, padBottom = 28;
+    var chartW = w - padLeft - padRight;
+    var chartH = h - padTop - padBottom;
+    var textTertiary = getCSS('--sf-text-tertiary') || '#94A3B8';
+    var borderLight = getCSS('--sf-border-light') || '#E2E8F0';
+    var points = [];
+    for (var i = 0; i < daily.length; i++) {
+      points.push({ x: padLeft + (chartW / (daily.length - 1)) * i, y: padTop + chartH - (daily[i].calories / maxVal) * chartH, data: daily[i] });
+    }
+    var animStart = null;
+    function draw(progress) {
+      ctx.clearRect(0, 0, w, h);
+      var easedP = easeOutQuart(Math.min(1, progress));
+      var gridCount = 4;
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (var g = 0; g <= gridCount; g++) {
+        var yVal = (maxVal / gridCount) * g;
+        var yPos = padTop + chartH - (chartH * (g / gridCount));
+        ctx.strokeStyle = borderLight;
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(padLeft, yPos);
+        ctx.lineTo(w - padRight, yPos);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = textTertiary;
+        ctx.fillText(Math.round(yVal) + '', padLeft - 6, yPos);
+      }
+      var totalLen = points.length - 1;
+      var visibleCount = Math.floor(easedP * totalLen);
+      var partialFrac = (easedP * totalLen) - visibleCount;
+      var visible = [];
+      for (var vi = 0; vi <= visibleCount && vi < points.length; vi++) { visible.push(points[vi]); }
+      if (visibleCount < totalLen && partialFrac > 0) {
+        var from = points[visibleCount], to = points[visibleCount + 1];
+        visible.push({ x: from.x + (to.x - from.x) * partialFrac, y: from.y + (to.y - from.y) * partialFrac, data: to.data });
+      }
+      if (visible.length < 2) return;
+      var grad = ctx.createLinearGradient(0, padTop, 0, padTop + chartH);
+      grad.addColorStop(0, 'rgba(249,115,22,0.25)');
+      grad.addColorStop(1, 'rgba(249,115,22,0.01)');
+      ctx.beginPath();
+      ctx.moveTo(visible[0].x, padTop + chartH);
+      for (var li = 0; li < visible.length; li++) {
+        if (li === 0) { ctx.lineTo(visible[li].x, visible[li].y); }
+        else { var p = visible[li - 1], c = visible[li]; var cpx = (p.x + c.x) / 2; ctx.bezierCurveTo(cpx, p.y, cpx, c.y, c.x, c.y); }
+      }
+      ctx.lineTo(visible[visible.length - 1].x, padTop + chartH);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.beginPath();
+      for (var li2 = 0; li2 < visible.length; li2++) {
+        if (li2 === 0) { ctx.moveTo(visible[li2].x, visible[li2].y); }
+        else { var p2 = visible[li2 - 1], c2 = visible[li2]; var cpx2 = (p2.x + c2.x) / 2; ctx.bezierCurveTo(cpx2, p2.y, cpx2, c2.y, c2.x, c2.y); }
+      }
+      ctx.strokeStyle = '#F97316';
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      for (var di = 0; di <= visibleCount && di < points.length; di++) {
+        ctx.beginPath(); ctx.arc(points[di].x, points[di].y, 4, 0, Math.PI * 2); ctx.fillStyle = '#F97316'; ctx.fill();
+        ctx.beginPath(); ctx.arc(points[di].x, points[di].y, 2, 0, Math.PI * 2); ctx.fillStyle = getCSS('--sf-bg-elevated') || '#FFFFFF'; ctx.fill();
+      }
+      ctx.fillStyle = textTertiary;
+      ctx.font = '11px Inter, PingFang SC, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      for (var xi = 0; xi < daily.length; xi++) { ctx.fillText(daily[xi].day, padLeft + (chartW / (daily.length - 1)) * xi, padTop + chartH + 8); }
+    }
+    function animate(ts) {
+      if (!animStart) animStart = ts;
+      var progress = Math.min(1, (ts - animStart) / 1200);
+      draw(progress);
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    var tooltip = document.getElementById('lineTooltip');
+    function getIdx(cx) {
+      var cr = canvas.getBoundingClientRect();
+      var x = (cx - cr.left) * (w / cr.width);
+      var best = -1, bestD = Infinity;
+      for (var pi = 0; pi < points.length; pi++) { var d = Math.abs(x - points[pi].x); if (d < bestD && d < 30) { bestD = d; best = pi; } }
+      return best;
+    }
+    function showTip(idx) {
+      var p = points[idx];
+      tooltip.innerHTML = p.data.day + ' \u00B7 ' + p.data.calories + ' kcal';
+      tooltip.classList.add('show');
+      tooltip.style.left = p.x + 'px';
+      tooltip.style.top = p.y + 'px';
+      tooltip.style.transform = 'translate(-50%, -130%)';
+    }
+    function hideTip() { tooltip.classList.remove('show'); }
+    canvas.addEventListener('mousemove', function(e) { var i = getIdx(e.clientX); if (i >= 0) showTip(i); else hideTip(); });
+    canvas.addEventListener('mouseleave', hideTip);
+    canvas.addEventListener('touchstart', function(e) { var t = e.touches[0]; var i = getIdx(t.clientX); if (i >= 0) { showTip(i); e.preventDefault(); } }, { passive: false });
+    canvas.addEventListener('touchend', function() { setTimeout(hideTip, 1200); });
+  }
+
+  function drawDonutChart(data) {
+    var canvas = document.getElementById('donutChart');
+    var size = 220;
+    var ctx = setupHiDPICanvas(canvas, size, size);
+    var types = data.types;
+    var total = types.reduce(function(s, t) { return s + t.count; }, 0);
+    var cx = size / 2, cy = size / 2;
+    var outerR = size / 2 - 8;
+    var innerR = outerR * 0.6;
+    var animStart = null;
+    function draw(progress) {
+      ctx.clearRect(0, 0, size, size);
+      var easedP = easeOutCubic(Math.min(1, progress));
+      var maxAngle = Math.PI * 2 * easedP;
+      var startAngle = -Math.PI / 2;
+      var drawnAngle = 0;
+      for (var i = 0; i < types.length; i++) {
+        var sliceAngle = (types[i].count / total) * Math.PI * 2;
+        var drawSlice = Math.min(sliceAngle, maxAngle - drawnAngle);
+        if (drawSlice <= 0) break;
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerR, startAngle, startAngle + drawSlice);
+        ctx.arc(cx, cy, innerR, startAngle + drawSlice, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = types[i].color;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = getCSS('--sf-bg-elevated') || '#FFFFFF';
+        ctx.stroke();
+        startAngle += sliceAngle;
+        drawnAngle += sliceAngle;
+      }
+      if (easedP > 0.5) {
+        var textAlpha = Math.min(1, (easedP - 0.5) * 4);
+        ctx.globalAlpha = textAlpha;
+        ctx.fillStyle = getCSS('--sf-text-primary') || '#0F172A';
+        ctx.font = '800 32px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(total + '', cx, cy - 6);
+        ctx.font = '500 12px Inter, PingFang SC, sans-serif';
+        ctx.fillStyle = getCSS('--sf-text-tertiary') || '#94A3B8';
+        ctx.fillText('\u6B21\u8FD0\u52A8', cx, cy + 16);
+        ctx.globalAlpha = 1;
+      }
+    }
+    function animate(ts) {
+      if (!animStart) animStart = ts;
+      var progress = Math.min(1, (ts - animStart) / 1100);
+      draw(progress);
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+    var legendEl = document.getElementById('donutLegend');
+    legendEl.innerHTML = '';
+    types.forEach(function(t) {
+      var item = document.createElement('div');
+      item.className = 'donut-legend-item';
+      item.innerHTML = '<span class="donut-legend-dot" style="background:' + t.color + '"></span><span>' + t.name + ' ' + t.count + '\u6B21</span>';
+      legendEl.appendChild(item);
+    });
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+  }
+
+  async function fetchStats() {
+    if (!user) return;
+    try {
+      var res = await fetch('/api/stats/' + user.id + '/weekly');
+      var json = await res.json();
+      statsData = (json.success && json.days) ? json : DEMO_STATS;
+    } catch (err) { statsData = DEMO_STATS; }
+    renderSummary(statsData);
+  }
+
+  async function fetchXP() {
+    if (!user) return;
+    try {
+      var res = await fetch('/api/xp/' + user.id);
+      var json = await res.json();
+      xpData = (json.success && json.level !== undefined) ? json : DEMO_XP;
+    } catch (err) { xpData = DEMO_XP; }
+    renderLevel(xpData);
+  }
+
+  function observeCharts() {
+    [
+      { id: 'bar-section', draw: function() { drawBarChart(statsData); } },
+      { id: 'line-section', draw: function() { drawLineChart(statsData); } },
+      { id: 'donut-section', draw: function() { drawDonutChart(statsData); } }
+    ].forEach(function(item) {
+      var el = document.getElementById(item.id);
+      if (!el) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && statsData) { item.draw(); observer.unobserve(entry.target); }
+        });
+      }, { threshold: 0.25 });
+      observer.observe(el);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', async function() {
+    await Promise.all([fetchStats(), fetchXP()]);
+    if (statsData) observeCharts();
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      if (statsData) { drawBarChart(statsData); drawLineChart(statsData); drawDonutChart(statsData); }
+    }, 250);
+  });
+
+})();
+
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+
+  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

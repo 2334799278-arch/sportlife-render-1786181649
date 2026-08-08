@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>运动挑战 - SportLife</title> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script> <script src="tab-prefetch.js"></script> <script src="/assets/vendor/tailwind.js" defer></script> <style id="theme-vars"> :root { --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-active: #15803D; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4; --sf-accent: #F97316; --sf-accent-hover: #EA580C; --sf-accent-light: #FFF7ED; --sf-accent-surface: #FED7AA; --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF; --sf-sky-surface: #BAE6FD; --sf-purple: #A78BFA; --sf-purple-light: #F5F3FF; --sf-red: #EF4444; --sf-red-light: #FEF2F2; --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9; --sf-bg-elevated: #FFFFFF; --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8; --sf-text-inverse: #FFFFFF; --sf-text-brand: #22C55E; --sf-border-light: #E2E8F0; --sf-border-default: #CBD5E1; --sf-success: #22C55E; --sf-success-light: #DCFCE7; --sf-warning: #F59E0B; --sf-warning-light: #FEF3C7; --sf-error: #EF4444; --sf-error-light: #FEE2E2; --sf-info: #38BDF8; --sf-info-light: #E0F2FE; --sf-font-sans: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-font-display: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-radius-sm: 6px; --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px; --sf-shadow-xs: 0 1px 2px rgba(0,0,0,0.04); --sf-shadow-sm: 0 2px 4px rgba(0,0,0,0.04); --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05); --sf-shadow-lg: 0 8px 24px rgba(0,0,0,0.06); --sf-shadow-xl: 0 16px 40px rgba(0,0,0,0.08); --sf-transition-fast: 150ms ease; --sf-transition-normal: 250ms ease; --sf-transition-slow: 400ms ease; --sf-z-sticky: 200; } html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-bg-elevated: #1E293B; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155; } </style> <style> /* ============ RESET & BASE ============ */ *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: var(--sf-font-sans); background: var(--sf-bg-secondary); color: var(--sf-text-primary); max-width: 480px; margin: 0 auto !important; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); } ::-webkit-scrollbar { width: 0; height: 0; } /* ============ SKELETON LOADING ============ */ @keyframes skeletonPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } .skeleton { background: var(--sf-bg-tertiary); border-radius: var(--sf-radius-md); animation: skeletonPulse 1.5s ease-in-out infinite; } .skeleton-card { height: 140px; border-radius: var(--sf-radius-lg); }
+to { opacity: 1; transform: translateY(0); } } /* ============ HEADER ============ */ .app-header { position: sticky; top: 0; z-index: 200; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: rgba(255,255,255,0.72); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(0,0,0,0.04); transition: background var(--sf-transition-normal); } html.dark .app-header { background: rgba(15,23,42,0.78); border-bottom-color: rgba(255,255,255,0.06); } .back-btn { width: 36px; height: 36px; border-radius: var(--sf-radius-md); border: 1px solid var(--sf-border-light); background: var(--sf-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--sf-transition-fast); -webkit-tap-highlight-color: transparent; text-decoration: none; color: var(--sf-text-primary); } .back-btn:active { background: var(--sf-bg-tertiary); transform: scale(0.94); } .header-title { font-size: 18px; font-weight: 700; color: var(--sf-text-primary); font-family: var(--sf-font-display); } /* ============ CHECK-IN BUTTON SECTION ============ */ .checkin-section { display: flex; flex-direction: column; align-items: center; padding: 32px 20px 24px; position: relative; } .checkin-ring-wrapper { position: relative; width: 160px; height: 160px; margin-bottom: 16px; } .checkin-ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); } .checkin-ring-bg { fill: none; stroke: var(--sf-bg-tertiary); stroke-width: 6; } .checkin-ring-progress { fill: none; stroke: var(--sf-primary); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 408; stroke-dashoffset: 408; transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1); filter: drop-shadow(0 0 6px rgba(34,197,94,0.4)); } .checkin-btn { position: absolute; inset: 12px; border-radius: 50%; border: none; background: linear-gradient(135deg, #15803D 0%, #22C55E 50%, #4ADE80 100%); color: #fff; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 8px 32px rgba(34,197,94,0.3), inset 0 1px 0 rgba(255,255,255,0.25); transition: all var(--sf-transition-normal); -webkit-tap-highlight-color: transparent; overflow: hidden; z-index: 1; } .checkin-btn:active { transform: scale(0.95); } .checkin-btn.checked-in { background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%); box-shadow: 0 4px 16px rgba(34,197,94,0.2); } .checkin-btn .btn-icon { font-size: 36px; line-height: 1; transition: transform 0.3s ease; } .checkin-btn.checked-in .btn-icon { transform: scale(1.1); } .checkin-btn .btn-label { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; } .checkin-btn .btn-xp { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: var(--sf-radius-full); } .checkin-streak { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--sf-text-secondary); margin-top: 4px; } .checkin-streak .streak-num { color: var(--sf-primary); font-weight: 800; font-size: 20px; font-variant-numeric: tabular-nums; } /* Check-in pulse animation */ @keyframes checkinPulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); } 70% { box-shadow: 0 0 0 20px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } } .checkin-btn.pulse { animation: checkinPulse 0.8s ease-out; } /* Ring shimmer on check-in */ @keyframes ringShimmer { 0% { stroke-dashoffset: 408; opacity: 0.6; } 50% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } } /* ============ CHALLENGE CARDS ============ */ .section-card { margin: 0 20px 16px; padding: 20px; border-radius: var(--sf-radius-xl); background: var(--sf-bg-elevated); box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease; } .section-title { font-size: 16px; font-weight: 700; color: var(--sf-text-primary); font-family: var(--sf-font-display); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; } .section-title .title-accent { color: var(--sf-primary); } .challenge-card { background: var(--sf-bg-elevated); border: 1px solid var(--sf-border-light); border-radius: var(--sf-radius-lg); padding: 16px; margin-bottom: 12px; transition: all 0.25s ease; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03); } .challenge-card:last-child { margin-bottom: 0; } .challenge-card:active { transform: scale(0.98); box-shadow: 0 1px 4px rgba(0,0,0,0.03); } .challenge-card.completed { border-color: var(--sf-primary); background: var(--sf-primary-surface); } html.dark .challenge-card.completed { background: rgba(34,197,94,0.08); } .challenge-card .completed-overlay { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: var(--sf-primary); display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: all 0.3s ease; } .challenge-card.completed .completed-overlay { opacity: 1; transform: scale(1); } .challenge-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; } .challenge-icon { width: 44px; height: 44px; border-radius: var(--sf-radius-md); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; } .challenge-icon.steps { background: linear-gradient(135deg, #DCFCE7, #BBF7D0); } .challenge-icon.workout { background: linear-gradient(135deg, #FFF7ED, #FED7AA); } .challenge-icon.calories { background: linear-gradient(135deg, #FEF2F2, #FECACA); } .challenge-info { flex: 1; min-width: 0; } .challenge-name { font-size: 15px; font-weight: 700; color: var(--sf-text-primary); line-height: 1.3; } .challenge-desc { font-size: 12px; color: var(--sf-text-tertiary); margin-top: 2px; font-weight: 500; } .challenge-xp-badge { font-size: 12px; font-weight: 700; color: var(--sf-accent); background: var(--sf-accent-light); padding: 4px 10px; border-radius: var(--sf-radius-full); white-space: nowrap; flex-shrink: 0; } .challenge-progress-wrap { margin-top: 4px; } .challenge-progress-bar { width: 100%; height: 8px; background: var(--sf-bg-tertiary); border-radius: var(--sf-radius-full); overflow: hidden; position: relative; } .challenge-progress-fill { height: 100%; border-radius: var(--sf-radius-full); width: 0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative; } .challenge-progress-fill.steps-fill { background: linear-gradient(90deg, #16A34A, #22C55E, #4ADE80); } .challenge-progress-fill.workout-fill { background: linear-gradient(90deg, #EA580C, #F97316, #FB923C); } .challenge-progress-fill.calories-fill { background: linear-gradient(90deg, #DC2626, #EF4444, #F87171); } .challenge-progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: progressShimmer 2s infinite; } @keyframes progressShimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } } .challenge-progress-text { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; } .challenge-current { font-size: 13px; font-weight: 700; color: var(--sf-text-primary); font-variant-numeric: tabular-nums; } .challenge-target { font-size: 12px; color: var(--sf-text-tertiary); font-weight: 500; } /* ============ HEATMAP SECTION ============ */ .heatmap-section { margin: 0 20px 24px; padding: 20px; border-radius: var(--sf-radius-xl); background: var(--sf-bg-elevated); box-shadow: var(--sf-shadow-sm); } .heatmap-container { position: relative; width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; } .heatmap-container::-webkit-scrollbar { display: none; } .heatmap-container { -ms-overflow-style: none; scrollbar-width: none; } #heatmapCanvas { display: block; border-radius: var(--sf-radius-sm); } .heatmap-legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 12px; font-size: 11px; color: var(--sf-text-tertiary); font-weight: 500; } .heatmap-legend-cell { width: 12px; height: 12px; border-radius: 2px; } .legend-less { margin-right: 4px; } .legend-more { margin-left: 4px; } .heatmap-stats { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--sf-border-light); } .heatmap-stat { text-align: center; flex: 1; } .heatmap-stat:not(:last-child) { border-right: 1px solid var(--sf-border-light); } .heatmap-stat-value { font-size: 22px; font-weight: 800; color: var(--sf-text-primary); font-variant-numeric: tabular-nums; line-height: 1.2; } .heatmap-stat-label { font-size: 11px; color: var(--sf-text-tertiary); font-weight: 500; margin-top: 2px; } /* ============ CONFETTI ============ */ @keyframes confettiFall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } } .confetti-piece { position: fixed; top: 0; width: 8px; height: 8px; border-radius: 2px; z-index: 9999; pointer-events: none; animation: confettiFall 2.5s ease-in forwards; } /* ============ TOAST ============ */ .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); padding: 10px 20px; border-radius: var(--sf-radius-full); font-size: 13px; font-weight: 600; color: #fff; z-index: 10000; opacity: 0; transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; white-space: nowrap; box-shadow: var(--sf-shadow-lg); } .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); } .toast.success { background: var(--sf-primary); } .toast.error { background: var(--sf-error); } .toast.info { background: var(--sf-info); } /* ============ TAB BAR ============ */ .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 480px; background: var(--sf-bg); border-top: 1px solid rgba(0,0,0,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.04); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 8px)); z-index: 200; transition: background 0.3s ease, border-color 0.3s ease; } html.dark .tab-bar { background: var(--sf-bg); border-top-color: rgba(255,255,255,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.2); } .tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; position: relative; padding: 4px 16px; transition: all 150ms ease; user-select: none; -webkit-tap-highlight-color: transparent; text-decoration: none; } .tab-item:active { transform: scale(0.9); } .tab-icon { color: var(--sf-text-tertiary); transition: color 150ms ease; } .tab-label { font-size: 10px; font-weight: 500; color: var(--sf-text-tertiary); transition: all 150ms ease; } .tab-item.active .tab-icon { color: var(--sf-primary); } .tab-item.active .tab-label { color: var(--sf-primary); font-weight: 700; } /* ============ RESPONSIVE ============ */ @media (min-width: 768px) { body { max-width: 768px; } .tab-bar { max-width: 768px; } } </style>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body> <div style="padding-bottom: env(safe-area-inset-bottom, 0);"> <!-- ===== HEADER ===== --> <header class="app-header"> <a href="home.html" class="back-btn" aria-label="返回"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> </a> <span class="header-title">挑战</span> </header> <!-- ===== SECTION 1: CHECK-IN BUTTON ===== --> <section class="checkin-section" id="checkinSection"> <div class="checkin-ring-wrapper"> <svg class="checkin-ring-svg" viewBox="0 0 160 160"> <circle class="checkin-ring-bg" cx="80" cy="80" r="65"/> <circle class="checkin-ring-progress" id="checkinRing" cx="80" cy="80" r="65"/> </svg> <button class="checkin-btn" id="checkinBtn" type="button"> <span class="btn-icon" id="checkinIcon">&#x1F525;</span> <span class="btn-label" id="checkinLabel">每日签到</span> <span class="btn-xp">+10 XP</span> </button> </div> <div class="checkin-streak"> 连续签到 <span class="streak-num" id="streakCount">--</span> 天 </div> </section> <!-- ===== SECTION 2: TODAY'S CHALLENGES ===== --> <section class="section-card" id="challengesSection"> <div class="section-title"> <span class="title-accent">&#9733;</span> 今日挑战 </div> <!-- Skeleton Loading --> <div id="challengesSkeleton"> <div class="skeleton skeleton-card" style="margin-bottom:12px;"></div> <div class="skeleton skeleton-card" style="margin-bottom:12px;"></div> <div class="skeleton skeleton-card"></div> </div> <!-- Challenge Cards (populated by JS) --> <div id="challengesList" style="display:none;"></div> </section> <!-- ===== SECTION 3: HEATMAP CALENDAR ===== --> <section class="heatmap-section" id="heatmapSection"> <div class="section-title"> <span class="title-accent">&#128197;</span> 签到日历 </div> <div class="heatmap-container"> <canvas id="heatmapCanvas" height="168"></canvas> </div> <div class="heatmap-legend"> <span class="legend-less">少</span> <div class="heatmap-legend-cell" style="background:#ebedf0;"></div> <div class="heatmap-legend-cell" style="background:#9be9a8;"></div> <div class="heatmap-legend-cell" style="background:#40c463;"></div> <div class="heatmap-legend-cell" style="background:#30a14e;"></div> <div class="heatmap-legend-cell" style="background:#216e39;"></div> <span class="legend-more">多</span> </div> <div class="heatmap-stats"> <div class="heatmap-stat"> <div class="heatmap-stat-value" id="totalCheckins">--</div> <div class="heatmap-stat-label">总签到</div> </div> <div class="heatmap-stat"> <div class="heatmap-stat-value" id="maxStreak">--</div> <div class="heatmap-stat-label">最长连续</div> </div> <div class="heatmap-stat"> <div class="heatmap-stat-value" id="thisMonth">--</div> <div class="heatmap-stat-label">本月签到</div> </div> </div> </section> <!-- Spacer for bottom bar --> <div style="height: 24px;"></div> </div> <!-- ===== BOTTOM TAB BAR ===== --> <nav class="tab-bar"> <a href="home.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> <span class="tab-label">首页</span> </a> <a href="training-plan.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span class="tab-label">训练</span> </a> <a href="challenges.html" class="tab-item active" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span class="tab-label">挑战</span> </a> <a href="community.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="tab-label">社区</span> </a> <a href="profile.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span class="tab-label">我的</span> </a> </nav> <!-- ===== TOAST ELEMENT ===== --> <div class="toast" id="toast"></div> <!-- ===== JAVASCRIPT ===== --> <script>
+(function() { 'use strict';
+
+  function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem('sportlife_user')); }
+    catch (e) { return null; }
+  }
+  if (!getCurrentUser()) { navigateTo('login.html'); }
+  var user = getCurrentUser();
+  var isCheckedIn = false;
+
+  /* ---- Init ---- */
+  document.addEventListener('DOMContentLoaded', function() {
+    loadCheckinStatus();
+    loadChallenges();
+    loadHeatmap();
+    bindCheckinButton();
+  });
+
+  /* ---- Toast ---- */
+  function showToast(message, type) {
+    type = type || 'info';
+    var toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast ' + type;
+    requestAnimationFrame(function() {
+      toast.classList.add('show');
+    });
+    setTimeout(function() {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  /* ---- Confetti ---- */
+  function launchConfetti() {
+    var colors = ['#22C55E', '#F97316', '#38BDF8', '#A78BFA', '#F59E0B', '#EF4444', '#4ADE80'];
+    for (var i = 0; i < 40; i++) {
+      (function(index) {
+        setTimeout(function() {
+          var piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.style.left = (Math.random() * 100) + 'vw';
+          piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.width = (Math.random() * 8 + 4) + 'px';
+          piece.style.height = (Math.random() * 8 + 4) + 'px';
+          piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          piece.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+          piece.style.animationDelay = '0s';
+          document.body.appendChild(piece);
+          setTimeout(function() {
+            if (piece.parentNode) piece.parentNode.removeChild(piece);
+          }, 3500);
+        }, index * 30);
+      })(i);
+    }
+  }
+
+  /* ---- Check-in Status ---- */
+  function loadCheckinStatus() {
+    fetch('/api/checkin/' + user.id + '/status')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && data.success && data.checkedIn) {
+          setCheckedInState(data.streak || 0);
+        } else if (data && data.streak !== undefined) {
+          document.getElementById('streakCount').textContent = data.streak;
+        } else {
+          document.getElementById('streakCount').textContent = '0';
+        }
+        var streak = (data && data.streak) || 0;
+        var progress = Math.min(streak / 7, 1);
+        animateRing(progress);
+      })
+      .catch(function() {
+        document.getElementById('streakCount').textContent = '0';
+        animateRing(0);
+      });
+  }
+
+  function animateRing(progress) {
+    var ring = document.getElementById('checkinRing');
+    var circumference = 2 * Math.PI * 65;
+    var offset = circumference * (1 - progress);
+    ring.style.strokeDasharray = circumference;
+    ring.style.strokeDashoffset = offset;
+  }
+
+  function setCheckedInState(streak) {
+    isCheckedIn = true;
+    var btn = document.getElementById('checkinBtn');
+    var icon = document.getElementById('checkinIcon');
+    var label = document.getElementById('checkinLabel');
+    btn.classList.add('checked-in');
+    icon.innerHTML = '\u2705';
+    label.textContent = '\u5DF2\u7B7E\u5230';
+    document.getElementById('streakCount').textContent = streak;
+    animateRing(Math.min(streak / 7, 1));
+  }
+
+  /* ---- Bind Check-in Button ---- */
+  function bindCheckinButton() {
+    document.getElementById('checkinBtn').addEventListener('click', function() {
+      if (isCheckedIn) {
+        showToast('\u4ECA\u5929\u5DF2\u7ECF\u7B7E\u5230\u8FC7\u4E86', 'info');
+        return;
+      }
+      var btn = this;
+      btn.disabled = true;
+      fetch('/api/checkin/' + user.id, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.success) {
+            setCheckedInState(data.streak || 1);
+            btn.classList.add('pulse');
+            setTimeout(function() { btn.classList.remove('pulse'); }, 800);
+            launchConfetti();
+            showToast('\u7B7E\u5230\u6210\u529F\uFF01+10 XP', 'success');
+          } else {
+            showToast(data.error || '\u7B7E\u5230\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5', 'error');
+            btn.disabled = false;
+          }
+        })
+        .catch(function() {
+          showToast('\u7F51\u7EDC\u8FDE\u63A5\u5931\u8D25', 'error');
+          btn.disabled = false;
+        });
+    });
+  }
+
+  /* ---- Challenge Templates ---- */
+  var challengeTemplates = [
+    { type: 'steps', icon: '\uD83D\uDC5E', name: '\u6B65\u884C8000\u6B65', desc: '\u65E5\u884C\u4E07\u6B65\uFF0C\u5065\u5EB7\u5E38\u9A7B', unit: '\u6B65', target: 8000, xp: 50, gradientClass: 'steps' },
+    { type: 'workout', icon: '\uD83C\uDFAF', name: '\u5B8C\u621030\u5206\u949F\u8BAD\u7EC3', desc: '\u575A\u6301\u8FD0\u52A8\uFF0C\u5F3A\u5065\u4F53\u9B44', unit: '\u5206\u949F', target: 30, xp: 50, gradientClass: 'workout' },
+    { type: 'calories', icon: '\uD83D\uDD25', name: '\u6D88\u8017500\u5343\u5361', desc: '\u71C3\u70E7\u5361\u8DEF\u91CC\uFF0C\u4FDD\u6301\u6D3B\u529B', unit: '\u5343\u5361', target: 500, xp: 50, gradientClass: 'calories' }
+  ];
+
+  /* ---- Load Challenges ---- */
+  function loadChallenges() {
+    fetch('/api/challenges/' + user.id)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        document.getElementById('challengesSkeleton').style.display = 'none';
+        document.getElementById('challengesList').style.display = 'block';
+        var challenges;
+        if (data && data.success && data.challenges && data.challenges.length > 0) {
+          challenges = data.challenges;
+        } else {
+          challenges = [
+            { type: 'steps', current: 5230, target: 8000, completed: false, xp: 50 },
+            { type: 'workout', current: 15, target: 30, completed: false, xp: 50 },
+            { type: 'calories', current: 320, target: 500, completed: false, xp: 50 }
+          ];
+        }
+        renderChallenges(challenges);
+      })
+      .catch(function() {
+        document.getElementById('challengesSkeleton').style.display = 'none';
+        document.getElementById('challengesList').style.display = 'block';
+        var challenges = [
+          { type: 'steps', current: 5230, target: 8000, completed: false, xp: 50 },
+          { type: 'workout', current: 15, target: 30, completed: false, xp: 50 },
+          { type: 'calories', current: 320, target: 500, completed: false, xp: 50 }
+        ];
+        renderChallenges(challenges);
+      });
+  }
+
+  /* ---- Render Challenges ---- */
+  function renderChallenges(challenges) {
+    var container = document.getElementById('challengesList');
+    container.innerHTML = '';
+    challenges.forEach(function(challenge, index) {
+      var template = challengeTemplates.find(function(t) { return t.type === challenge.type; }) || challengeTemplates[index];
+      var current = challenge.current || 0;
+      var target = challenge.target || template.target;
+      var completed = challenge.completed || (current >= target);
+      var percent = Math.min((current / target) * 100, 100);
+
+      var card = document.createElement('div');
+      card.className = 'challenge-card' + (completed ? ' completed' : '');
+      card.setAttribute('data-challenge-type', challenge.type);
+      card.setAttribute('data-challenge-id', challenge.id || index);
+      card.innerHTML =
+        '<div class="completed-overlay">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<div class="challenge-header">' +
+          '<div class="challenge-icon ' + template.gradientClass + '">' + template.icon + '</div>' +
+          '<div class="challenge-info">' +
+            '<div class="challenge-name">' + (challenge.name || template.name) + '</div>' +
+            '<div class="challenge-desc">' + (challenge.description || template.desc) + '</div>' +
+          '</div>' +
+          '<div class="challenge-xp-badge">+' + (challenge.xp || template.xp) + ' XP</div>' +
+        '</div>' +
+        '<div class="challenge-progress-wrap">' +
+          '<div class="challenge-progress-bar">' +
+            '<div class="challenge-progress-fill ' + template.gradientClass + '-fill" data-percent="' + percent + '"></div>' +
+          '</div>' +
+          '<div class="challenge-progress-text">' +
+            '<span class="challenge-current">' + current + ' ' + template.unit + '</span>' +
+            '<span class="challenge-target">\u76EE\u6807 ' + target + ' ' + template.unit + '</span>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(card);
+    });
+
+    requestAnimationFrame(function() {
+      setTimeout(function() {
+        var fills = container.querySelectorAll('.challenge-progress-fill');
+        fills.forEach(function(fill) {
+          fill.style.width = fill.getAttribute('data-percent') + '%';
+        });
+      }, 100);
+    });
+
+    requestAnimationFrame(function() {
+      document.getElementById('challengesList').classList.add('visible');
+    });
+  }
+
+  /* ---- Heatmap ---- */
+  function loadHeatmap() {
+    fetch('/api/checkin/' + user.id + '/calendar')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var calendarData = [];
+        if (data && data.success && data.calendar) {
+          calendarData = data.calendar;
+        }
+        var stats = {
+          total: (data && data.totalCheckins) || 0,
+          maxStreak: (data && data.maxStreak) || 0,
+          thisMonth: (data && data.thisMonth) || 0
+        };
+        renderHeatmap(calendarData, stats);
+      })
+      .catch(function() {
+        var calendarData = generateMockCalendar();
+        var stats = { total: 47, maxStreak: 12, thisMonth: 18 };
+        renderHeatmap(calendarData, stats);
+      });
+  }
+
+  function generateMockCalendar() {
+    var data = {};
+    var today = new Date();
+    for (var i = 89; i >= 0; i--) {
+      var d = new Date(today);
+      d.setDate(d.getDate() - i);
+      var key = formatDateKey(d);
+      if (Math.random() < 0.6) {
+        data[key] = Math.floor(Math.random() * 4) + 1;
+      }
+    }
+    return data;
+  }
+
+  function formatDateKey(date) {
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1).padStart(2, '0');
+    var d = String(date.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+  }
+
+  function renderHeatmap(calendarData, stats) {
+    var canvas = document.getElementById('heatmapCanvas');
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+
+    var cellSize = 13;
+    var cellGap = 3;
+    var cellStep = cellSize + cellGap;
+    var leftPadding = 36;
+    var topPadding = 20;
+    var weeks = 13;
+    var days = 7;
+    var canvasWidth = leftPadding + weeks * cellStep + 10;
+    var canvasHeight = topPadding + days * cellStep + 4;
+
+    canvas.width = canvasWidth * dpr;
+    canvas.height = canvasHeight * dpr;
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
+    ctx.scale(dpr, dpr);
+
+    var isDark = document.documentElement.classList.contains('dark');
+    var emptyColor = isDark ? '#334155' : '#ebedf0';
+    var textColor = isDark ? '#64748b' : '#94a3b8';
+
+    var colorLevels = [emptyColor, '#86efac', '#22c55e', '#16a34a', '#15803d'];
+
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    var startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - 89);
+    var dayOfWeek = startDate.getDay();
+    startDate.setDate(startDate.getDate() - dayOfWeek);
+
+    var dayLabels = ['', '\u4E00', '', '\u4E09', '', '\u4E94', ''];
+    ctx.font = '10px ' + getComputedStyle(document.body).fontFamily;
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (var d = 0; d < 7; d++) {
+      if (dayLabels[d]) {
+        ctx.fillText(dayLabels[d], leftPadding - 6, topPadding + d * cellStep + cellSize / 2);
+      }
+    }
+
+    var lastMonth = -1;
+    var monthXPositions = [];
+
+    var currentDate = new Date(startDate);
+    for (var week = 0; week < weeks; week++) {
+      for (var day = 0; day < days; day++) {
+        var dateKey = formatDateKey(currentDate);
+        var count = calendarData[dateKey] || 0;
+        var level = Math.min(count, 4);
+        var x = leftPadding + week * cellStep;
+        var y = topPadding + day * cellStep;
+
+        var radius = 2;
+        ctx.fillStyle = colorLevels[level];
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + cellSize - radius, y);
+        ctx.quadraticCurveTo(x + cellSize, y, x + cellSize, y + radius);
+        ctx.lineTo(x + cellSize, y + cellSize - radius);
+        ctx.quadraticCurveTo(x + cellSize, y + cellSize, x + cellSize - radius, y + cellSize);
+        ctx.lineTo(x + radius, y + cellSize);
+        ctx.quadraticCurveTo(x, y + cellSize, x, y + cellSize - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fill();
+
+        var currentMonth = currentDate.getMonth();
+        if (currentMonth !== lastMonth) {
+          monthXPositions.push({ month: currentMonth, x: x });
+          lastMonth = currentMonth;
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    }
+
+    var monthNames = ['1\u6708', '2\u6708', '3\u6708', '4\u6708', '5\u6708', '6\u6708', '7\u6708', '8\u6708', '9\u6708', '10\u6708', '11\u6708', '12\u6708'];
+    ctx.font = '10px ' + getComputedStyle(document.body).fontFamily;
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    for (var m = 0; m < monthXPositions.length; m++) {
+      var nextX = (m + 1 < monthXPositions.length) ? monthXPositions[m + 1].x : canvasWidth;
+      if (nextX - monthXPositions[m].x > 30) {
+        ctx.fillText(monthNames[monthXPositions[m].month], monthXPositions[m].x, 4);
+      }
+    }
+
+    document.getElementById('totalCheckins').textContent = stats.total || '0';
+    document.getElementById('maxStreak').textContent = stats.maxStreak || '0';
+    document.getElementById('thisMonth').textContent = stats.thisMonth || '0';
+  }
+
+  /* Re-render heatmap when dark class changes */
+  var themeObserver = new MutationObserver(function() {
+    var canvas = document.getElementById('heatmapCanvas');
+    if (canvas && canvas.width > 0) {
+      setTimeout(function() {
+        fetch('/api/checkin/' + user.id + '/calendar')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var calendarData = [];
+            if (data && data.success && data.calendar) {
+              calendarData = data.calendar;
+            }
+            var stats = {
+              total: (data && data.totalCheckins) || 0,
+              maxStreak: (data && data.maxStreak) || 0,
+              thisMonth: (data && data.thisMonth) || 0
+            };
+            renderHeatmap(calendarData, stats);
+          })
+          .catch(function() {
+            var calendarData = generateMockCalendar();
+            renderHeatmap(calendarData, { total: 47, maxStreak: 12, thisMonth: 18 });
+          });
+      }, 100);
+    }
+  });
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+})();
+
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+
+  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

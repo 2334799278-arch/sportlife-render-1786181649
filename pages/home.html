@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>SportLife - 首页</title>
+
+  <style id="theme-vars">
+    :root {
+      --sf-primary: #22C55E;
+      --sf-primary-hover: #16A34A;
+      --sf-primary-light: #DCFCE7;
+      --sf-primary-surface: #F0FDF4;
+      --sf-accent: #F97316;
+      --sf-accent-light: #FFF7ED;
+      --sf-sky: #38BDF8;
+      --sf-sky-light: #F0F9FF;
+      --sf-purple: #A78BFA;
+      --sf-purple-light: #F5F3FF;
+      --sf-red: #EF4444;
+      --sf-red-light: #FEF2F2;
+      --sf-bg: #FFFFFF;
+      --sf-bg-secondary: #F8FAFC;
+      --sf-bg-tertiary: #F1F5F9;
+      --sf-text-primary: #0F172A;
+      --sf-text-secondary: #475569;
+      --sf-text-tertiary: #94A3B8;
+      --sf-border-light: #E2E8F0;
+      --sf-font-sans: 'Inter', 'PingFang SC', system-ui, sans-serif;
+      --sf-radius-md: 10px;
+      --sf-radius-lg: 14px;
+      --sf-radius-xl: 20px;
+      --sf-radius-full: 9999px;
+      --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+      --sf-shadow-lg: 0 8px 24px rgba(0,0,0,0.06);
+      --sf-transition-normal: 250ms ease;
+    }
+    html.dark {
+      --sf-bg: #0F172A;
+      --sf-bg-secondary: #1E293B;
+      --sf-bg-tertiary: #334155;
+      --sf-text-primary: #F8FAFC;
+      --sf-text-secondary: #CBD5E1;
+      --sf-text-tertiary: #64748B;
+      --sf-border-light: #334155;
+    }
+  </style>
+
+  <script src="theme-init.js"></script>
+  <script src="ngrok-fix.js"></script>
+  <script src="tab-prefetch.js"></script>
+
+  <style>
+    /* ============ RESET & BASE ============ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--sf-font-sans);
+      background: var(--sf-bg-secondary);
+      color: var(--sf-text-primary);
+      max-width: 480px;
+      margin: 0 auto !important;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    }
+
+    ::-webkit-scrollbar { width: 0; height: 0; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ============ SKELETON LOADING ============ */
+    @keyframes skeletonPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .skeleton {
+      background: var(--sf-bg-tertiary);
+      border-radius: var(--sf-radius-md);
+      animation: skeletonPulse 1.5s ease-in-out infinite;
+    }
+    .skeleton-circle { border-radius: 50%; }
+    .skeleton-text { height: 12px; border-radius: 6px; }
+    .skeleton-text-sm { height: 10px; border-radius: 5px; }
+    .skeleton-card {
+      height: 160px;
+      border-radius: var(--sf-radius-lg);
+    }
+
+    /* ============ HEADER ============ */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 12px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      transition: background var(--sf-transition-normal);
+    }
+    html.dark .app-header {
+      background: rgba(15,23,42,0.78);
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+
+    .greeting { font-size: 20px; font-weight: 700; color: var(--sf-text-primary); line-height: 1.3; }
+    .greeting-sub { font-size: 12px; color: var(--sf-text-tertiary); margin-top: 2px; font-weight: 500; }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .weather-chip {
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 10px; border-radius: var(--sf-radius-full);
+      background: var(--sf-bg-tertiary); font-size: 12px; font-weight: 500;
+      color: var(--sf-text-secondary); white-space: nowrap;
+    }
+    .weather-chip svg { opacity: 0.7; flex-shrink: 0; }
+
+    .bell-btn {
+      position: relative; width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: var(--sf-bg-tertiary);
+      border: none; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform var(--sf-transition-normal);
+    }
+    .bell-btn:active { transform: scale(0.92); }
+    .bell-btn svg { color: var(--sf-text-secondary); }
+    .bell-dot {
+      position: absolute; top: 4px; right: 4px;
+      min-width: 16px; height: 16px; border-radius: 50%;
+      background: var(--sf-red); border: 1.5px solid var(--sf-bg);
+      display: none; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff;
+      padding: 0 3px; line-height: 1;
+    }
+
+    .checkin-btn {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: var(--sf-bg-tertiary);
+      border: none; cursor: pointer;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform var(--sf-transition-normal), background var(--sf-transition-normal);
+      color: var(--sf-text-secondary);
+    }
+    .checkin-btn:active { transform: scale(0.92); }
+    .checkin-btn.checked {
+      background: var(--sf-primary);
+      color: white;
+    }
+    .checkin-btn.checked svg path,
+    .checkin-btn.checked svg polyline {
+      stroke: white;
+    }
+
+    /* ============ STATS CARD ============ */
+    .stats-card {
+      margin: 16px 20px 0;
+      border-radius: var(--sf-radius-xl);
+      padding: 24px 16px 20px;
+      background: linear-gradient(135deg, #15803D 0%, #22C55E 25%, #34D399 50%, #4ADE80 75%, #86EFAC 100%);
+      background-size: 400% 400%;
+      animation: statsGradient 4s ease infinite, statsHueShift 8s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(34,197,94,0.3);
+    }
+    @keyframes statsGradient {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes statsHueShift {
+      0% { filter: hue-rotate(0deg) brightness(1); }
+      50% { filter: hue-rotate(15deg) brightness(1.05); }
+      100% { filter: hue-rotate(0deg) brightness(1); }
+    }
+    .stats-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.25) 55%, transparent 60%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .stats-card::after {
+      content: '';
+      position: absolute; bottom: -40px; right: -40px;
+      width: 140px; height: 140px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .stats-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; position: relative; z-index: 1; }
+    .stats-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .stats-date { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; }
+
+    .stats-circles { display: flex; justify-content: space-around; position: relative; z-index: 1; }
+
+    .stat-circle {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .stat-circle-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.2); margin-bottom: 2px;
+    }
+    .stat-circle-icon svg { color: #fff; }
+
+    .stat-value {
+      font-size: 28px; font-weight: 800; color: #fff;
+      font-variant-numeric: tabular-nums; line-height: 1;
+    }
+    .stat-unit { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); }
+    .stat-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    .stats-bottom {
+      margin-top: 18px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .stats-workout-info { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+    .bmi-chip {
+      padding: 4px 10px; border-radius: var(--sf-radius-full);
+      background: rgba(255,255,255,0.2);
+      font-size: 11px; font-weight: 600; color: #fff;
+    }
+
+    /* ============ QUICK START ============ */
+    .quick-section { padding: 24px 0; }
+    .quick-scroll {
+      display: flex; gap: 10px; overflow-x: auto;
+      padding: 0 20px; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .quick-scroll::-webkit-scrollbar { display: none; }
+
+    .quick-start-btn {
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100px; height: 100px;
+      border-radius: var(--sf-radius-xl);
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: #fff; text-decoration: none;
+      box-shadow: 0 6px 20px rgba(34,197,94,0.3);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .quick-start-btn:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(34,197,94,0.2); }
+    .quick-start-btn svg { margin-bottom: 6px; }
+    .quick-start-btn span { font-size: 13px; font-weight: 700; }
+
+    .quick-pill {
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+      width: 72px; height: 88px;
+      border-radius: var(--sf-radius-lg);
+      background: var(--sf-bg);
+      border: 1px solid var(--sf-border-light);
+      color: var(--sf-text-secondary); text-decoration: none;
+      font-size: 12px; font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: all 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .quick-pill:active { transform: scale(0.95); background: var(--sf-primary-light); border-color: var(--sf-primary); color: var(--sf-primary-hover); }
+    .quick-pill-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-pill span { white-space: nowrap; }
+
+    /* ============ WEEKLY CHART ============ */
+    .section-wrap { padding: 0 20px; margin-bottom: 12px; }
+    .section-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px;
+    }
+    .section-title { font-size: 18px; font-weight: 700; color: var(--sf-text-primary); }
+    .section-summary { font-size: 13px; font-weight: 500; color: var(--sf-text-tertiary); }
+    .section-link {
+      font-size: 13px; font-weight: 600; color: var(--sf-primary);
+      text-decoration: none;
+    }
+
+    .chart-card {
+      background: var(--sf-bg);
+      border-radius: 16px;
+      padding: 20px 16px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .chart-bars {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      height: 120px; gap: 6px;
+    }
+    .chart-bar-col {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      height: 100%;
+    }
+    .chart-bar-track {
+      flex: 1; width: 100%; max-width: 28px;
+      border-radius: 8px; background: var(--sf-bg-tertiary);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      overflow: hidden; position: relative;
+    }
+    .chart-bar-fill {
+      width: 100%; border-radius: 8px;
+      transition: height 0.8s ease;
+      min-height: 0;
+    }
+    .chart-bar-fill.high { background: linear-gradient(180deg, #4ADE80, #22C55E); }
+    .chart-bar-fill.mid { background: linear-gradient(180deg, #FB923C, #F97316); }
+    .chart-bar-fill.low { background: linear-gradient(180deg, #BBF7D0, #86EFAC); }
+    .chart-bar-fill.empty { background: var(--sf-bg-tertiary); opacity: 0.5; }
+
+    .chart-bar-label { font-size: 11px; font-weight: 600; color: var(--sf-text-tertiary); }
+    .chart-bar-label.today { color: var(--sf-primary); }
+    .chart-bar-value { font-size: 10px; font-weight: 600; color: var(--sf-text-tertiary); white-space: nowrap; }
+    .chart-bar-value.today { color: var(--sf-primary); }
+
+    /* ============ COURSES ============ */
+    .courses-scroll {
+      display: flex; gap: 12px; overflow-x: auto;
+      padding: 0 20px 4px; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .courses-scroll::-webkit-scrollbar { display: none; }
+
+    .course-card {
+      flex-shrink: 0; width: 180px;
+      border-radius: 16px;
+      overflow: hidden; background: var(--sf-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.04);
+      cursor: pointer; text-decoration: none; color: inherit;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .course-card:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+    .course-card-banner {
+      height: 90px; display: flex; align-items: flex-end;
+      padding: 10px 12px; position: relative; overflow: hidden;
+    }
+    .course-card-banner::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.25) 100%);
+      pointer-events: none;
+    }
+    .course-card-banner .course-type-icon {
+      font-size: 32px; position: absolute; top: 12px; right: 12px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+    .course-card-banner .course-diff-badge {
+      position: relative; z-index: 1;
+      padding: 2px 8px; border-radius: var(--sf-radius-full);
+      background: rgba(255,255,255,0.9);
+      font-size: 10px; font-weight: 700; color: #0F172A;
+    }
+
+    .course-card-body { padding: 12px; }
+    .course-card-name { font-size: 14px; font-weight: 700; color: var(--sf-text-primary); line-height: 1.3; margin-bottom: 6px; }
+    .course-card-meta {
+      display: flex; gap: 10px; font-size: 11px; color: var(--sf-text-tertiary); font-weight: 500;
+    }
+    .course-card-meta span { display: flex; align-items: center; gap: 2px; }
+
+    .course-gradient-hiit { background: linear-gradient(135deg, #F97316, #EF4444); }
+    .course-gradient-yoga { background: linear-gradient(135deg, #A78BFA, #7C3AED); }
+    .course-gradient-strength { background: linear-gradient(135deg, #38BDF8, #2563EB); }
+    .course-gradient-run { background: linear-gradient(135deg, #22C55E, #15803D); }
+    .course-gradient-stretch { background: linear-gradient(135deg, #38BDF8, #A78BFA); }
+
+    /* ============ TAB BAR ============ */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto;
+      width: 100%; max-width: 480px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(24px) saturate(200%);
+      -webkit-backdrop-filter: blur(24px) saturate(200%);
+      border-top: 1px solid rgba(0,0,0,0.06);
+      display: flex; justify-content: space-around; align-items: center;
+      padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 8px));
+      z-index: 200;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    html.dark .tab-bar {
+      background: rgba(15,23,42,0.82);
+      backdrop-filter: blur(24px) saturate(200%);
+      -webkit-backdrop-filter: blur(24px) saturate(200%);
+      border-top-color: rgba(255,255,255,0.06);
+    }
+
+    .tab-item {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      cursor: pointer; position: relative;
+      padding: 4px 16px;
+      transition: all 0.25s ease; user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-item:active { transform: scale(0.9); }
+    .tab-icon { color: var(--sf-text-tertiary); transition: color 0.25s ease, transform 0.25s ease; }
+    .tab-label { font-size: 10px; font-weight: 500; color: var(--sf-text-tertiary); transition: all 0.25s ease; }
+    .tab-item.active .tab-icon { color: var(--sf-primary); transform: scale(1.1) translateY(-1px); }
+    .tab-item.active .tab-label { color: var(--sf-primary); font-weight: 700; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (min-width: 768px) {
+      body { max-width: 768px; }
+      .tab-bar { max-width: 768px; }
+    }
+  </style>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body>
+  <div id="main-content">
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <div>
+      <div class="greeting" id="greeting">--</div>
+      <div class="greeting-sub" id="date-sub">--</div>
+    </div>
+    <div class="header-right">
+      <div class="weather-chip" id="weather-display">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <span>...</span>
+      </div>
+      <button class="bell-btn" id="bell-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <div class="bell-dot" id="bell-dot"></div>
+      </button>
+      <a href="challenges.html" class="checkin-btn" id="home-checkin-btn" title="签到">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Notification Panel -->
+  <div id="notification-panel" style="display:none;position:fixed;top:52px;right:12px;width:calc(100% - 24px);max-width:340px;max-height:420px;background:var(--sf-bg);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.15);z-index:500;overflow:hidden;animation:slideDown 0.25s ease;">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--sf-border-light);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-weight:700;font-size:16px;color:var(--sf-text-primary);">消息通知</span>
+      <button id="mark-all-read-btn" style="font-size:12px;color:var(--sf-primary);background:none;border:none;cursor:pointer;">全部已读</button>
+    </div>
+    <div id="notification-list" style="overflow-y:auto;max-height:360px;padding:8px 0;">
+      <!-- Dynamic content -->
+    </div>
+  </div>
+  <style>
+  @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+  #notification-panel .notif-item { display:flex;align-items:flex-start;gap:10px;padding:12px 16px;cursor:pointer;transition:background 0.15s; }
+  #notification-panel .notif-item:hover { background:var(--sf-bg-secondary); }
+  #notification-panel .notif-item.unread { background:var(--sf-primary-surface); }
+  #notification-panel .notif-avatar { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0; }
+  #notification-panel .notif-body { flex:1;min-width:0; }
+  #notification-panel .notif-text { font-size:13px;color:var(--sf-text-primary);line-height:1.5; }
+  #notification-panel .notif-text strong { font-weight:600; }
+  #notification-panel .notif-time { font-size:11px;color:var(--sf-text-tertiary);margin-top:2px; }
+  </style>
+
+  <!-- ===== FRIENDS ONLINE ===== -->
+  <section style="margin:16px 20px 0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <h2 style="font-size:17px;font-weight:700;color:var(--sf-text-primary);margin:0;">好友</h2>
+      <a href="social.html" style="font-size:13px;color:var(--sf-primary);text-decoration:none;">查看全部</a>
+    </div>
+    <div id="friends-list" style="display:flex;gap:16px;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+      <!-- Dynamic friend avatars -->
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="width:52px;height:52px;border-radius:50%;background:var(--sf-bg-secondary);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--sf-text-tertiary);">加载中</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TODAY'S ACTIVITY CARD ===== -->
+  <section class="stats-card" id="stats-card">
+    <div class="stats-top">
+      <span class="stats-title">今日活动</span>
+      <span class="stats-date" id="stats-date"></span>
+    </div>
+    <div class="stats-circles" id="stats-container">
+      <!-- Skeleton placeholders -->
+      <div class="stat-circle"><div class="skeleton skeleton-circle" style="width:70px;height:70px"></div><div class="skeleton skeleton-text" style="width:36px;margin-top:8px"></div></div>
+      <div class="stat-circle"><div class="skeleton skeleton-circle" style="width:70px;height:70px"></div><div class="skeleton skeleton-text" style="width:36px;margin-top:8px"></div></div>
+      <div class="stat-circle"><div class="skeleton skeleton-circle" style="width:70px;height:70px"></div><div class="skeleton skeleton-text" style="width:36px;margin-top:8px"></div></div>
+    </div>
+    <div class="stats-bottom" id="stats-bottom" style="display:none;">
+      <span class="stats-workout-info" id="workout-info"></span>
+      <span class="bmi-chip" id="bmi-chip" style="display:none;"></span>
+    </div>
+  </section>
+
+  <!-- ===== USER LEVEL ===== -->
+  <section style="padding: 0 20px; margin-top: 16px;">
+    <div id="level-card" style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1px solid #BBF7D0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+      <div id="level-avatar-wrap" style="position:relative;width:44px;height:44px;flex-shrink:0;">
+        <div id="level-avatar" style="width:44px;height:44px;border-radius:50%;background:var(--sf-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;"></div>
+        <div id="level-badge" style="position:absolute;bottom:-2px;right:-2px;background:var(--sf-primary);color:#fff;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;"></div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <span id="level-title" style="font-size:14px;font-weight:700;color:#15803D;">运动新手</span>
+          <span id="level-xp-text" style="font-size:12px;color:#4ADE80;font-weight:600;">0/100 XP</span>
+        </div>
+        <div style="height:6px;background:#fff;border-radius:3px;overflow:hidden;">
+          <div id="level-xp-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#22C55E,#4ADE80);border-radius:3px;transition:width 0.8s ease;"></div>
+        </div>
+      </div>
+      <a href="leaderboard.html" style="flex-shrink:0;width:36px;height:36px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10l1 7H6L7 4z"/><path d="M5 11h14l-1.5 6h-11L5 11z"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== QUICK START ===== -->
+  <section class="quick-section">
+    <div class="quick-scroll no-scrollbar">
+      <a href="workout-tracker.html" class="quick-start-btn">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <span>开始运动</span>
+      </a>
+      <a href="training-plan.html" class="quick-pill">
+        <div class="quick-pill-icon" style="background:var(--sf-primary-light);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <span>训练计划</span>
+      </a>
+      <a href="course-detail.html" class="quick-pill">
+        <div class="quick-pill-icon" style="background:var(--sf-purple-light);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <span>课程学习</span>
+      </a>
+      <a href="community.html" class="quick-pill">
+        <div class="quick-pill-icon" style="background:var(--sf-sky-light);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <span>社区</span>
+      </a>
+      <a href="achievements.html" class="quick-pill">
+        <div class="quick-pill-icon" style="background:var(--sf-accent-light);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <span>成就</span>
+      </a>
+      <a href="leaderboard.html" class="quick-pill">
+        <div class="quick-pill-icon" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        </div>
+        <span>排行榜</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== WEEKLY ACTIVITY CHART ===== -->
+  <section>
+    <div class="section-wrap" style="padding-bottom:0;">
+      <div class="section-header">
+        <h2 class="section-title">本周活动</h2>
+        <span class="section-summary" id="week-total-steps">--</span>
+      </div>
+    </div>
+    <div style="padding: 0 20px; margin-bottom: 8px;">
+      <div class="chart-card">
+        <div class="chart-bars" id="chart-bars">
+          <!-- 7 skeleton bars -->
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+          <div class="chart-bar-col"><div class="skeleton" style="width:100%;flex:1;border-radius:8px;"></div><div class="skeleton skeleton-text-sm" style="width:20px;height:10px;margin-top:6px;"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RECOMMENDED COURSES ===== -->
+  <section style="margin-top:8px;">
+    <div class="section-wrap" style="padding-bottom:0;">
+      <div class="section-header">
+        <h2 class="section-title">推荐课程</h2>
+        <a href="course-detail.html" class="section-link">查看全部</a>
+      </div>
+    </div>
+    <div class="courses-scroll no-scrollbar" id="courses-container">
+      <!-- 3 skeleton cards -->
+      <div class="skeleton skeleton-card" style="flex-shrink:0;width:180px;border-radius:var(--sf-radius-lg);"></div>
+      <div class="skeleton skeleton-card" style="flex-shrink:0;width:180px;border-radius:var(--sf-radius-lg);"></div>
+      <div class="skeleton skeleton-card" style="flex-shrink:0;width:180px;border-radius:var(--sf-radius-lg);"></div>
+    </div>
+  </section>
+
+  <!-- Spacer for bottom bar -->
+  <div style="height: 24px;"></div>
+
+  <!-- ===== BOTTOM TAB BAR ===== -->
+  <nav class="tab-bar">
+    <a href="home.html" class="tab-item active" style="text-decoration:none;">
+      <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span class="tab-label">首页</span>
+    </a>
+    <a href="training-plan.html" class="tab-item" style="text-decoration:none;">
+      <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="tab-label">训练</span>
+    </a>
+    <a href="course-detail.html" class="tab-item" style="text-decoration:none;">
+      <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span class="tab-label">课程</span>
+    </a>
+    <a href="community.html" class="tab-item" style="text-decoration:none;">
+      <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="tab-label">社区</span>
+    </a>
+    <a href="profile.html" class="tab-item" style="text-decoration:none;">
+      <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="tab-label">我的</span>
+    </a>
+  </nav>
+
+  </div><!-- end main-content -->
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    /* ---- Auth Guard ---- */
+    function getCurrentUser(){try{return JSON.parse(localStorage.getItem('sportlife_user'))}catch{return null}}
+    if(!getCurrentUser())navigateTo('login.html');
+
+    var user = getCurrentUser();
+
+    /* ---- Init on DOMContentLoaded ---- */
+    document.addEventListener('DOMContentLoaded', function() {
+      updateGreeting();
+      initWeather();
+      loadStats();
+      loadWeeklyChart();
+      loadCourses();
+      loadFriends();
+      checkUnreadNotifications();
+      /* 每 8 秒轮询未读通知数，实现实时提醒 */
+      setInterval(checkUnreadNotifications, 8000);
+    });
+
+    /* ---- Greeting (time-based) ---- */
+    function updateGreeting() {
+      var h = new Date().getHours();
+      var g = h < 6 ? '夜深了' : h < 12 ? '早上好' : h < 14 ? '中午好' : h < 18 ? '下午好' : '晚上好';
+      var name = (user && user.nickname) || (user && user.username) || '运动达人';
+      document.getElementById('greeting').textContent = g + '，' + name;
+
+      var now = new Date();
+      var weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+      document.getElementById('date-sub').textContent = (now.getMonth()+1)+'月'+now.getDate()+'日 '+weekdays[now.getDay()];
+      document.getElementById('stats-date').textContent = (now.getMonth()+1)+'/'+now.getDate();
+    }
+
+    /* ---- Weather (wttr.in) ---- */
+    var weatherZhMap = {
+      'Clear': '晴', 'Sunny': '晴', 'Cloudy': '多云', 'Partly cloudy': '局部多云', 'Partly Cloudy': '局部多云',
+      'Overcast': '阴', 'Rain': '雨', 'Light rain': '小雨', 'Light Rain': '小雨',
+      'Heavy rain': '大雨', 'Heavy Rain': '大雨', 'Snow': '雪', 'Fog': '雾',
+      'Windy': '大风', 'Thunderstorm': '雷暴', 'Haze': '雾霾', 'Drizzle': '毛毛雨',
+      'Moderate rain': '中雨', 'Moderate Rain': '中雨', 'Mist': '薄雾', 'Freezing fog': '冻雾',
+      'Patchy rain possible': '可能有小雨', 'Patchy rain nearby': '附近有小雨',
+      'Light drizzle': '小毛毛雨', 'Light snow': '小雪', 'Heavy snow': '大雪',
+      'Blizzard': '暴风雪', 'Ice pellets': '冰粒', 'Light rain shower': '阵雨',
+      'Moderate or heavy rain shower': '大阵雨', 'Patchy light rain with thunder': '雷阵雨'
+    };
+    function translateWeather(desc) {
+      if (!desc) return '';
+      desc = desc.trim();
+      if (weatherZhMap[desc]) return weatherZhMap[desc];
+      // Try partial match
+      for (var key in weatherZhMap) {
+        if (desc.toLowerCase().indexOf(key.toLowerCase()) !== -1) return weatherZhMap[key];
+      }
+      return desc; // return original if no match
+    }
+    function initWeather() {
+      fetch('https://wttr.in/?format=j1',{headers:{'Accept':'application/json'}})
+      .then(function(r){return r.json()})
+      .then(function(data){
+        var c = data.current_condition[0];
+        var desc = (c.lang_zh && c.lang_zh[0]) ? c.lang_zh[0].value : translateWeather(c.weatherDesc[0].value);
+        document.getElementById('weather-display').innerHTML =
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
+          '<span>' + c.temp_C + '\u00B0 ' + desc + '</span>';
+      }).catch(function(){});
+    }
+
+    /* ---- Load Stats ---- */
+    async function loadStats() {
+      var steps = 0, calories = 0, duration = 0;
+      try {
+        var stepRes = await fetch('/api/steps/' + user.id);
+        var stepData = await stepRes.json();
+        if (stepData.success) steps = stepData.steps || 0;
+      } catch(e) {}
+
+      // 获取今日训练记录来计算今日卡路里和时长
+      var todayCount = 0;
+      try {
+        var todayRes = await fetch('/api/workouts/' + user.id + '/today');
+        var todayData = await todayRes.json();
+        if (todayData.success && todayData.workouts) {
+          todayCount = todayData.workouts.length;
+          todayData.workouts.forEach(function(w) {
+            calories += (w.calories_burned || 0);
+            duration += (w.duration_minutes || 0);
+          });
+        }
+      } catch(e) {}
+
+      renderStats(steps, calories, duration, todayCount);
+    }
+
+    /* ---- Render Stats (with count-up) ---- */
+    function renderStats(steps, calories, duration, workoutCount) {
+      var container = document.getElementById('stats-container');
+      container.innerHTML =
+        '<div class="stat-circle">' +
+          '<div class="stat-circle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>' +
+          '<span class="stat-value" id="val-steps">0</span>' +
+          '<span class="stat-unit">步</span>' +
+          '<span class="stat-label">步数</span>' +
+        '</div>' +
+        '<div class="stat-circle">' +
+          '<div class="stat-circle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4.97 0-9-2.69-9-6v0c0-4 4.03-6 9-6s9 2 9 6v0c0 3.31-4.03 6-9 6z"/><path d="M15 2.5c.5 1 .5 2 0 3s-1.5 1.5-2 2.5"/><path d="M9 2.5c-.5 1-.5 2 0 3s1.5 1.5 2 2.5"/><path d="M12 8v6"/></svg></div>' +
+          '<span class="stat-value" id="val-cal">0</span>' +
+          '<span class="stat-unit">kcal</span>' +
+          '<span class="stat-label">卡路里</span>' +
+        '</div>' +
+        '<div class="stat-circle">' +
+          '<div class="stat-circle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>' +
+          '<span class="stat-value" id="val-dur">0</span>' +
+          '<span class="stat-unit">分钟</span>' +
+          '<span class="stat-label">运动时长</span>' +
+        '</div>';
+
+      animateNumber('val-steps', steps, 800);
+      animateNumber('val-cal', calories, 800);
+      animateNumber('val-dur', duration, 800);
+
+      var bottom = document.getElementById('stats-bottom');
+      bottom.style.display = 'flex';
+      document.getElementById('workout-info').textContent =
+        workoutCount > 0 ? '今日训练 ' + workoutCount + ' 次' : '今天还没有训练';
+
+      // BMI
+      if (user.height && user.weight && user.height > 0 && user.weight > 0) {
+        var h = user.height / 100;
+        var bmi = (user.weight / (h * h)).toFixed(1);
+        var chip = document.getElementById('bmi-chip');
+        chip.style.display = 'block';
+        chip.textContent = 'BMI ' + bmi;
+      }
+    }
+
+    /* ---- Count-up Animation ---- */
+    function animateNumber(id, target, duration) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      target = Math.max(0, Math.floor(target));
+      if (target === 0) { el.textContent = '0'; return; }
+      var start = 0;
+      var startTime = null;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = Math.floor(eased * target);
+        el.textContent = current.toLocaleString();
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* ---- Weekly Chart ---- */
+    async function loadWeeklyChart() {
+      try {
+        var [stepRes, workoutRes] = await Promise.all([
+          fetch('/api/steps/' + user.id + '/week'),
+          fetch('/api/workouts/' + user.id + '/week')
+        ]);
+        var stepData = await stepRes.json();
+        var workoutData = await workoutRes.json();
+        if (stepData.success || workoutData.success) {
+          renderWeekChart(
+            stepData.success ? stepData.records : [],
+            workoutData.success ? workoutData.records : []
+          );
+        }
+      } catch(e) {}
+    }
+
+    function renderWeekChart(stepRecords, workoutRecords) {
+      var dayNames = ['周一','周二','周三','周四','周五','周六','周日'];
+      var today = new Date().getDay(); // 0=Sun
+      var todayIdx = today === 0 ? 6 : today - 1; // Mon=0 ... Sun=6
+
+      // 合并步数和训练数据到每日活动量 map
+      var map = {}; // idx -> { steps, calories, duration, workouts }
+      var totalSteps = 0;
+
+      // 步数数据
+      stepRecords.forEach(function(r) {
+        var d = new Date(r.date + 'T00:00:00');
+        var idx = d.getDay() === 0 ? 6 : d.getDay() - 1;
+        if (!map[idx]) map[idx] = { steps: 0, calories: 0, duration: 0, workouts: 0 };
+        map[idx].steps += (r.steps || 0);
+        map[idx].calories += (r.calories || 0);
+        totalSteps += (r.steps || 0);
+      });
+
+      // 训练数据
+      workoutRecords.forEach(function(r) {
+        var d = new Date(r.date + 'T00:00:00');
+        var idx = d.getDay() === 0 ? 6 : d.getDay() - 1;
+        if (!map[idx]) map[idx] = { steps: 0, calories: 0, duration: 0, workouts: 0 };
+        map[idx].calories += (r.calories_burned || 0);
+        map[idx].duration += (r.duration_minutes || 0) + Math.floor((r.duration_seconds || 0) / 60);
+        map[idx].steps += (r.steps || 0); // 跑步/步行类的步数
+        map[idx].workouts += 1;
+        // 如果是跑步/步行类，步数已在上面的 steps 字段
+      });
+
+      // 计算每日活动量分数 = 步数 + 训练时长*100（分钟换算为等效步数）
+      var scoreMap = {};
+      for (var k in map) {
+        scoreMap[k] = map[k].steps + (map[k].duration * 100);
+      }
+
+      var maxScore = 1;
+      for (var k in scoreMap) { if (scoreMap[k] > maxScore) maxScore = scoreMap[k]; }
+
+      document.getElementById('week-total-steps').textContent = '总计 ' + totalSteps.toLocaleString() + ' 步';
+
+      var html = '';
+      for (var i = 0; i < 7; i++) {
+        var score = scoreMap[i] || 0;
+        var pct = Math.round((score / maxScore) * 100);
+        var cls = score >= 5000 ? 'high' : score >= 2000 ? 'mid' : score > 0 ? 'low' : 'empty';
+        var isToday = i === todayIdx;
+        var dayData = map[i];
+        var valueText = '';
+        if (dayData) {
+          if (dayData.workouts > 0 && dayData.duration > 0) {
+            valueText = dayData.duration + '分';
+          } else if (dayData.steps > 0) {
+            valueText = formatSteps(dayData.steps);
+          }
+        }
+
+        html += '<div class="chart-bar-col">' +
+          '<div class="chart-bar-value' + (isToday ? ' today' : '') + '">' + valueText + '</div>' +
+          '<div class="chart-bar-track"><div class="chart-bar-fill ' + cls + '" style="height:0%" data-height="' + pct + '%"></div></div>' +
+          '<div class="chart-bar-label' + (isToday ? ' today' : '') + '">' + dayNames[i] + '</div>' +
+        '</div>';
+      }
+      document.getElementById('chart-bars').innerHTML = html;
+
+      // Animate bars in
+      setTimeout(function() {
+        document.querySelectorAll('.chart-bar-fill').forEach(function(bar) {
+          bar.style.height = bar.getAttribute('data-height');
+        });
+      }, 100);
+    }
+
+    function formatSteps(n) {
+      if (n >= 10000) return (n / 1000).toFixed(1).replace('.0','') + 'k';
+      return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n.toString();
+    }
+
+    /* ---- Load Courses ---- */
+    async function loadCourses() {
+      try {
+        var res = await fetch('/api/courses');
+        var data = await res.json();
+        if (data.success && data.courses && data.courses.length > 0) {
+          renderCourses(data.courses.slice(0, 6));
+        }
+      } catch(e) {}
+    }
+
+    /* ---- Friends List ---- */
+    function loadFriends() {
+      var u = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!u.id) return;
+      fetch('/api/friends/' + u.id).then(function(r){return r.json();}).then(function(data) {
+        var friends = data.friends || [];
+        var container = document.getElementById('friends-list');
+        if (!container) return;
+        if (friends.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:12px 0;color:var(--sf-text-tertiary);font-size:13px;width:100%;">暂无好友，去社区添加吧</div>';
+          return;
+        }
+        var html = '';
+        var show = friends.slice(0, 10);
+        show.forEach(function(f) {
+          var bgColor = f.avatar_color || '#DCFCE7';
+          var initial = f.avatar_initial || (f.nickname ? f.nickname.charAt(0) : '?');
+          var avatarHtml = f.avatar_url 
+            ? '<img src="' + f.avatar_url + '" style="width:100%;height:100%;object-fit:cover;">'
+            : '<span style="font-size:20px;font-weight:700;color:#15803D;">' + initial + '</span>';
+          html += '<a href="chat.html?uid=' + encodeURIComponent(f.id) + '&name=' + encodeURIComponent(f.nickname || '') + '" style="text-decoration:none;text-align:center;flex-shrink:0;display:block;">' +
+            '<div style="width:52px;height:52px;border-radius:50%;background:' + bgColor + ';display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.1);overflow:hidden;">' +
+            avatarHtml +
+            '<div style="position:absolute;bottom:1px;right:1px;width:12px;height:12px;border-radius:50%;background:#22C55E;border:2px solid var(--sf-bg);"></div>' +
+            '</div>' +
+            '<div style="font-size:11px;color:var(--sf-text-secondary);margin-top:4px;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (f.nickname || '好友') + '</div>' +
+          '</a>';
+        });
+        if (friends.length > 10) {
+          html += '<a href="social.html" style="text-decoration:none;text-align:center;flex-shrink:0;display:block;">' +
+            '<div style="width:52px;height:52px;border-radius:50%;background:var(--sf-bg-secondary);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--sf-text-tertiary);">+' + (friends.length - 10) + '</div>' +
+            '<div style="font-size:11px;color:var(--sf-text-tertiary);margin-top:4px;">更多</div>' +
+          '</a>';
+        }
+        container.innerHTML = html;
+      }).catch(function(){});
+    }
+
+    function renderCourses(courses) {
+      var typeGradients = {
+        'HIIT': 'course-gradient-hiit',
+        '瑜伽': 'course-gradient-yoga',
+        '力量': 'course-gradient-strength',
+        '跑步': 'course-gradient-run',
+        '拉伸': 'course-gradient-stretch'
+      };
+      var typeIcons = {
+        'HIIT': '\uD83D\uDD25',
+        '瑜伽': '\uD83E\uDDD8',
+        '力量': '\uD83D\uDCAA',
+        '跑步': '\uD83C\uDFC3',
+        '拉伸': '\uD83E\uDDF8'
+      };
+
+      var html = '';
+      courses.forEach(function(c) {
+        var grad = typeGradients[c.type] || 'course-gradient-run';
+        var icon = typeIcons[c.type] || '\uD83C\uDFCB\uFE0F';
+        html += '<a href="course-detail.html" class="course-card">' +
+          '<div class="course-card-banner ' + grad + '">' +
+            '<span class="course-type-icon">' + icon + '</span>' +
+            '<span class="course-diff-badge">' + (c.difficulty || '') + '</span>' +
+          '</div>' +
+          '<div class="course-card-body">' +
+            '<div class="course-card-name">' + c.name + '</div>' +
+            '<div class="course-card-meta">' +
+              '<span>' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                c.duration + '分钟' +
+              '</span>' +
+              '<span>' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c-4.97 0-9-2.69-9-6v0c0-4 4.03-6 9-6s9 2 9 6v0c0 3.31-4.03 6-9 6z"/><path d="M15 2.5c.5 1 .5 2 0 3s-1.5 1.5-2 2.5"/><path d="M9 2.5c-.5 1-.5 2 0 3s1.5 1.5 2 2.5"/><path d="M12 8v6"/></svg>' +
+                c.calories + 'kcal' +
+              '</span>' +
+            '</div>' +
+          '</div>' +
+        '</a>';
+      });
+      document.getElementById('courses-container').innerHTML = html;
+    }
+
+    var lastUnreadTotal = -1;
+    var notifSoundPlayed = sessionStorage.getItem('sportlife_notif_sound_played') === 'true';
+
+    // Check unread notifications
+    function checkUnreadNotifications() {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      fetch('/api/notifications/' + user.id + '/unread-count').then(function(r){return r.json();}).then(function(data) {
+        var dot = document.getElementById('bell-dot');
+        if (dot) {
+          dot.style.display = (data.total > 0) ? 'flex' : 'none';
+          if (data.total > 0) dot.textContent = data.total > 9 ? '9+' : data.total;
+        }
+        // Only play sound when NEW notifications arrive (count increases)
+        if (lastUnreadTotal >= 0 && data.total > lastUnreadTotal) {
+          playNotifSound();
+        }
+        // First time seeing unread: play once, then remember
+        if (data.total > 0 && !notifSoundPlayed) {
+          notifSoundPlayed = true;
+          sessionStorage.setItem('sportlife_notif_sound_played', 'true');
+          playNotifSound();
+        }
+        // If all read, reset so next new notification can play
+        if (data.total === 0 && notifSoundPlayed) {
+          notifSoundPlayed = false;
+          sessionStorage.removeItem('sportlife_notif_sound_played');
+        }
+        lastUnreadTotal = data.total;
+      }).catch(function(){});
+    }
+
+    // Backup event bindings (mobile Safari + ngrok compatibility)
+    document.querySelectorAll('[onclick]').forEach(function(el) {
+      var onclickAttr = el.getAttribute('onclick');
+      if (onclickAttr && onclickAttr.indexOf('window.location') === -1) {
+        var fnMatch = onclickAttr.match(/^(\w+)\(/);
+        if (fnMatch) {
+          var fnName = fnMatch[1];
+          el.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof window[fnName] === 'function') window[fnName]();
+          }, true);
+        }
+      }
+    });
+
+    // Bell button click - toggle notification panel
+    document.addEventListener('DOMContentLoaded', function() {
+      var bellBtn = document.getElementById('bell-btn');
+      if (bellBtn) {
+        bellBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var panel = document.getElementById('notification-panel');
+          if (!panel) return;
+          if (panel.style.display === 'none') {
+            loadNotifications();
+            panel.style.display = 'block';
+          } else {
+            panel.style.display = 'none';
+          }
+        });
+      }
+
+      // Mark all read button
+      var markReadBtn = document.getElementById('mark-all-read-btn');
+      if (markReadBtn) {
+        markReadBtn.addEventListener('click', function() {
+          var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+          if (!user.id) return;
+          // Mark notifications read + mark ALL unread messages read
+          Promise.all([
+            fetch('/api/notifications/read/' + user.id, {method:'POST'}),
+            fetch('/api/chat/messages/read-all/' + user.id, {method:'POST'})
+          ]).then(function(){
+            loadNotifications();
+            checkUnreadNotifications();
+          });
+        });
+      }
+    });
+
+    // Close panel when clicking outside
+    document.addEventListener('click', function(e) {
+      var panel = document.getElementById('notification-panel');
+      if (panel && !panel.contains(e.target)) {
+        panel.style.display = 'none';
+      }
+    });
+
+    // Notification sound
+    function playNotifSound() {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } catch(e) {}
+    }
+
+    function loadNotifications() {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      var list = document.getElementById('notification-list');
+      list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sf-text-tertiary);font-size:13px;">加载中...</div>';
+
+      fetch('/api/notifications/' + user.id).then(function(r){return r.json();}).then(function(data) {
+        var notifs = data.notifications || [];
+        // 过滤已读通知（保留未读 + 好友请求中未处理的）
+        notifs = notifs.filter(function(n) {
+          if (n.is_read) return false;
+          return true;
+        });
+        if (notifs.length === 0) {
+          list.innerHTML = '<div style="text-align:center;padding:30px 20px;color:var(--sf-text-tertiary);font-size:14px;">暂无新通知</div>';
+          return;
+        }
+        list.innerHTML = notifs.map(function(n) {
+          var isUnread = !n.is_read;
+          var actorName = n.actor ? n.actor.nickname : '系统';
+          var actorInitial = actorName.charAt(0);
+          var actorColor = n.actor ? (n.actor.avatar_color || '#DCFCE7') : '#E2E8F0';
+          var actorAvatarUrl = n.actor ? n.actor.avatar_url : '';
+          var msg = n.message || n.content || '';
+          var time = n.created_at ? formatNotifTime(n.created_at) : '';
+
+          var actionsHtml = '';
+          if (n.type === 'friend_request') {
+            actionsHtml = '<div style="display:flex;gap:8px;margin-top:8px;">' +
+              '<button onclick="acceptFriendRequest(event, \'' + (n.actor_id || n.from_user_id || '') + '\')" style="flex:1;padding:6px 0;border-radius:8px;background:var(--sf-primary);color:white;font-size:13px;font-weight:600;border:none;cursor:pointer;">接受</button>' +
+              '<button onclick="rejectFriendRequest(event, \'' + (n.actor_id || n.from_user_id || '') + '\')" style="flex:1;padding:6px 0;border-radius:8px;background:var(--sf-bg-tertiary);color:var(--sf-text-secondary);font-size:13px;font-weight:600;border:none;cursor:pointer;">拒绝</button>' +
+            '</div>';
+          }
+
+          var avatarHtml = actorAvatarUrl
+            ? '<img class="notif-avatar" src="' + actorAvatarUrl + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="">'
+            : '<div class="notif-avatar" style="background:' + actorColor + ';color:#22C55E;">' + actorInitial + '</div>';
+
+          return '<div class="notif-item' + (isUnread ? ' unread' : '') + '" style="cursor:pointer;" data-notif-type="' + (n.type || '') + '" data-actor-id="' + (n.actor_id || n.from_user_id || '') + '">' +
+            avatarHtml +
+            '<div class="notif-body">' +
+              '<div class="notif-text"><strong>' + escapeHtml(actorName) + '</strong> ' + escapeHtml(msg) + '</div>' +
+              '<div class="notif-time">' + time + '</div>' +
+              actionsHtml +
+            '</div>' +
+            (isUnread ? '<div style="width:8px;height:8px;border-radius:50%;background:var(--sf-primary);flex-shrink:0;margin-top:6px;"></div>' : '') +
+          '</div>';
+        }).join('');
+
+        // After rendering, add click delegation for notification items
+        var notifItems = list.querySelectorAll('.notif-item');
+        notifItems.forEach(function(item) {
+          item.addEventListener('click', function(e) {
+            // Don't navigate if clicking on action buttons
+            if (e.target.closest('button')) return;
+            var type = this.getAttribute('data-notif-type');
+            var actorId = this.getAttribute('data-actor-id');
+            // Close notification panel
+            var panel = document.getElementById('notification-panel');
+            if (panel) panel.style.display = 'none';
+            // Navigate based on type
+            if (type === 'friend_request' && actorId) {
+              navigateTo('user-profile.html?uid=' + actorId);
+            } else if ((type === 'message' || type === 'chat') && actorId) {
+              navigateTo('chat.html?uid=' + actorId);
+            }
+          });
+        });
+      }).catch(function() {
+        list.innerHTML = '<div style="text-align:center;padding:30px 20px;color:var(--sf-text-tertiary);font-size:14px;">加载失败</div>';
+      });
+    }
+
+    function formatNotifTime(dateStr) {
+      if (!dateStr) return '';
+      var now = new Date();
+      var d = new Date(dateStr.replace(' ', 'T'));
+      var diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return '刚刚';
+      if (diff < 3600) return Math.floor(diff/60) + '分钟前';
+      if (diff < 86400) return Math.floor(diff/3600) + '小时前';
+      if (diff < 604800) return Math.floor(diff/86400) + '天前';
+      return dateStr.substring(5, 10);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function showToast(msg, type) {
+      var container = document.getElementById('toast-container');
+      if (!container) { container = document.createElement('div'); container.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:10000;pointer-events:none;'; document.body.appendChild(container); }
+      var t = document.createElement('div');
+      t.style.cssText = 'padding:10px 20px;border-radius:8px;color:#fff;font-size:14px;font-weight:500;margin-bottom:8px;opacity:0;transform:translateY(-10px);transition:opacity 0.3s,transform 0.3s;pointer-events:auto;';
+      t.style.background = (type === 'error') ? '#EF4444' : '#22C55E';
+      t.textContent = msg;
+      container.appendChild(t);
+      requestAnimationFrame(function() { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+      setTimeout(function() { t.style.opacity = '0'; setTimeout(function() { t.remove(); }, 300); }, 3000);
+    }
+
+    function acceptFriendRequest(event, fromUserId) {
+      event.stopPropagation();
+      event.preventDefault();
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id || !fromUserId) return;
+      fetch('/api/friends/accept', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ from_user_id: fromUserId, to_user_id: user.id })
+      }).then(function(r){return r.json();}).then(function(data) {
+        if (data.success) {
+          showToast('已添加好友');
+          loadNotifications();
+          checkUnreadNotifications();
+        }
+      }).catch(function(){});
+    }
+    // Expose to global scope so inline onclick handlers can reach it
+    window.acceptFriendRequest = acceptFriendRequest;
+
+    function rejectFriendRequest(event, fromUserId) {
+      event.stopPropagation();
+      event.preventDefault();
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id || !fromUserId) return;
+      fetch('/api/friends/reject', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ from_user_id: fromUserId, to_user_id: user.id })
+      }).then(function(r){return r.json();}).then(function(data) {
+        if (data.success) {
+          showToast('已拒绝');
+          loadNotifications();
+          checkUnreadNotifications();
+        }
+      }).catch(function(){});
+    }
+    // Expose to global scope so inline onclick handlers can reach it
+    window.rejectFriendRequest = rejectFriendRequest;
+
+    // Backup event delegation for accept/reject buttons inside notification panel
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var onclickAttr = btn.getAttribute('onclick') || '';
+      if (onclickAttr.indexOf('acceptFriendRequest') !== -1) {
+        e.preventDefault();
+        e.stopPropagation();
+        var match = onclickAttr.match(/acceptFriendRequest\s*\(\s*event\s*,\s*'([^']+)'\s*\)/);
+        if (match) acceptFriendRequest(e, match[1]);
+      } else if (onclickAttr.indexOf('rejectFriendRequest') !== -1) {
+        e.preventDefault();
+        e.stopPropagation();
+        var match = onclickAttr.match(/rejectFriendRequest\s*\(\s*event\s*,\s*'([^']+)'\s*\)/);
+        if (match) rejectFriendRequest(e, match[1]);
+      }
+    }, true);
+
+    // Load XP info on home page
+    function loadHomeXP() {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      // Check if checked in today
+      fetch('/api/checkin/' + user.id + '/calendar').then(function(r){return r.json();}).then(function(calData) {
+        if (calData.success && calData.calendar) {
+          var today = new Date().toISOString().slice(0, 10);
+          if (calData.calendar.indexOf(today) !== -1) {
+            var btn = document.getElementById('home-checkin-btn');
+            if (btn) btn.classList.add('checked');
+          }
+        }
+      }).catch(function(){});
+    }
+    // Call it
+    loadHomeXP();
+
+    // Load user XP/Level
+    function loadUserXP() {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      fetch('/api/xp/' + user.id).then(function(r){return r.json();}).then(function(data) {
+        var info = data.level_info || { level: 1, title: '运动新手', xpNeeded: 0 };
+        var currentXP = data.total_xp || 0;
+        var level = data.level || 1;
+        var title = data.title || info.title || '运动新手';
+        var xpNeeded = info.xpNeeded || 0;
+        var xpToNext = data.xp_to_next || 100;
+        var nextTitle = data.next_title || '';
+        var nextLevelTotalXP = currentXP + xpToNext;
+        var progress = nextLevelTotalXP > xpNeeded ? Math.round(((currentXP - xpNeeded) / (nextLevelTotalXP - xpNeeded)) * 100) : 100;
+        if (progress > 100) progress = 100;
+        if (progress < 0) progress = 0;
+
+        var levelTitle = document.getElementById('level-title');
+        var levelXpText = document.getElementById('level-xp-text');
+        var levelXpBar = document.getElementById('level-xp-bar');
+        var levelBadge = document.getElementById('level-badge');
+        var levelAvatar = document.getElementById('level-avatar');
+
+        if (levelTitle) levelTitle.textContent = title;
+        if (levelXpText) levelXpText.textContent = currentXP + '/' + (currentXP + xpToNext) + ' XP';
+        if (levelXpBar) levelXpBar.style.width = progress + '%';
+        if (levelBadge) levelBadge.textContent = 'Lv' + level;
+
+        // Set avatar
+        var nickname = user.nickname || '?';
+        if (levelAvatar) {
+          if (user.avatar_url) {
+            levelAvatar.innerHTML = '<img src="' + user.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">';
+            levelAvatar.style.background = 'transparent';
+          } else {
+            levelAvatar.textContent = nickname.charAt(0);
+            levelAvatar.style.background = user.avatar_color || 'var(--sf-primary)';
+          }
+        }
+      }).catch(function(){});
+    }
+    // Call it
+    loadUserXP();
+
+
+  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script>
+</body>
+</html>

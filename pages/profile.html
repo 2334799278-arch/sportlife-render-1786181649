@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SportLife - 我的</title>
+
+  <script src="/assets/vendor/tailwind.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'PingFang SC', 'system-ui', 'sans-serif'] },
+          colors: {
+            sf: {
+              primary: '#22C55E', 'primary-hover': '#16A34A', 'primary-light': '#DCFCE7', 'primary-surface': '#F0FDF4',
+              accent: '#F97316', 'accent-light': '#FFF7ED',
+              sky: '#38BDF8', 'sky-light': '#F0F9FF',
+              bg: '#FFFFFF', 'bg-secondary': '#F8FAFC', 'bg-tertiary': '#F1F5F9',
+              'text-primary': '#0F172A', 'text-secondary': '#475569', 'text-tertiary': '#94A3B8',
+              'border-light': '#E2E8F0',
+            }
+          },
+          borderRadius: { 'sf-md': '10px', 'sf-lg': '14px', 'sf-xl': '20px', 'sf-full': '9999px' },
+          boxShadow: { 'sf-md': '0 4px 12px rgba(0,0,0,0.05)' },
+        }
+      }
+    }
+  </script>
+  <style id="theme-vars">
+    :root {
+      --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4;
+      --sf-accent: #F97316; --sf-accent-light: #FFF7ED;
+      --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF;
+      --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9;
+      --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8;
+      --sf-border-light: #E2E8F0;
+      --sf-font-sans: 'Inter', 'PingFang SC', system-ui, sans-serif;
+      --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px;
+      --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    html.dark {
+      --sf-bg: #0F172A;
+      --sf-bg-secondary: #1E293B;
+      --sf-bg-tertiary: #334155;
+      --sf-text-primary: #F8FAFC;
+      --sf-text-secondary: #CBD5E1;
+      --sf-text-tertiary: #64748B;
+      --sf-border-light: #334155;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: var(--sf-font-sans); background: var(--sf-bg-secondary); color: var(--sf-text-primary); margin: 0 !important; min-height: 100vh; padding-bottom: 80px; width: 100%; }
+    input:focus, textarea:focus { outline: none; }
+    .gender-pill input[type="radio"] { display: none; }
+    .gender-pill label { cursor: pointer; padding: 6px 18px; border-radius: var(--sf-radius-full); border: 1.5px solid var(--sf-border-light); font-size: 14px; font-weight: 500; color: var(--sf-text-secondary); transition: all 0.2s; }
+    .gender-pill input[type="radio"]:checked + label { background: var(--sf-primary-light); border-color: var(--sf-primary); color: var(--sf-primary-hover); font-weight: 600; }
+    .stat-number { font-size: 22px; font-weight: 800; color: var(--sf-text-primary); line-height: 1; }
+    .stat-label { font-size: 12px; color: var(--sf-text-tertiary); margin-top: 6px; }
+    .menu-row { display: flex; align-items: center; padding: 16px 18px; background: var(--sf-bg); border-bottom: 1px solid var(--sf-bg-tertiary); cursor: pointer; transition: all 0.25s ease; }
+    .menu-row:first-child { border-radius: var(--sf-radius-lg) var(--sf-radius-lg) 0 0; }
+    .menu-row:last-child { border-radius: 0 0 var(--sf-radius-lg) var(--sf-radius-lg); border-bottom: none; }
+    .menu-row:active { background: var(--sf-bg-tertiary); transform: scale(0.98); }
+    .menu-row .menu-icon-wrap { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 14px; flex-shrink: 0; }
+    .menu-row .menu-label { flex: 1; font-size: 15px; font-weight: 500; color: var(--sf-text-primary); }
+    .menu-row .menu-extra { font-size: 13px; color: var(--sf-text-tertiary); margin-right: 8px; }
+    .menu-row .chevron { flex-shrink: 0; }
+    .panel-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); z-index: 500; }
+    .panel-overlay.active { display: block; }
+    .panel-sheet { position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; transform: translateY(100%); width: 100%; max-width: 500px; background: var(--sf-bg); border-radius: var(--sf-radius-xl) var(--sf-radius-xl) 0 0; z-index: 501; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); max-height: 85vh; overflow-y: auto; }
+    .panel-sheet.active { transform: translateY(0); }
+    .input-field { width: 100%; padding: 12px 14px; border: 1.5px solid var(--sf-border-light); border-radius: var(--sf-radius-md); font-size: 15px; font-family: var(--sf-font-sans); color: var(--sf-text-primary); background: var(--sf-bg-secondary); transition: border-color 0.2s; }
+    .input-field:focus { border-color: var(--sf-primary); background: var(--sf-bg); }
+    .input-field::placeholder { color: var(--sf-text-tertiary); }
+    .strength-bar { height: 4px; border-radius: 2px; background: var(--sf-bg-tertiary); margin-top: 6px; overflow: hidden; }
+    .strength-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; }
+    .bottom-sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--sf-border-light); margin: 10px auto 6px; }
+    .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; pointer-events: none; }
+    .toast-msg { padding: 12px 24px; border-radius: var(--sf-radius-md); color: #fff; font-size: 14px; font-weight: 500; margin-bottom: 8px; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s, transform 0.3s; pointer-events: auto; }
+    .toast-msg.show { opacity: 1; transform: translateY(0); }
+    .avatar-upload-btn { position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--sf-primary); border: 2.5px solid var(--sf-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .suffix-group { position: relative; }
+    .suffix-group input { padding-right: 36px; }
+    .suffix-group .suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--sf-text-tertiary); font-weight: 500; pointer-events: none; }
+    .post-card { background: var(--sf-bg); border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); position:relative; }
+    .post-card .post-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .post-card .post-time { font-size:12px; color:var(--sf-text-tertiary); }
+    .post-card .post-content { font-size:14px; color:var(--sf-text-primary); line-height:1.7; margin:0; }
+    .post-card .post-actions { display:flex; align-items:center; padding-top:10px; margin-top:10px; border-top:1px solid var(--sf-border-light); gap:4px; }
+    .post-card .post-actions button { display:flex; align-items:center; gap:4px; background:none; border:none; font-size:13px; color:var(--sf-text-tertiary); cursor:pointer; padding:4px 8px; }
+    .three-dot-btn { background:none; border:none; cursor:pointer; padding:4px 8px; color:var(--sf-text-tertiary); }
+    .post-menu { position:absolute; top:40px; right:12px; background:white; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.15); z-index:10; overflow:hidden; min-width:120px; animation:fadeIn 0.15s ease; }
+    .post-menu button { display:flex; align-items:center; gap:8px; width:100%; padding:12px 16px; background:none; border:none; font-size:14px; color:var(--sf-text-primary); cursor:pointer; text-align:left; }
+    .post-menu button:hover { background:var(--sf-bg-secondary); }
+    .post-menu button.delete-btn { color:#EF4444; }
+    @keyframes fadeIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+
+    /* SOUL-Inspired Hero Section — Premium Vibrant Gradient + Pattern Overlay */
+    .profile-hero {
+      position: relative;
+      height: 220px;
+      background: linear-gradient(135deg, #22C55E 0%, #38BDF8 100%);
+      overflow: hidden;
+    }
+    .profile-hero-bg {
+      position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0;
+    }
+    .profile-hero-bg::after {
+      content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.25) 100%);
+    }
+    .profile-hero-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 12px 16px;
+      z-index: 10;
+    }
+    .profile-hero-header .gear-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .profile-hero-header .gear-btn:active { background: rgba(255,255,255,0.35); transform: scale(0.92); }
+    .profile-hero-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 50px;
+      z-index: 5;
+    }
+    .hero-avatar-wrap {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .hero-avatar-ring {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      padding: 4px;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .hero-avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .hero-nickname {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      margin-bottom: 2px;
+    }
+    .hero-bio {
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      max-width: 240px;
+      text-align: center;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    /* SOUL-Inspired Settings Menu Row */
+    .settings-menu-row {
+      display: flex;
+      align-items: center;
+      padding: 15px 16px;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border-bottom: 1px solid var(--sf-bg-tertiary);
+    }
+    .settings-menu-row:last-child { border-bottom: none; }
+    .settings-menu-row:active { background: var(--sf-bg-tertiary); transform: scale(0.98); }
+    .settings-menu-row span { flex: 1; font-size: 15px; font-weight: 500; color: var(--sf-text-primary); }
+    .settings-menu-row .chevron { flex-shrink: 0; }
+    .settings-menu-row a { text-decoration: none; display: block; width: 100%; }
+
+    /* Edit Profile Pill Button — Premium btn-secondary style */
+    .edit-profile-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 28px;
+      border-radius: 9999px;
+      border: 2px solid #fff;
+      background: rgba(255,255,255,0.92);
+      color: var(--sf-primary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .edit-profile-pill:hover { background: #fff; transform: translateY(-1px); }
+    .edit-profile-pill:active { transform: scale(0.96) translateY(0); }
+
+    /* Logout Menu Row (Red) */
+    .logout-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 18px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .logout-row:active { background: var(--sf-bg-tertiary); }
+    .logout-row span { font-size: 15px; font-weight: 600; color: #EF4444; }
+  </style>
+  <script src="theme-init.js"></script>
+  <script src="ngrok-fix.js"></script>
+  <script src="tab-prefetch.js"></script>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ==================== HERO SECTION (Gradient Header + Avatar) ==================== -->
+  <div class="profile-hero">
+    <!-- Background image layer -->
+    <div class="profile-hero-bg" id="profile-hero-bg" style="background:linear-gradient(135deg,#22C55E,#38BDF8);"></div>
+    <!-- Change background button (uses label for mobile file picker compatibility) -->
+    <label for="bg-input" style="position:absolute;top:12px;left:12px;z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);pointer-events:auto;border:1.5px solid rgba(255,255,255,0.5);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </label>
+    <input type="file" id="bg-input" accept="image/*" style="display:none" onchange="handleBgUpload(this.files[0])">
+    <!-- Transparent Header with Gear Icon -->
+    <div class="profile-hero-header">
+      <button class="gear-btn" onclick="openSettingsPanel()" aria-label="设置">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <!-- Hero Content: Avatar + Name + Bio -->
+    <div class="profile-hero-content">
+      <div class="hero-avatar-wrap" id="header-avatar-wrap">
+        <div class="hero-avatar-ring">
+          <div id="avatar-display" class="hero-avatar-inner flex items-center justify-center text-2xl font-bold text-white" style="background:#DCFCE7">
+            <!-- JS will fill: either <img> or initial letter -->
+          </div>
+        </div>
+        <!-- Hidden avatar upload input for the hero area -->
+        <div class="avatar-upload-btn" style="border-color:#fff;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <input type="file" id="header-avatar-input" accept="image/*" class="hidden" onchange="handleAvatarUpload(this.files[0])">
+        <label for="header-avatar-input" class="absolute inset-0 rounded-full cursor-pointer" style="z-index:10;"></label>
+      </div>
+      <div class="hero-nickname" id="display-name">--</div>
+      <div class="hero-bio" id="display-bio"></div>
+    </div>
+  </div>
+
+  <!-- ==================== EDIT PROFILE BUTTON ==================== -->
+  <div class="flex justify-center" style="margin-top:-20px; margin-bottom:20px; position:relative; z-index:5;">
+    <button class="edit-profile-pill" onclick="openEditPanel()">编辑资料</button>
+  </div>
+
+  <!-- ==================== STATS ROW ==================== -->
+  <section class="mx-5 mb-5 rounded-sf-xl bg-white shadow-sf-md">
+    <div class="grid grid-cols-3 py-5 px-2 text-center">
+      <div>
+        <div class="stat-number" id="total-workouts">0</div>
+        <div class="stat-label">训练次数</div>
+      </div>
+      <div style="border-left:1px solid var(--sf-border-light); border-right:1px solid var(--sf-border-light);">
+        <div class="stat-number" id="total-hours">0</div>
+        <div class="stat-label">训练时长(h)</div>
+      </div>
+      <div>
+        <div class="stat-number" id="streak-days">0</div>
+        <div class="stat-label">连续打卡</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SOUL-STYLE MENU LIST ==================== -->
+  <section class="mx-5 mb-5 rounded-sf-xl overflow-hidden bg-white shadow-sf-md">
+    <!-- 我的动态 -->
+    <div class="menu-row" onclick="document.getElementById('my-posts-section').scrollIntoView({behavior:'smooth'})">
+      <div class="menu-icon-wrap" style="background:var(--sf-primary-light);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <span class="menu-label">我的动态</span>
+      <span class="menu-extra" id="my-posts-count"></span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <!-- 我的成就 -->
+    <a href="achievements.html" class="menu-row" style="text-decoration:none;display:flex;">
+      <div class="menu-icon-wrap" style="background:var(--sf-accent-light);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+      </div>
+      <span class="menu-label">我的成就</span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </section>
+
+  <!-- ==================== 账号设置 (Account Settings) ==================== -->
+  <section class="mx-5 mb-5 rounded-sf-xl overflow-hidden bg-white shadow-sf-md">
+    <!-- 账号与安全 -->
+    <div class="menu-row" onclick="showToast('账号与安全功能开发中', 'info')">
+      <div class="menu-icon-wrap" style="background:#EFF6FF;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+      </div>
+      <span class="menu-label">账号与安全</span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <!-- 手机号绑定 -->
+    <div class="menu-row" onclick="showToast('手机号绑定功能开发中', 'info')">
+      <div class="menu-icon-wrap" style="background:#F0FDF4;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <span class="menu-label">手机号绑定</span>
+      <span class="menu-extra" id="bind-phone-hint">未绑定</span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <!-- 隐私设置 -->
+    <div class="menu-row" onclick="showToast('隐私设置功能开发中', 'info')">
+      <div class="menu-icon-wrap" style="background:#FFF7ED;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <span class="menu-label">隐私设置</span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <!-- 消息通知 -->
+    <div class="menu-row" onclick="showToast('消息通知功能开发中', 'info')">
+      <div class="menu-icon-wrap" style="background:#FEF2F2;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <span class="menu-label">消息通知</span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </section>
+
+  <!-- My Posts Section -->
+  <section style="padding:0 20px 20px;" id="my-posts-section">
+    <h3 style="font-size:16px;font-weight:700;color:var(--sf-text-primary);margin-bottom:14px;">我的动态</h3>
+    <div id="my-posts-list">
+      <div style="text-align:center;padding:24px;color:var(--sf-text-tertiary);font-size:13px;">加载中...</div>
+    </div>
+  </section>
+
+  <!-- Logout Button -->
+  <section class="mx-5 mb-5">
+    <div class="rounded-sf-xl overflow-hidden bg-white shadow-sf-md">
+      <div class="logout-row" id="logout-btn" onclick="handleLogout()">
+        <span>退出登录</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SETTINGS PANEL (Bottom Sheet) ==================== -->
+  <div class="panel-overlay" id="settings-overlay" onclick="closeSettingsPanel()"></div>
+  <div class="panel-sheet" id="settings-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <div class="px-5 pt-3 pb-8">
+      <h3 class="text-lg font-bold mb-4" style="color:var(--sf-text-primary);">设置</h3>
+      <div class="rounded-xl overflow-hidden" style="background:var(--sf-bg-secondary);">
+        <!-- 个人资料 -->
+        <div class="settings-menu-row" onclick="closeSettingsPanel();openEditPanel();">
+          <span>个人资料</span>
+          <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <!-- 修改密码 -->
+        <div class="settings-menu-row" onclick="closeSettingsPanel();openPasswordPanel();">
+          <span>修改密码</span>
+          <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <!-- 系统设置 -->
+        <a href="settings.html" class="settings-menu-row" style="text-decoration:none;display:flex;">
+          <span>系统设置</span>
+          <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== EDIT PROFILE PANEL (Bottom Sheet) ==================== -->
+  <div class="panel-overlay" id="edit-overlay" onclick="closeEditPanel()"></div>
+  <div class="panel-sheet" id="edit-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <div class="px-5 pt-3 pb-8">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-bold text-sf-text-primary">编辑个人资料</h3>
+        <button onclick="closeEditPanel()" class="w-8 h-8 rounded-full bg-sf-bg-tertiary flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Avatar in edit panel -->
+      <div class="flex items-center gap-4 mb-5">
+        <div class="relative">
+          <div id="edit-avatar-display" class="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center text-xl font-bold text-white" style="background:#DCFCE7">
+            <!-- JS filled -->
+          </div>
+          <div class="avatar-upload-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <input type="file" id="edit-avatar-input" accept="image/*" class="hidden" onchange="handleAvatarUpload(this.files[0])">
+          <label for="edit-avatar-input" class="absolute inset-0 rounded-full cursor-pointer" style="z-index:10;"></label>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-sf-text-primary">点击更换头像</p>
+          <p class="text-xs text-sf-text-tertiary mt-0.5">支持 JPG、PNG 格式</p>
+        </div>
+      </div>
+
+      <!-- Nickname -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">昵称</label>
+        <input type="text" id="edit-nickname" class="input-field" placeholder="请输入昵称" maxlength="20">
+      </div>
+
+      <!-- Gender -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-2">性别</label>
+        <div class="gender-pill flex gap-3">
+          <input type="radio" name="gender" id="gender-male" value="male">
+          <label for="gender-male">男</label>
+          <input type="radio" name="gender" id="gender-female" value="female">
+          <label for="gender-female">女</label>
+          <input type="radio" name="gender" id="gender-secret" value="secret">
+          <label for="gender-secret">保密</label>
+        </div>
+      </div>
+
+      <!-- Age -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">年龄</label>
+        <input type="number" id="edit-age" class="input-field" placeholder="请输入年龄" min="1" max="120">
+      </div>
+
+      <!-- Height -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">身高</label>
+        <div class="suffix-group">
+          <input type="number" id="edit-height" class="input-field" placeholder="请输入身高" min="50" max="250">
+          <span class="suffix">cm</span>
+        </div>
+      </div>
+
+      <!-- Weight -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">体重</label>
+        <div class="suffix-group">
+          <input type="number" id="edit-weight" class="input-field" placeholder="请输入体重" min="20" max="300">
+          <span class="suffix">kg</span>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">个人简介</label>
+        <textarea id="edit-bio" class="input-field resize-none" rows="3" placeholder="写点什么介绍自己..." maxlength="200"></textarea>
+      </div>
+
+      <!-- Save Button -->
+      <button class="w-full py-3.5 rounded-sf-lg bg-sf-primary text-white font-semibold text-[15px] hover:bg-sf-primary-hover transition-colors active:scale-[0.98]" onclick="saveProfile()">
+        保存
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== CHANGE PASSWORD PANEL (Bottom Sheet) ==================== -->
+  <div class="panel-overlay" id="password-overlay" onclick="closePasswordPanel()"></div>
+  <div class="panel-sheet" id="password-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <div class="px-5 pt-3 pb-8">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-bold text-sf-text-primary">修改密码</h3>
+        <button onclick="closePasswordPanel()" class="w-8 h-8 rounded-full bg-sf-bg-tertiary flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Old Password -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">旧密码</label>
+        <input type="password" id="old-password" class="input-field" placeholder="请输入旧密码">
+      </div>
+
+      <!-- New Password -->
+      <div class="mb-1">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">新密码</label>
+        <input type="password" id="new-password" class="input-field" placeholder="请输入新密码" oninput="updatePasswordStrength()">
+      </div>
+      <!-- Strength indicator -->
+      <div class="mb-4 px-0.5">
+        <div class="strength-bar">
+          <div class="strength-bar-fill" id="strength-fill" style="width:0%;background:#E2E8F0"></div>
+        </div>
+        <p class="text-xs text-sf-text-tertiary mt-1" id="strength-text"></p>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-sf-text-secondary mb-1.5">确认新密码</label>
+        <input type="password" id="confirm-password" class="input-field" placeholder="再次输入新密码">
+      </div>
+
+      <!-- Submit Button -->
+      <button class="w-full py-3.5 rounded-sf-lg bg-sf-primary text-white font-semibold text-[15px] hover:bg-sf-primary-hover transition-colors active:scale-[0.98]" onclick="changePassword()">
+        修改密码
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== BOTTOM TAB BAR ==================== -->
+  <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[500px] border-t border-sf-border-light z-40 safe-area-bottom" style="background:var(--sf-bg);">
+    <div class="flex justify-around items-center py-2 px-4">
+      <!-- 首页 -->
+      <a href="home.html" class="flex flex-col items-center gap-0.5 text-sf-text-tertiary text-xs" style="text-decoration:none;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        首页
+      </a>
+      <!-- 训练 -->
+      <a href="workout-tracker.html" class="flex flex-col items-center gap-0.5 text-sf-text-tertiary text-xs" style="text-decoration:none;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        训练
+      </a>
+      <!-- 课程 -->
+      <a href="course-detail.html" class="flex flex-col items-center gap-0.5 text-sf-text-tertiary text-xs" style="text-decoration:none;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        课程
+      </a>
+      <!-- 社区 -->
+      <a href="community.html" class="flex flex-col items-center gap-0.5 text-sf-text-tertiary text-xs" style="text-decoration:none;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        社区
+      </a>
+      <!-- 我的 (active) -->
+      <a href="profile.html" class="flex flex-col items-center gap-0.5 text-xs font-semibold" style="text-decoration:none;color:var(--sf-primary);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        我的
+      </a>
+    </div>
+  </nav>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    /* ---------- Auth Guard ---------- */
+    function getCurrentUser() {
+      try { return JSON.parse(localStorage.getItem('sportlife_user')); }
+      catch { return null; }
+    }
+    if (!getCurrentUser()) { navigateTo('login.html'); }
+
+    let user = getCurrentUser();
+
+    /* ---------- Settings Panel ---------- */
+    function openSettingsPanel() {
+      document.getElementById('settings-overlay').classList.add('active');
+      document.getElementById('settings-sheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSettingsPanel() {
+      document.getElementById('settings-overlay').classList.remove('active');
+      document.getElementById('settings-sheet').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    /* ---------- Initialize UI ---------- */
+    function refreshUI() {
+      // Avatar
+      renderAvatar('avatar-display');
+      renderAvatar('edit-avatar-display');
+
+      // Name & bio
+      const nameEl = document.getElementById('display-name');
+      const bioEl = document.getElementById('display-bio');
+      nameEl.textContent = user.nickname || user.username || '--';
+      bioEl.textContent = user.bio || '';
+
+      // Pre-fill edit fields
+      document.getElementById('edit-nickname').value = user.nickname || '';
+      document.getElementById('edit-age').value = user.age || '';
+      document.getElementById('edit-height').value = user.height || '';
+      document.getElementById('edit-weight').value = user.weight || '';
+      document.getElementById('edit-bio').value = user.bio || '';
+
+      // Gender
+      const gender = user.gender || 'secret';
+      const radio = document.querySelector('input[name="gender"][value="' + gender + '"]');
+      if (radio) radio.checked = true;
+    }
+
+    function renderAvatar(containerId) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      if (user.avatar_url) {
+        el.innerHTML = '<img src="' + user.avatar_url + '" alt="头像" class="w-full h-full object-cover">';
+        el.style.background = 'transparent';
+      } else {
+        const initial = (user.nickname || user.username || 'U').charAt(0).toUpperCase();
+        const bgColor = user.avatar_color || '#DCFCE7';
+        el.style.background = bgColor;
+        // Determine text color based on background brightness
+        el.innerHTML = '<span class="select-none" style="color:' + getContrastColor(bgColor) + '">' + initial + '</span>';
+      }
+    }
+
+    function getContrastColor(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+      const r = parseInt(hex.substr(0,2),16);
+      const g = parseInt(hex.substr(2,2),16);
+      const b = parseInt(hex.substr(4,2),16);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return luminance > 0.55 ? '#0F172A' : '#FFFFFF';
+    }
+
+    /* ---------- Load Stats ---------- */
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/workouts/' + user.id + '/stats');
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('total-workouts').textContent = data.stats.totalWorkouts || 0;
+          document.getElementById('total-hours').textContent = data.stats.totalDurationMin ? Math.round(data.stats.totalDurationMin / 60) : 0;
+          document.getElementById('streak-days').textContent = data.stats.streak || 0;
+        }
+      } catch(e) {}
+    }
+
+    /* ---------- Edit Panel ---------- */
+    function openEditPanel() {
+      document.getElementById('edit-overlay').classList.add('active');
+      document.getElementById('edit-sheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeEditPanel() {
+      document.getElementById('edit-overlay').classList.remove('active');
+      document.getElementById('edit-sheet').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    /* ---------- Password Panel ---------- */
+    function openPasswordPanel() {
+      document.getElementById('password-overlay').classList.add('active');
+      document.getElementById('password-sheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePasswordPanel() {
+      document.getElementById('password-overlay').classList.remove('active');
+      document.getElementById('password-sheet').classList.remove('active');
+      document.body.style.overflow = '';
+      // Clear fields
+      document.getElementById('old-password').value = '';
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+      updatePasswordStrength();
+    }
+
+    /* ---------- Password Strength ---------- */
+    function updatePasswordStrength() {
+      const pwd = document.getElementById('new-password').value;
+      const fill = document.getElementById('strength-fill');
+      const text = document.getElementById('strength-text');
+      let score = 0;
+      if (pwd.length >= 6) score++;
+      if (pwd.length >= 10) score++;
+      if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score++;
+      if (/\d/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+      const levels = [
+        { width: '0%', color: '#E2E8F0', label: '' },
+        { width: '20%', color: '#EF4444', label: '非常弱' },
+        { width: '40%', color: '#F97316', label: '较弱' },
+        { width: '60%', color: '#F59E0B', label: '一般' },
+        { width: '80%', color: '#38BDF8', label: '较强' },
+        { width: '100%', color: '#22C55E', label: '强' },
+      ];
+      const level = levels[score] || levels[0];
+      fill.style.width = level.width;
+      fill.style.background = level.color;
+      text.textContent = pwd ? level.label : '';
+      text.style.color = level.color;
+    }
+
+    /* ---------- Save Profile ---------- */
+    async function saveProfile() {
+      const nickname = document.getElementById('edit-nickname').value.trim();
+      if (!nickname) { showToast('请输入昵称', 'error'); return; }
+
+      const formData = {
+        nickname: nickname,
+        gender: document.querySelector('input[name="gender"]:checked')?.value || '',
+        height: parseFloat(document.getElementById('edit-height').value) || 0,
+        weight: parseFloat(document.getElementById('edit-weight').value) || 0,
+        bio: document.getElementById('edit-bio').value
+      };
+
+      try {
+        const res = await fetch('/api/profile/' + user.id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        const data = await res.json();
+        if (data.success) {
+          user.nickname = formData.nickname;
+          user.gender = formData.gender;
+          user.height = formData.height;
+          user.weight = formData.weight;
+          user.bio = formData.bio;
+          localStorage.setItem('sportlife_user', JSON.stringify(user));
+          showToast('保存成功', 'success');
+          closeEditPanel();
+          refreshUI();
+        } else {
+          showToast(data.message || '保存失败', 'error');
+        }
+      } catch(e) {
+        showToast('网络错误，请重试', 'error');
+      }
+    }
+
+    /* ---------- Avatar Upload ---------- */
+    function handleAvatarUpload(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) { showToast('请选择图片文件', 'error'); return; }
+
+      // Preview immediately
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imgUrl = e.target.result;
+        document.getElementById('avatar-display').innerHTML = '<img src="' + imgUrl + '" alt="头像预览" class="w-full h-full object-cover">';
+        document.getElementById('avatar-display').style.background = 'transparent';
+        var editAv = document.getElementById('edit-avatar-display');
+        if (editAv) {
+          editAv.innerHTML = '<img src="' + imgUrl + '" alt="头像预览" class="w-full h-full object-cover">';
+          editAv.style.background = 'transparent';
+        }
+      };
+      reader.readAsDataURL(file);
+
+      showToast('正在上传头像...', 'info');
+      // Compress and upload
+      compressImage(file, 800, 0.85, function(compressedFile) {
+        uploadAvatar(compressedFile);
+      });
+    }
+
+    function compressImage(file, maxDim, quality, callback) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function() {
+        var w = img.width, h = img.height;
+        if (w <= maxDim && h <= maxDim && file.size < 2 * 1024 * 1024) {
+          URL.revokeObjectURL(url);
+          callback(file);
+          return;
+        }
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(function(blob) {
+          if (blob) callback(blob);
+          else callback(file);
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = function() { callback(file); };
+      img.src = url;
+    }
+
+    async function uploadAvatar(file) {
+      try {
+        if (!user.id) { showToast('请先登录', 'error'); return; }
+        const fd = new FormData();
+        fd.append('avatar', file, 'avatar.jpg');
+        const res = await fetch('/api/profile/' + user.id + '/avatar', {
+          method: 'POST', body: fd
+        });
+        const data = await res.json();
+        if (data.avatar_url) {
+          user.avatar_url = data.avatar_url;
+          localStorage.setItem('sportlife_user', JSON.stringify(user));
+          renderAvatar('avatar-display');
+          renderAvatar('edit-avatar-display');
+          showToast('头像已更新', 'success');
+          return;
+        }
+        showToast('上传失败，请重试', 'error');
+      } catch(e) {
+        console.error('Avatar upload error:', e);
+        showToast('网络错误，头像已保存到本地', 'error');
+        // Fallback: save as data URL
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          user.avatar_url = ev.target.result;
+          localStorage.setItem('sportlife_user', JSON.stringify(user));
+          renderAvatar('avatar-display');
+          renderAvatar('edit-avatar-display');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    /* ---------- Profile Background Upload ---------- */
+    function changeProfileBg() {
+      document.getElementById('bg-input').click();
+    }
+
+    function handleBgUpload(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      showToast('正在设置背景...', 'info');
+      // Compress for performance (background doesn't need full res)
+      compressImage(file, 1200, 0.8, function(compressedFile) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var bg = document.getElementById('profile-hero-bg');
+          bg.style.background = 'url(' + e.target.result + ') center/cover no-repeat';
+          localStorage.setItem('sportlife_profile_bg', e.target.result);
+          showToast('背景已更新', 'success');
+        };
+        reader.readAsDataURL(compressedFile);
+        // Also try server upload for persistence
+        var uid = user.id;
+        if (uid) {
+          var fd = new FormData();
+          fd.append('avatar', compressedFile, 'bg.jpg');
+          fetch('/api/profile/' + uid + '/avatar', { method: 'POST', body: fd }).then(function(r){return r.json();}).then(function(data) {
+            if (data.avatar_url) {
+              localStorage.setItem('sportlife_profile_bg', data.avatar_url);
+            }
+          }).catch(function(){});
+        }
+      });
+    }
+
+    function loadProfileBg() {
+      var savedBg = localStorage.getItem('sportlife_profile_bg');
+      if (savedBg) {
+        var bg = document.getElementById('profile-hero-bg');
+        if (bg) bg.style.background = 'url(' + savedBg + ') center/cover no-repeat';
+      }
+    }
+
+    /* ---------- Change Password ---------- */
+    async function changePassword() {
+      const oldPwd = document.getElementById('old-password').value;
+      const newPwd = document.getElementById('new-password').value;
+      const confirmPwd = document.getElementById('confirm-password').value;
+
+      if (!oldPwd) { showToast('请输入旧密码', 'error'); return; }
+      if (!newPwd) { showToast('请输入新密码', 'error'); return; }
+      if (newPwd.length < 6) { showToast('新密码至少6位', 'error'); return; }
+      if (newPwd !== confirmPwd) { showToast('两次密码不一致', 'error'); return; }
+
+      try {
+        const res = await fetch('/api/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, oldPassword: oldPwd, newPassword: newPwd })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('密码修改成功', 'success');
+          closePasswordPanel();
+        } else {
+          showToast(data.message || '修改失败', 'error');
+        }
+      } catch(e) {
+        showToast('网络错误，请重试', 'error');
+      }
+    }
+
+    /* ---------- Toast ---------- */
+    function showToast(msg, type) {
+      const container = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = 'toast-msg';
+      t.style.background = (type === 'success') ? '#22C55E' : '#EF4444';
+      t.textContent = msg;
+      container.appendChild(t);
+      // Trigger animation
+      requestAnimationFrame(() => { t.classList.add('show'); });
+      setTimeout(() => {
+        t.classList.remove('show');
+        setTimeout(() => t.remove(), 300);
+      }, 3000);
+    }
+
+    /* ---------- Logout ---------- */
+    function handleLogout() {
+      if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('sportlife_user');
+        navigateTo('login.html');
+      }
+    }
+
+    // Backup: bind logout via JS (in case inline onclick fails)
+    var logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleLogout();
+      }, true);
+    }
+
+    /* ---------- My Posts ---------- */
+    function escapeHtml(text) { if (!text) return ''; var d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+
+    function loadMyPosts() {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      var container = document.getElementById('my-posts-list');
+      if (!container) return;
+      
+      fetch('/api/posts?user_id=' + user.id + '&limit=20').then(function(r){return r.json();}).then(function(data) {
+        if (!data.success || !data.posts || data.posts.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--sf-text-tertiary);font-size:14px;">暂无动态</div>';
+          return;
+        }
+        // Update post count in menu
+        var countEl = document.getElementById('my-posts-count');
+        if (countEl) countEl.textContent = data.posts.length + '条';
+
+        container.innerHTML = data.posts.map(function(post) {
+          var time = formatPostTime(post.created_at);
+          var workoutTag = '';
+          if (post.workout_type) {
+            var parts = [post.workout_type];
+            if (post.duration_minutes) parts.push(post.duration_minutes + 'min');
+            if (post.calories_burned) parts.push(post.calories_burned + 'kcal');
+            workoutTag = '<div style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;background:var(--sf-primary-surface);color:var(--sf-primary);font-size:12px;font-weight:600;margin-top:8px;">' + parts.join(' · ') + '</div>';
+          }
+          return '<div class="post-card" id="post-' + post.id + '">' +
+            '<div class="post-header">' +
+              '<span class="post-time">' + time + '</span>' +
+              '<button class="three-dot-btn" data-dot-post-id="' + post.id + '">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>' +
+              '</button>' +
+            '</div>' +
+            '<p class="post-content">' + escapeHtml(post.content) + '</p>' +
+            (post.image_url ? '<img src="' + escapeHtml(post.image_url) + '" style="width:100%;border-radius:8px;margin-top:8px;" loading="lazy">' : '') +
+            workoutTag +
+            '<div class="post-actions">' +
+              '<span style="font-size:12px;color:var(--sf-text-tertiary);">❤ ' + (post.likes_count || 0) + ' · 💬 ' + (post.comments_count || 0) + '</span>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }).catch(function() {
+        container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--sf-text-tertiary);font-size:14px;">加载失败</div>';
+      });
+    }
+
+    function formatPostTime(dateStr) {
+      if (!dateStr) return '';
+      var now = new Date();
+      var d = new Date(dateStr.replace(' ', 'T'));
+      var diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return '刚刚';
+      if (diff < 3600) return Math.floor(diff/60) + '分钟前';
+      if (diff < 86400) return Math.floor(diff/3600) + '小时前';
+      if (diff < 604800) return Math.floor(diff/86400) + '天前';
+      return dateStr.substring(5, 10);
+    }
+
+    function togglePostMenu(postId, anchorBtn) {
+      var existing = document.querySelector('.post-menu');
+      if (existing) { existing.remove(); return; }
+      
+      var card = anchorBtn.closest('.post-card');
+      if (!card) return;
+      
+      var menu = document.createElement('div');
+      menu.className = 'post-menu';
+      menu.innerHTML = '<button class="delete-btn" data-action="delete-post" data-post-id="' + postId + '">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+        '<span>删除动态</span></button>';
+      card.style.position = 'relative';
+      card.appendChild(menu);
+      
+      setTimeout(function() {
+        document.addEventListener('click', function closeMenu(e) {
+          if (!document.querySelector('.post-menu')) { document.removeEventListener('click', closeMenu); return; }
+          if (!e.target.closest('.post-menu') && !e.target.closest('.three-dot-btn')) {
+            menu.remove();
+          }
+          document.removeEventListener('click', closeMenu);
+        });
+      }, 100);
+    }
+
+    function deletePost(postId) {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      if (!confirm('确定要删除这条动态吗？')) return;
+      
+      fetch('/api/posts/' + postId, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ userId: user.id })
+      }).then(function(r){return r.json();}).then(function(data) {
+        if (data.success) {
+          var card = document.getElementById('post-' + postId);
+          if (card) {
+            card.style.transition = 'all 0.3s';
+            card.style.opacity = '0';
+            card.style.transform = 'translateX(100%)';
+            setTimeout(function() { card.remove(); }, 300);
+          }
+          var list = document.getElementById('my-posts-list');
+          if (list && list.children.length === 0) {
+            list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--sf-text-tertiary);font-size:14px;">暂无动态</div>';
+          }
+        }
+      }).catch(function(){});
+    }
+
+    /* ---------- Init ---------- */
+    // Sync user data from server (avatar_url, etc.)
+    fetch('/api/profile/' + user.id).then(function(r){return r.json();}).then(function(data) {
+      if (data.success && data.user) {
+        var serverUser = data.user;
+        // Merge server fields into local user
+        if (serverUser.avatar_url) user.avatar_url = serverUser.avatar_url;
+        if (serverUser.nickname) user.nickname = serverUser.nickname;
+        if (serverUser.bio !== undefined) user.bio = serverUser.bio;
+        if (serverUser.gender) user.gender = serverUser.gender;
+        if (serverUser.height) user.height = serverUser.height;
+        if (serverUser.weight) user.weight = serverUser.weight;
+        localStorage.setItem('sportlife_user', JSON.stringify(user));
+        refreshUI();
+      }
+    }).catch(function(){});
+    refreshUI();
+    loadStats();
+    loadMyPosts();
+    loadProfileBg();
+
+    // Bind all buttons via addEventListener (mobile Safari + ngrok compatibility)
+    var profileBindings = [
+      { id: 'menu-edit-profile', fn: openEditPanel },
+      { id: 'menu-change-password', fn: openPasswordPanel }
+    ];
+    profileBindings.forEach(function(b) {
+      var el = document.getElementById(b.id);
+      if (el) el.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); b.fn(); }, true);
+    });
+
+    // Bind all onclick buttons via selector (backup)
+    var onclickBindings = [
+      { sel: '[onclick="saveProfile()"]', fn: saveProfile },
+      { sel: '[onclick="changePassword()"]', fn: changePassword },
+      { sel: '[onclick="closeEditPanel()"]', fn: closeEditPanel },
+      { sel: '[onclick="closePasswordPanel()"]', fn: closePasswordPanel },
+      { sel: '[onclick="openEditPanel()"]', fn: openEditPanel },
+      { sel: '[onclick="openSettingsPanel()"]', fn: openSettingsPanel },
+      { sel: '[onclick="closeSettingsPanel()"]', fn: closeSettingsPanel },
+      { sel: '[onclick="handleLogout()"]', fn: handleLogout },
+      { sel: '[onclick="changeProfileBg()"]', fn: changeProfileBg }
+    ];
+    onclickBindings.forEach(function(b) {
+      document.querySelectorAll(b.sel).forEach(function(el) {
+        el.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); b.fn(); }, true);
+      });
+    });
+
+    // Bind file input change events (onchange handlers in IIFE)
+    ['header-avatar-input', 'edit-avatar-input'].forEach(function(id) {
+      var inp = document.getElementById(id);
+      if (inp) inp.addEventListener('change', function() { if (this.files[0]) handleAvatarUpload(this.files[0]); });
+    });
+    var bgInput = document.getElementById('bg-input');
+    if (bgInput) bgInput.addEventListener('change', function() { if (this.files[0]) handleBgUpload(this.files[0]); });
+
+    // Settings panel menu items - use event delegation for mobile compatibility
+    var settingsRows = document.querySelectorAll('.settings-menu-row:not(a)');
+    settingsRows.forEach(function(row) {
+      row.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var text = this.querySelector('span');
+        if (!text) return;
+        var label = text.textContent.trim();
+        closeSettingsPanel();
+        setTimeout(function() {
+          if (label === '个人资料') openEditPanel();
+          else if (label === '修改密码') openPasswordPanel();
+        }, 400); // Wait for settings panel close animation
+      }, true);
+    });
+
+    // Three-dot button delegation (open post menu)
+    document.addEventListener('click', function(e) {
+      var dotBtn = e.target.closest('.three-dot-btn');
+      if (dotBtn) {
+        e.stopPropagation();
+        var postId = dotBtn.getAttribute('data-dot-post-id');
+        if (postId) togglePostMenu(postId, dotBtn);
+      }
+    });
+
+    // Delete button delegation for post menus (non-capture phase)
+    document.addEventListener('click', function(e) {
+      var deleteBtn = e.target.closest('[data-action="delete-post"]');
+      if (deleteBtn) {
+        e.stopPropagation();
+        e.preventDefault();
+        var postId = deleteBtn.getAttribute('data-post-id');
+        deletePost(postId);
+      }
+    });
+
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+
+  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

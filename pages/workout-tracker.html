@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>运动记录 - SportLife</title> <link rel="stylesheet" href="/assets/vendor/leaflet.css"> <script src="/assets/vendor/tailwind.js" defer></script> <style id="theme-vars"> :root { --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-active: #15803D; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4; --sf-accent: #F97316; --sf-accent-hover: #EA580C; --sf-accent-light: #FFF7ED; --sf-accent-surface: #FED7AA; --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF; --sf-sky-surface: #BAE6FD; --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9; --sf-bg-elevated: #FFFFFF; --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8; --sf-text-inverse: #FFFFFF; --sf-text-brand: #22C55E; --sf-border-light: #E2E8F0; --sf-border-default: #CBD5E1; --sf-success: #22C55E; --sf-success-light: #DCFCE7; --sf-warning: #F59E0B; --sf-warning-light: #FEF3C7; --sf-error: #EF4444; --sf-error-light: #FEE2E2; --sf-info: #38BDF8; --sf-info-light: #E0F2FE; --sf-font-sans: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px; --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05); --sf-shadow-lg: 0 8px 24px rgba(0,0,0,0.06); --sf-shadow-xl: 0 16px 40px rgba(0,0,0,0.08); --sf-transition-fast: 150ms ease; --sf-transition-normal: 250ms ease; --sf-transition-slow: 400ms ease; } html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-bg-elevated: #1E293B; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155; } </style> <style> * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; } html, body { height: 100%; overflow: hidden; } body { font-family: var(--sf-font-sans); background: var(--sf-bg-secondary); color: var(--sf-text-primary); max-width: 480px; margin: 0 auto !important; position: relative; } /* Leaflet overrides */ .leaflet-control-zoom { display: none !important; } .leaflet-control-attribution { font-size: 10px !important; opacity: 0.5; } /* Pulse animation for start button */ @keyframes pulseRing { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.4); opacity: 0; } } @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 50% { box-shadow: 0 0 0 16px rgba(34, 197, 94, 0); } } .pulse-btn { animation: pulseGlow 2s ease-in-out infinite; } .pulse-btn::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; background: var(--sf-primary); animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; z-index: -1; } /* Workout type pills */ .workout-type-pill { transition: all var(--sf-transition-normal); white-space: nowrap; user-select: none; cursor: pointer; } .workout-type-pill:active { transform: scale(0.95); } /* Stats card glass effect */ .stats-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); } /* Timer styling */ .timer-display { font-variant-numeric: tabular-nums; font-feature-settings:"tnum"; letter-spacing: 0.02em; text-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: color 0.3s ease; } /* Stat value animation */ .stat-value { transition: all 0.3s ease; font-variant-numeric: tabular-nums; } /* Toast */ @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } } .toast-anim { animation: toastIn 300ms ease forwards; } /* Summary modal */ .summary-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 300ms ease; } .summary-overlay.active { opacity: 1; pointer-events: auto; } .summary-panel { width: 100%; max-width: 480px; max-height: 90vh; background: var(--sf-bg); border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1); overflow-y: auto; } .summary-overlay.active .summary-panel { transform: translateY(0); } /* Confetti / celebration */ @keyframes confettiDrop { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } } .confetti-piece { position: fixed; width: 10px; height: 10px; border-radius: 2px; z-index: 10001; pointer-events: none; } @keyframes checkmarkBounce { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } } .checkmark-anim { animation: checkmarkBounce 0.6s ease forwards; } @keyframes circleGrow { 0% { transform: scale(0); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } } .circle-anim { animation: circleGrow 0.5s ease forwards; } /* Lock screen */ .lock-screen { position: fixed; inset: 0; background: var(--sf-bg); z-index: 8000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 300ms ease; } .lock-screen.active { opacity: 1; pointer-events: auto; } /* Control button transitions */ .ctrl-btn { transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(0,0,0,0.12); } .ctrl-btn:active { transform: scale(0.92); box-shadow: 0 2px 8px rgba(0,0,0,0.1); } /* GPS manual mode banner */
+.manual-banner {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; background: linear-gradient(135deg, var(--sf-primary-light) 0%, var(--sf-sky-light) 50%, var(--sf-accent-light) 100%); z-index: 500; overflow: hidden;
+}
+.manual-banner .manual-bg-icon {
+  font-size: 64px; line-height: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+}
+.manual-banner .manual-title {
+  font-size: 18px; font-weight: 700; color: var(--sf-text-primary); margin-top: 4px;
+}
+.manual-banner .manual-desc {
+  font-size: 13px; color: var(--sf-text-secondary); margin-bottom: 8px;
+}
+.manual-banner .manual-route-svg {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; pointer-events: none; opacity: 0.25;
+}
+/* 虚线运动轨迹动画 */
+@keyframes dashMove {
+  to { stroke-dashoffset: -20; }
+}
+.manual-route-line {
+  stroke-dasharray: 10 10;
+  animation: dashMove 1s linear infinite;
+} /* Interval timer */ .interval-bar { transition: width 0.1s linear; } /* Map preview in summary */ #summary-map { border-radius: var(--sf-radius-lg); } /* Scrollbar hidden */ ::-webkit-scrollbar { width: 0; height: 0; } .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } /* Dark mode map fix */ html.dark .leaflet-tile-pane { filter: brightness(0.7) contrast(1.1) saturate(0.8); } </style> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body> <!-- ==================== HEADER ==================== --> <header id="app-header" class="fixed top-0 left-0 right-0 z-[1000] flex items-center justify-between px-4 py-3" style="background: var(--sf-bg); box-shadow: var(--sf-shadow-sm); max-width: 480px; margin: 0 auto;"> <a href="home.html" class="w-9 h-9 flex items-center justify-center rounded-full ctrl-btn" style="background: var(--sf-bg-tertiary); text-decoration:none; display:flex; align-items:center; justify-content:center;" aria-label="返回"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--sf-text-primary);"> <path d="M15 18l-6-6 6-6"/> </svg> </a> <h1 class="text-base font-semibold" style="color: var(--sf-text-primary);">运动记录</h1> <div id="gps-badge" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style="background: var(--sf-bg-tertiary); color: var(--sf-text-secondary);"> <span id="gps-dot" class="w-2 h-2 rounded-full" style="background: var(--sf-text-tertiary);"></span> <span id="gps-text">定位中</span> </div> </header> <!-- ==================== MAIN CONTENT ==================== --> <main id="main-content" class="pt-[52px] h-full flex flex-col" style="max-width: 480px; margin: 0 auto;"> <!-- ===== MAP AREA (50vh) ===== --> <div class="relative" style="height: 50vh; min-height: 240px;"> <div id="map-container" class="w-full h-full"></div> <div id="manual-banner" class="manual-banner" style="display: none;"> <span id="manual-emoji" class="manual-bg-icon">🏃</span> <span class="manual-title">开始你的跑步之旅</span> <span class="manual-desc">当前为演示模式</span> <span class="text-xs" style="color: var(--sf-text-tertiary);">点击下方按钮开始运动</span> <svg class="manual-route-svg" viewBox="0 0 480 160" preserveAspectRatio="none"> <path class="manual-route-line" d="M0 120 Q60 40 120 100 T240 80 T360 110 T480 60" fill="none" stroke="var(--sf-primary)" stroke-width="3" stroke-linecap="round"/> <path class="manual-route-line" d="M0 140 Q80 80 160 120 T320 100 T480 90" fill="none" stroke="var(--sf-sky)" stroke-width="2" stroke-linecap="round" style="animation-delay: 0.3s;"/> <path class="manual-route-line" d="M0 150 Q100 110 200 140 T400 120 T480 130" fill="none" stroke="var(--sf-accent)" stroke-width="2" stroke-linecap="round" style="animation-delay: 0.6s;"/> </svg> </div> </div> <!-- ===== BOTTOM PANEL ===== --> <div class="flex-1 overflow-y-auto px-4 pt-3 pb-6" style="background: var(--sf-bg-secondary);"> <!-- Workout Type Selector (only visible when idle) --> <div id="type-selector" class="mb-3"> <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar"> <button class="workout-type-pill flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium" style="background: var(--sf-primary); color: #fff; border: 1.5px solid var(--sf-primary);" data-type="跑步" onclick="selectType(this)">🏃 跑步</button> <button class="workout-type-pill flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium" style="background: var(--sf-bg); color: var(--sf-text-secondary); border: 1.5px solid var(--sf-border-light);" data-type="骑行" onclick="selectType(this)">🚴 骑行</button> <button class="workout-type-pill flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium" style="background: var(--sf-bg); color: var(--sf-text-secondary); border: 1.5px solid var(--sf-border-light);" data-type="步行" onclick="selectType(this)">🚶 步行</button> <button class="workout-type-pill flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium" style="background: var(--sf-bg); color: var(--sf-text-secondary); border: 1.5px solid var(--sf-border-light);" data-type="HIIT" onclick="selectType(this)">🔥 HIIT</button> <button class="workout-type-pill flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium" style="background: var(--sf-bg); color: var(--sf-text-secondary); border: 1.5px solid var(--sf-border-light);" data-type="瑜伽" onclick="selectType(this)">🧘 瑜伽</button> <button class="workout-type-pill flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium" style="background: var(--sf-bg); color: var(--sf-text-secondary); border: 1.5px solid var(--sf-border-light);" data-type="力量" onclick="selectType(this)">💪 力量</button> </div> </div> <!-- ===== STATS CARD (floating) ===== --> <div class="stats-card rounded-2xl p-5 mb-5" style="background: var(--sf-bg); box-shadow: var(--sf-shadow-xl);"> <!-- Interval Timer Bar --> <div id="interval-section" class="mb-3" style="display: none;"> <div class="flex items-center justify-between mb-1"> <span class="text-xs font-semibold" style="color: var(--sf-accent);">间隔计时</span> <span id="interval-label" class="text-xs font-medium" style="color: var(--sf-text-tertiary);">00:00 / 00:30</span> </div> <div class="w-full h-1.5 rounded-full" style="background: var(--sf-bg-tertiary);"> <div id="interval-bar" class="interval-bar h-full rounded-full" style="background: var(--sf-accent); width: 0%;"></div> </div> </div> <!-- Timer (MM:SS.SS) --> <div class="text-center mb-4"> <div id="timer-display" class="timer-display text-5xl font-extrabold" style="color: var(--sf-text-primary);">00:00<span class="text-3xl font-bold" style="color: var(--sf-text-tertiary);">.00</span></div> <div id="timer-label" class="text-xs mt-1 font-medium" style="color: var(--sf-text-tertiary);">准备开始</div> </div> <!-- Divider --> <div class="w-full h-px mb-4" style="background: var(--sf-border-light);"></div> <!-- Stats Grid --> <div class="grid grid-cols-4 gap-2"> <div class="text-center"> <div class="text-[11px] mb-0.5 font-medium" style="color: var(--sf-text-tertiary);">距离</div> <div class="stat-value text-lg font-bold" style="color: var(--sf-text-primary);"> <span id="stat-distance">0.00</span> </div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">km</div> </div> <div class="text-center"> <div class="text-[11px] mb-0.5 font-medium" style="color: var(--sf-text-tertiary);">配速</div> <div class="stat-value text-lg font-bold" style="color: var(--sf-text-primary);"> <span id="stat-pace">0'00"</span> </div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">min/km</div> </div> <div class="text-center"> <div class="text-[11px] mb-0.5 font-medium" style="color: var(--sf-text-tertiary);">卡路里</div> <div class="stat-value text-lg font-bold" style="color: var(--sf-accent);"> <span id="stat-calories">0</span> </div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">kcal</div> </div> <div class="text-center"> <div class="text-[11px] mb-0.5 font-medium" style="color: var(--sf-text-tertiary);">步数</div> <div class="stat-value text-lg font-bold" style="color: var(--sf-sky);"> <span id="stat-steps">0</span> </div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">步</div> </div> </div> </div> <!-- ===== CONTROL BUTTONS ===== --> <!-- State: Ready --> <div id="controls-ready" class="flex flex-col items-center gap-3"> <button id="start-btn" class="pulse-btn relative w-[76px] h-[76px] rounded-full flex items-center justify-center text-white text-lg font-bold ctrl-btn" style="background: var(--sf-primary);"> 开始 </button> <span class="text-xs" style="color: var(--sf-text-tertiary);">点击开始运动</span> </div> <!-- State: Running --> <div id="controls-running" class="flex items-center justify-center gap-5" style="display: none;"> <button onclick="toggleLock()" class="ctrl-btn w-14 h-14 rounded-full flex items-center justify-center" style="background: var(--sf-bg-tertiary); border: 1.5px solid var(--sf-border-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/> <path d="M7 11V7a5 5 0 0 1 10 0v4"/> </svg> </button> <button onclick="pauseWorkout()" class="ctrl-btn w-[76px] h-[76px] rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg" style="background: var(--sf-accent);"> 暂停 </button> <button onclick="requestEndWorkout()" class="ctrl-btn w-14 h-14 rounded-full flex items-center justify-center" style="background: var(--sf-error-light); border: 1.5px solid var(--sf-error);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--sf-error)" stroke="none"> <rect x="6" y="6" width="12" height="12" rx="2"/> </svg> </button> </div> <!-- State: Paused --> <div id="controls-paused" class="flex items-center justify-center gap-5" style="display: none;"> <button onclick="requestEndWorkout()" class="ctrl-btn w-14 h-14 rounded-full flex items-center justify-center text-sm font-bold" style="background: transparent; border: 2px solid var(--sf-error); color: var(--sf-error);"> 结束 </button> <button onclick="resumeWorkout()" class="pulse-btn relative ctrl-btn w-[76px] h-[76px] rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg" style="background: var(--sf-primary);"> 继续 </button> <div class="w-14 h-14"></div> </div> </div> </main> <!-- ==================== LOCK SCREEN ==================== --> <div id="lock-screen" class="lock-screen"> <div class="flex flex-col items-center gap-4"> <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/> <path d="M7 11V7a5 5 0 0 1 10 0v4"/> </svg> <div id="lock-timer" class="timer-display text-6xl font-extrabold" style="color: var(--sf-text-primary);">00:00<span class="text-4xl font-bold" style="color: var(--sf-text-tertiary);">.00</span></div> <div class="flex gap-8 mt-2"> <div class="text-center"> <div class="text-sm font-bold" style="color: var(--sf-text-primary);"><span id="lock-dist">0.00</span></div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">km</div> </div> <div class="text-center"> <div class="text-sm font-bold" style="color: var(--sf-accent);"><span id="lock-cal">0</span></div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">kcal</div> </div> <div class="text-center"> <div class="text-sm font-bold" style="color: var(--sf-sky);"><span id="lock-steps">0</span></div> <div class="text-[10px]" style="color: var(--sf-text-tertiary);">步</div> </div> </div> <button onclick="toggleLock()" class="mt-8 px-8 py-3 rounded-full text-sm font-semibold ctrl-btn" style="background: var(--sf-bg-tertiary); color: var(--sf-text-secondary);"> 点击解锁 </button> </div> </div> <!-- ==================== END CONFIRM MODAL ==================== --> <div id="end-modal" class="fixed inset-0 z-[9000] flex items-center justify-center" style="background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity 200ms ease;"> <div class="mx-6 rounded-2xl p-6 w-full max-w-xs text-center" style="background: var(--sf-bg);"> <div class="text-base font-semibold mb-2" style="color: var(--sf-text-primary);">结束训练？</div> <div class="text-sm mb-5" style="color: var(--sf-text-secondary);">确定要结束本次训练并保存记录吗？</div> <div class="flex gap-3"> <button onclick="closeEndModal()" class="flex-1 py-2.5 rounded-xl text-sm font-medium ctrl-btn" style="background: var(--sf-bg-tertiary); color: var(--sf-text-secondary);">取消</button> <button onclick="confirmEndWorkout()" class="flex-1 py-2.5 rounded-xl text-sm font-medium text-white ctrl-btn" style="background: var(--sf-error);">结束并保存</button> </div> </div> </div> <!-- ==================== WORKOUT SUMMARY MODAL ==================== --> <div id="summary-overlay" class="summary-overlay"> <div class="summary-panel"> <!-- Drag handle --> <div class="flex justify-center pt-3 pb-1"> <div class="w-10 h-1 rounded-full" style="background: var(--sf-border-light);"></div> </div> <!-- Celebration --> <div class="flex flex-col items-center pt-4 pb-5"> <!-- Animated checkmark circle --> <div class="circle-anim w-20 h-20 rounded-full flex items-center justify-center mb-4" style="background: linear-gradient(135deg, var(--sf-primary), #16A34A);"> <svg class="checkmark-anim" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"> <polyline points="20 6 9 17 4 12"/> </svg> </div> <h2 class="text-2xl font-extrabold mb-1" style="color: var(--sf-text-primary);">训练完成!</h2> <p class="text-sm" style="color: var(--sf-text-secondary);">恭喜你，又完成了一次出色的训练</p> </div> <!-- Route preview map --> <div id="summary-map-container" class="mx-4 mb-4 rounded-2xl overflow-hidden" style="height: 160px; background: var(--sf-bg-tertiary);"> <div id="summary-map" class="w-full h-full"></div> </div> <!-- Summary stats --> <div class="mx-4 mb-4 rounded-2xl p-4" style="background: var(--sf-bg-secondary);"> <div class="grid grid-cols-2 gap-3"> <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--sf-bg);"> <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sf-primary-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/> </svg> </div> <div> <div class="text-[11px]" style="color: var(--sf-text-tertiary);">总用时</div> <div class="text-base font-bold" id="sum-time" style="color: var(--sf-text-primary);">00:00</div> </div> </div> <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--sf-bg);"> <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sf-sky-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/> </svg> </div> <div> <div class="text-[11px]" style="color: var(--sf-text-tertiary);">距离</div> <div class="text-base font-bold" id="sum-distance" style="color: var(--sf-text-primary);">0.00 km</div> </div> </div> <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--sf-bg);"> <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sf-primary-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/> </svg> </div> <div> <div class="text-[11px]" style="color: var(--sf-text-tertiary);">平均配速</div> <div class="text-base font-bold" id="sum-pace" style="color: var(--sf-text-primary);">0'00"</div> </div> </div> <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--sf-bg);"> <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sf-accent-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/> </svg> </div> <div> <div class="text-[11px]" style="color: var(--sf-text-tertiary);">消耗卡路里</div> <div class="text-base font-bold" id="sum-calories" style="color: var(--sf-text-primary);">0 kcal</div> </div> </div> <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--sf-bg);"> <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sf-sky-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 4H9.5a4.5 4.5 0 0 0 0 9h5a4.5 4.5 0 0 1 0 9H5"/> </svg> </div> <div> <div class="text-[11px]" style="color: var(--sf-text-tertiary);">步数</div> <div class="text-base font-bold" id="sum-steps" style="color: var(--sf-text-primary);">0 步</div> </div> </div> <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--sf-bg);"> <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sf-primary-light);"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/> </svg> </div> <div> <div class="text-[11px]" style="color: var(--sf-text-tertiary);">运动类型</div> <div class="text-base font-bold" id="sum-type" style="color: var(--sf-text-primary);">跑步</div> </div> </div> </div> </div> <!-- Action buttons --> <div class="mx-4 mb-8 flex gap-3"> <button onclick="discardWorkout()" class="flex-1 py-3 rounded-xl text-sm font-semibold ctrl-btn" style="background: var(--sf-bg-tertiary); color: var(--sf-text-secondary);"> 放弃 </button> <button onclick="saveWorkout()" class="flex-1 py-3 rounded-xl text-sm font-semibold text-white ctrl-btn" style="background: var(--sf-primary);"> 保存训练 </button> </div> </div> </div> <!-- ==================== SCRIPTS ==================== --> <script src="/assets/vendor/leaflet.js"></script>
+<script>/* AUTH CHECK */
+(function checkAuth() {
+  try {
+    var u = JSON.parse(localStorage.getItem('sportlife_user'));
+    if (!u || !u.id) {
+      showToast('请先登录', 'error');
+      setTimeout(function() { navigateTo('login.html'); }, 1200);
+    }
+  } catch (e) {
+    navigateTo('login.html');
+  }
+})();
+
+/* STATE */
+var watchId = null;
+var trackPoints = [];
+var workoutStartTime = null;
+var pausedDuration = 0;
+var pauseStartTime = null;
+var timerRAF = null;
+var totalSteps = 0;
+var selectedType = '跑步';
+var workoutState = 'ready';
+var gpsAvailable = false;
+var isLocked = false;
+var map = null;
+var summaryMap = null;
+var polyline = null;
+var currentMarker = null;
+var startMarker = null;
+var intervalDuration = 30;
+var intervalElapsed = 0;
+var intervalTimerRAF = null;
+
+/* SPORT TYPE CONFIGURATIONS */
+var SPORT_CONFIGS = {
+  '跑步': { emoji: '🏃', calPerMin: 10, stepPerMeter: 1.43, simSpeed: 2.5, hasRoute: true, hasPace: true, intervalEnabled: false, manualLabel: '开始你的跑步之旅', routeColor: '#22C55E', statLabel: '配速', statUnit: 'min/km' },
+  '骑行': { emoji: '🚴', calPerMin: 8, stepPerMeter: 0, simSpeed: 5.5, hasRoute: true, hasPace: false, intervalEnabled: false, manualLabel: '开始你的骑行之旅', routeColor: '#38BDF8', statLabel: '速度', statUnit: 'km/h' },
+  '步行': { emoji: '🚶', calPerMin: 5, stepPerMeter: 1.5, simSpeed: 1.2, hasRoute: true, hasPace: true, intervalEnabled: false, manualLabel: '开始你的步行之旅', routeColor: '#F97316', statLabel: '配速', statUnit: 'min/km' },
+  'HIIT': { emoji: '🔥', calPerMin: 14, stepPerMeter: 0.8, simSpeed: 0, hasRoute: false, hasPace: false, intervalEnabled: true, intervalDuration: 30, manualLabel: '开始你的HIIT训练', routeColor: '#EF4444', statLabel: '次数', statUnit: '组' },
+  '瑜伽': { emoji: '🧘', calPerMin: 4, stepPerMeter: 0, simSpeed: 0, hasRoute: false, hasPace: false, intervalEnabled: true, intervalDuration: 60, manualLabel: '开始你的瑜伽练习', routeColor: '#A855F7', statLabel: '时长', statUnit: 'min' },
+  '力量': { emoji: '💪', calPerMin: 8, stepPerMeter: 0, simSpeed: 0, hasRoute: false, hasPace: false, intervalEnabled: true, intervalDuration: 45, manualLabel: '开始你的力量训练', routeColor: '#F59E0B', statLabel: '组数', statUnit: '组' }
+};
+
+/* WORKOUT TYPE SELECTOR */
+function selectType(btn) {
+  selectedType = btn.dataset.type;
+  document.querySelectorAll('.workout-type-pill').forEach(function(p) {
+    p.style.background = 'var(--sf-bg)';
+    p.style.color = 'var(--sf-text-secondary)';
+    p.style.border = '1.5px solid var(--sf-border-light)';
+  });
+  btn.style.background = 'var(--sf-primary)';
+  btn.style.color = '#fff';
+  btn.style.border = '1.5px solid var(--sf-primary)';
+  /* 更新 manual banner */
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  document.getElementById('manual-emoji').textContent = config.emoji;
+  document.querySelector('.manual-title').textContent = config.manualLabel;
+  /* 室内运动显示 manual banner，户外运动显示地图 */
+  if (config.hasRoute) {
+    document.getElementById('map-container').style.display = 'block';
+    document.getElementById('manual-banner').style.display = 'none';
+  } else {
+    document.getElementById('map-container').style.display = 'none';
+    document.getElementById('manual-banner').style.display = 'flex';
+  }
+  /* 更新 stat label */
+  var paceLabel = document.querySelector('#stat-pace').parentElement.previousElementSibling;
+  if (paceLabel) paceLabel.textContent = config.statLabel;
+  var paceUnit = document.querySelector('#stat-pace').parentElement.nextElementSibling;
+  if (paceUnit) paceUnit.textContent = config.statUnit;
+}
+
+/* MAP */
+function initMap(lat, lng) {
+  if (map) { map.setView([lat, lng], 16); return; }
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var routeColor = config.routeColor || '#22C55E';
+  map = L.map('map-container', { center: [lat, lng], zoom: 16, zoomControl: false, attributionControl: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 19 }).addTo(map);
+  polyline = L.polyline([], { color: routeColor, weight: 4, opacity: 0.85, smoothFactor: 1, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+  var userIcon = L.divIcon({ html: '<div style="width:18px;height:18px;background:' + routeColor + ';border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>', iconSize: [18, 18], iconAnchor: [9, 9], className: '' });
+  L.marker([lat, lng], { icon: userIcon }).addTo(map);
+  setTimeout(function() { map.invalidateSize(); }, 300);
+}
+
+function updateMap(point) {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var routeColor = config.routeColor || '#22C55E';
+  var latlng = [point.lat, point.lng];
+  if (!startMarker) {
+    var startIcon = L.divIcon({ html: '<div style="width:20px;height:20px;background:' + routeColor + ';border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>', iconSize: [20, 20], iconAnchor: [10, 10], className: '' });
+    startMarker = L.marker(latlng, { icon: startIcon }).addTo(map);
+  }
+  if (currentMarker) map.removeLayer(currentMarker);
+  currentMarker = L.circleMarker(latlng, { radius: 8, fillColor: '#38BDF8', color: '#fff', weight: 3, fillOpacity: 1 }).addTo(map);
+  polyline.addLatLng(latlng);
+  map.panTo(latlng, { animate: true, duration: 0.5 });
+}
+
+function getUserLocation(cb) {
+  if (!navigator.geolocation) { cb(null, new Error('no geo')); return; }
+  var timeoutId = setTimeout(function() { cb(null, new Error('GPS timeout')); }, 5000);
+  navigator.geolocation.getCurrentPosition(
+    function(pos) { clearTimeout(timeoutId); cb({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
+    function(err) { clearTimeout(timeoutId); cb(null, err); },
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 5000 }
+  );
+}
+
+/* GPS STATUS */
+function setGpsStatus(connected) {
+  var dot = document.getElementById('gps-dot');
+  var text = document.getElementById('gps-text');
+  if (connected) {
+    dot.style.background = '#22C55E';
+    text.textContent = 'GPS已连接';
+  } else {
+    dot.style.background = '#EF4444';
+    text.textContent = 'GPS未连接';
+  }
+}
+
+/* TIMER */
+function startTimerLoop() {
+  function tick() {
+    if (workoutState === 'paused' || workoutState === 'ready') return;
+    updateTimerDisplay();
+    updateLockTimer();
+    timerRAF = requestAnimationFrame(tick);
+  }
+  timerRAF = requestAnimationFrame(tick);
+}
+
+function updateTimerDisplay() {
+  if (!workoutStartTime) return;
+  var elapsed = (Date.now() - workoutStartTime - pausedDuration) / 1000;
+  var mins = Math.floor(elapsed / 60);
+  var secs = elapsed % 60;
+  var wholeSecs = Math.floor(secs);
+  var hundredths = Math.floor((secs - wholeSecs) * 100);
+  var html = String(mins).padStart(2, '0') + ':' + String(wholeSecs).padStart(2, '0') + '<span class="text-3xl font-bold" style="color: var(--sf-text-tertiary);">.' + String(hundredths).padStart(2, '0') + '</span>';
+  document.getElementById('timer-display').innerHTML = html;
+}
+
+function updateLockTimer() {
+  if (!workoutStartTime) return;
+  var elapsed = (Date.now() - workoutStartTime - pausedDuration) / 1000;
+  var mins = Math.floor(elapsed / 60);
+  var secs = elapsed % 60;
+  var wholeSecs = Math.floor(secs);
+  var hundredths = Math.floor((secs - wholeSecs) * 100);
+  var html = String(mins).padStart(2, '0') + ':' + String(wholeSecs).padStart(2, '0') + '<span class="text-4xl font-bold" style="color: var(--sf-text-tertiary);">.' + String(hundredths).padStart(2, '0') + '</span>';
+  document.getElementById('lock-timer').innerHTML = html;
+}
+
+/* INTERVAL TIMER */
+function startIntervalTimer() {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  if (config.intervalEnabled && config.intervalDuration) {
+    intervalDuration = config.intervalDuration;
+  }
+  intervalElapsed = 0;
+  if (config.intervalEnabled) {
+    document.getElementById('interval-section').style.display = 'block';
+  } else {
+    document.getElementById('interval-section').style.display = 'none';
+    return;
+  }
+  function tick() {
+    if (workoutState === 'paused' || workoutState === 'ready') return;
+    intervalElapsed += 0.1;
+    if (intervalElapsed >= intervalDuration) { intervalElapsed = 0; if (navigator.vibrate) navigator.vibrate([200, 100, 200]); }
+    var progress = Math.min((intervalElapsed / intervalDuration) * 100, 100);
+    document.getElementById('interval-bar').style.width = progress + '%';
+    var elapsedStr = formatIntervalTime(intervalElapsed);
+    var totalStr = formatIntervalTime(intervalDuration);
+    document.getElementById('interval-label').textContent = elapsedStr + ' / ' + totalStr;
+    intervalTimerRAF = requestAnimationFrame(tick);
+  }
+  intervalTimerRAF = requestAnimationFrame(tick);
+}
+
+function stopIntervalTimer() {
+  if (intervalTimerRAF) cancelAnimationFrame(intervalTimerRAF);
+  document.getElementById('interval-section').style.display = 'none';
+}
+
+function formatIntervalTime(sec) {
+  var m = Math.floor(sec / 60);
+  var s = Math.floor(sec % 60);
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+/* SIMULATED GPS TRACKING */
+var simTrackInterval = null;
+
+function startSimulatedTracking() {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var simSpeed = config.simSpeed || 2.5;
+  var route = [
+    { lat: 39.9042, lng: 116.3974 },
+    { lat: 39.9035, lng: 116.3976 },
+    { lat: 39.9025, lng: 116.3980 },
+    { lat: 39.9015, lng: 116.3988 },
+    { lat: 39.9005, lng: 116.3998 },
+    { lat: 39.8995, lng: 116.4010 },
+    { lat: 39.8985, lng: 116.4025 },
+    { lat: 39.8975, lng: 116.4040 },
+    { lat: 39.8968, lng: 116.4055 },
+    { lat: 39.8960, lng: 116.4070 },
+    { lat: 39.8955, lng: 116.4085 },
+    { lat: 39.8952, lng: 116.4100 },
+    { lat: 39.8950, lng: 116.4115 },
+    { lat: 39.8948, lng: 116.4130 },
+    { lat: 39.8947, lng: 116.4145 },
+    { lat: 39.8948, lng: 116.4160 },
+    { lat: 39.8950, lng: 116.4175 },
+    { lat: 39.8955, lng: 116.4188 },
+    { lat: 39.8962, lng: 116.4200 },
+    { lat: 39.8970, lng: 116.4210 }
+  ];
+  var routeIdx = 0;
+  var totalRoutePoints = route.length;
+  var prevPt = null;
+  var simInterval = config.simSpeed > 3 ? 2000 : 3000;
+  simTrackInterval = setInterval(function() {
+    if (workoutState !== 'running') return;
+    if (routeIdx >= totalRoutePoints) { routeIdx = 0; }
+    var pt = route[routeIdx];
+    var point = {
+      lat: pt.lat + (Math.random() - 0.5) * 0.0003,
+      lng: pt.lng + (Math.random() - 0.5) * 0.0003,
+      alt: 50,
+      acc: 10,
+      speed: simSpeed + Math.random() * 1.5,
+      time: new Date().toISOString()
+    };
+    trackPoints.push(point);
+    prevPt = point;
+    if (map) updateMap(point);
+    updateStats();
+    routeIdx++;
+  }, simInterval);
+}
+
+function stopSimulatedTracking() {
+  if (simTrackInterval) { clearInterval(simTrackInterval); simTrackInterval = null; }
+}
+
+/* GPS TRACKING */
+function startTracking() {
+  gpsAvailable = false;
+  if (navigator.geolocation) {
+    watchId = navigator.geolocation.watchPosition(
+      function(pos) {
+        gpsAvailable = true;
+        var point = { lat: pos.coords.latitude, lng: pos.coords.longitude, alt: pos.coords.altitude, acc: pos.coords.accuracy, speed: pos.speed, time: new Date().toISOString() };
+        trackPoints.push(point);
+        if (map) updateMap(point);
+        updateStats();
+        setGpsStatus(true);
+      },
+      function(err) { setGpsStatus(false); if (!gpsAvailable) { showToast('GPS不可用，已切换手动模式', 'info'); } },
+      { enableHighAccuracy: true, maximumAge: 2000, timeout: 10000 }
+    );
+  } else {
+    setGpsStatus(false);
+    showToast('浏览器不支持GPS，已切换手动模式', 'info');
+  }
+}
+
+function initStepCounter() {
+  var lastAccel = { x: 0, y: 0, z: 0 };
+  var stepThreshold = 1.2;
+  var lastStepTime = 0;
+  document.addEventListener('devicemotion', function(e) {
+    if (workoutState !== 'running') return;
+    var accel = e.accelerationIncludingGravity;
+    if (accel) {
+      var delta = Math.abs(accel.x - lastAccel.x) + Math.abs(accel.y - lastAccel.y) + Math.abs(accel.z - lastAccel.z);
+      var now = Date.now();
+      if (delta > stepThreshold && (now - lastStepTime) > 250) {
+        totalSteps++;
+        lastAccel = { x: accel.x, y: accel.y, z: accel.z };
+        lastStepTime = now;
+      }
+    }
+  });
+  return true; // sensor initialized
+}
+
+function startPedometer() {
+  // Only start pedometer, do NOT start sim here
+  if (window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(function(state) {
+      if (state === 'granted') { initStepCounter(); }
+    }).catch(function() {});
+  } else if (window.DeviceMotionEvent) {
+    initStepCounter();
+  }
+}
+
+/* SIMULATED STEP COUNTER (for desktop / no sensor) */
+var simStepInterval = null;
+var lastSimStepTrackLen = 0; // track last known trackPoints length to detect GPS movement
+function startSimSteps() {
+  if (simStepInterval) return;
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  if (config.stepPerMeter <= 0) return; // No steps for indoor sports without sensor
+  // Realistic walking cadence: ~2 steps/sec for walking, ~2.8 for running
+  var stepsPerSec = selectedType === '跑步' ? 2.8 : selectedType === '步行' ? 2.0 : 1.5;
+  if (stepsPerSec <= 0) return;
+  lastSimStepTrackLen = trackPoints.length;
+  simStepInterval = setInterval(function() {
+    if (workoutState !== 'running') return;
+    // Only add steps if GPS shows user is actually moving (new track points added)
+    // or if GPS is not available (fallback to timer-based simulation)
+    if (gpsAvailable && config.hasRoute) {
+      if (trackPoints.length <= lastSimStepTrackLen) return; // stationary, no steps
+      lastSimStepTrackLen = trackPoints.length;
+    }
+    // Add slight randomness for realism
+    var jitter = 0.8 + Math.random() * 0.4; // 0.8 ~ 1.2
+    totalSteps += Math.max(1, Math.round(stepsPerSec * jitter));
+    updateStats();
+  }, 1000);
+}
+function stopSimSteps() {
+  if (simStepInterval) { clearInterval(simStepInterval); simStepInterval = null; }
+}
+
+function stopTracking() {
+  stopSimulatedTracking();
+  stopSimSteps();
+  if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  if (timerRAF) cancelAnimationFrame(timerRAF);
+  stopIntervalTimer();
+}
+
+/* STATS UPDATE */
+function updateStats() {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var distKm = calculateDistance(trackPoints);
+  if (distKm < 0.01 && totalSteps > 0) { distKm = Math.round(totalSteps * 0.0007 * 100) / 100; }
+  var elapsed = Math.floor((Date.now() - workoutStartTime - pausedDuration) / 1000);
+  var durationMin = elapsed / 60;
+
+  /* 卡路里 */
+  var cals = Math.round(durationMin * config.calPerMin + totalSteps * 0.04 + distKm * 60);
+
+  /* 配速或速度 */
+  var paceStr = "0'00\"";
+  if (distKm > 0.01 && durationMin > 0) {
+    if (config.hasPace) {
+      var paceMinPerKm = durationMin / distKm;
+      var pMin = Math.floor(paceMinPerKm);
+      var pSec = Math.round((paceMinPerKm - pMin) * 60);
+      paceStr = pMin + "'" + String(pSec).padStart(2, '0') + '"';
+    } else {
+      /* 速度 km/h */
+      var speedKmh = distKm / (durationMin / 60);
+      paceStr = speedKmh.toFixed(1);
+    }
+  }
+
+  document.getElementById('stat-distance').textContent = distKm.toFixed(2);
+  document.getElementById('stat-pace').textContent = paceStr;
+  document.getElementById('stat-calories').textContent = cals;
+  document.getElementById('stat-steps').textContent = totalSteps;
+  document.getElementById('lock-dist').textContent = distKm.toFixed(2);
+  document.getElementById('lock-cal').textContent = cals;
+  document.getElementById('lock-steps').textContent = totalSteps;
+}
+
+function startStatsLoop() {
+  setInterval(function() { if (workoutState === 'running') updateStats(); }, 1000);
+}
+
+/* HAVERSINE DISTANCE */
+function calculateDistance(points) {
+  if (points.length < 2) return 0;
+  var total = 0;
+  for (var i = 1; i < points.length; i++) {
+    var R = 6371;
+    var dLat = (points[i].lat - points[i - 1].lat) * Math.PI / 180;
+    var dLon = (points[i].lng - points[i - 1].lng) * Math.PI / 180;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(points[i - 1].lat * Math.PI / 180) * Math.cos(points[i].lat * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    total += R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+  return Math.round(total * 100) / 100;
+}
+
+/* WORKOUT STATE MANAGEMENT */
+function setWorkoutState(state) {
+  workoutState = state;
+  document.getElementById('controls-ready').style.display = state === 'ready' ? 'flex' : 'none';
+  document.getElementById('controls-running').style.display = state === 'running' ? 'flex' : 'none';
+  document.getElementById('controls-paused').style.display = state === 'paused' ? 'flex' : 'none';
+  document.getElementById('type-selector').style.display = state === 'ready' ? 'block' : 'none';
+  var label = document.getElementById('timer-label');
+  if (state === 'ready') label.textContent = '准备开始';
+  else if (state === 'running') label.textContent = selectedType + ' 进行中...';
+  else if (state === 'paused') label.textContent = '已暂停';
+}
+
+function startWorkout() {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  /* 立即切换 UI 状态，不让用户等 GPS */
+  workoutStartTime = Date.now();
+  trackPoints = [];
+  totalSteps = 0;
+  pausedDuration = 0;
+  startTimerLoop();
+  startIntervalTimer();
+  startStatsLoop();
+  startPedometer();
+  startSimSteps();
+  setWorkoutState('running');
+  /* 室内运动 */
+  if (!config.hasRoute) {
+    if (simTrackInterval) { clearInterval(simTrackInterval); simTrackInterval = null; }
+    document.getElementById('map-container').style.display = 'none';
+    document.getElementById('manual-banner').style.display = 'flex';
+    document.getElementById('gps-badge').style.display = 'none';
+    if (config.intervalEnabled && config.intervalDuration) { intervalDuration = config.intervalDuration; }
+    return;
+  }
+  /* 户外运动：后台获取 GPS，不阻塞 UI */
+  document.getElementById('map-container').style.display = 'block';
+  document.getElementById('manual-banner').style.display = 'none';
+  startTracking();
+  getUserLocation(function(pos, err) {
+    if (pos && !err) {
+      if (!map) { initMap(pos.lat, pos.lng); setGpsStatus(true); }
+      else { map.setView([pos.lat, pos.lng], 16); setGpsStatus(true); }
+    } else {
+      if (!map && typeof initMap === 'function' && typeof L !== 'undefined') { initMap(39.9042, 116.4074); }
+      setGpsStatus(false);
+      document.getElementById('gps-text').textContent = '模拟中';
+      startSimulatedTracking();
+    }
+  });
+}
+
+function pauseWorkout() { pauseStartTime = Date.now(); workoutState = 'paused'; setWorkoutState('paused'); stopSimSteps(); }
+
+function resumeWorkout() {
+  if (pauseStartTime) { pausedDuration += Date.now() - pauseStartTime; pauseStartTime = null; }
+  workoutState = 'running'; setWorkoutState('running'); startTimerLoop(); startIntervalTimer(); startSimSteps();
+}
+
+function requestEndWorkout() { var modal = document.getElementById('end-modal'); modal.style.opacity = '1'; modal.style.pointerEvents = 'auto'; }
+function closeEndModal() { var modal = document.getElementById('end-modal'); modal.style.opacity = '0'; modal.style.pointerEvents = 'none'; }
+
+/* confirmEndWorkout: converted from async to sync */
+function confirmEndWorkout() {
+  closeEndModal();
+  stopTracking();
+  if (isLocked) toggleLock();
+  /* 恢复 UI */
+  document.getElementById('map-container').style.display = 'block';
+  document.getElementById('manual-banner').style.display = 'none';
+  document.getElementById('gps-badge').style.display = 'flex';
+  workoutState = 'ended';
+  showSummaryModal();
+}
+
+/* LOCK SCREEN */
+function toggleLock() {
+  isLocked = !isLocked;
+  var lockEl = document.getElementById('lock-screen');
+  if (isLocked) { lockEl.classList.add('active'); } else { lockEl.classList.remove('active'); }
+}
+
+/* SUMMARY MODAL */
+function showSummaryModal() {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var elapsed = Math.floor((Date.now() - workoutStartTime - pausedDuration) / 1000);
+  var distKm = calculateDistance(trackPoints);
+  if (distKm < 0.01 && totalSteps > 0) { distKm = Math.round(totalSteps * 0.0007 * 100) / 100; }
+  var durationMin = elapsed / 60;
+  var cals = Math.round(durationMin * config.calPerMin + totalSteps * 0.04 + distKm * 60);
+
+  /* 配速/速度/时长 */
+  var paceStr = "0'00\"";
+  if (config.hasPace) {
+    if (distKm > 0.01 && durationMin > 0) {
+      var paceMinPerKm = durationMin / distKm;
+      var pMin = Math.floor(paceMinPerKm);
+      var pSec = Math.round((paceMinPerKm - pMin) * 60);
+      paceStr = pMin + "'" + String(pSec).padStart(2, '0') + '"';
+    }
+    document.getElementById('sum-pace').textContent = paceStr + ' /km';
+  } else if (!config.hasRoute) {
+    /* 室内运动：显示运动时长 */
+    document.getElementById('sum-pace').textContent = Math.floor(durationMin) + ' min';
+  } else {
+    /* 骑行：显示速度 */
+    if (distKm > 0.01 && durationMin > 0) {
+      var speedKmh = distKm / (durationMin / 60);
+      document.getElementById('sum-pace').textContent = speedKmh.toFixed(1) + ' km/h';
+    } else {
+      document.getElementById('sum-pace').textContent = '0.0 km/h';
+    }
+  }
+
+  /* 更新 summary 配速标签 */
+  var sumPaceCard = document.getElementById('sum-pace');
+  if (sumPaceCard) {
+    var labelEl = sumPaceCard.closest('.flex').querySelector('.text-\\[11px\\]');
+    if (labelEl) {
+      if (config.hasPace) labelEl.textContent = '平均配速';
+      else if (!config.hasRoute) labelEl.textContent = '运动时长';
+      else labelEl.textContent = '平均速度';
+    }
+  }
+
+  var mins = Math.floor(elapsed / 60);
+  var secs = elapsed % 60;
+  document.getElementById('sum-time').textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  document.getElementById('sum-distance').textContent = distKm.toFixed(2) + ' km';
+  document.getElementById('sum-calories').textContent = cals + ' kcal';
+  document.getElementById('sum-steps').textContent = totalSteps + ' 步';
+  document.getElementById('sum-type').textContent = selectedType;
+  var mapContainer = document.getElementById('summary-map-container');
+  if (trackPoints.length > 1) { mapContainer.style.display = 'block'; setTimeout(function() { initSummaryMap(); }, 400); }
+  else { mapContainer.style.display = 'none'; }
+  var overlay = document.getElementById('summary-overlay');
+  overlay.classList.add('active');
+  launchConfetti();
+}
+
+function initSummaryMap() {
+  var config = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var routeColor = config.routeColor || '#22C55E';
+  if (summaryMap) { summaryMap.remove(); summaryMap = null; }
+  var el = document.getElementById('summary-map');
+  summaryMap = L.map(el, { center: trackPoints.length > 0 ? [trackPoints[0].lat, trackPoints[0].lng] : [39.9042, 116.4074], zoom: 15, zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, touchZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(summaryMap);
+  var latlngs = trackPoints.map(function(p) { return [p.lat, p.lng]; });
+  L.polyline(latlngs, { color: routeColor, weight: 4, opacity: 0.85, smoothFactor: 1, lineJoin: 'round', lineCap: 'round' }).addTo(summaryMap);
+  L.circleMarker(latlngs[0], { radius: 6, fillColor: routeColor, color: '#fff', weight: 2, fillOpacity: 1 }).addTo(summaryMap);
+  if (latlngs.length > 1) { L.circleMarker(latlngs[latlngs.length - 1], { radius: 6, fillColor: '#EF4444', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(summaryMap); }
+  summaryMap.fitBounds(L.polyline(latlngs).getBounds().pad(0.2));
+  setTimeout(function() { summaryMap.invalidateSize(); }, 100);
+}
+
+function hideSummaryModal() { document.getElementById('summary-overlay').classList.remove('active'); }
+
+/* CONFETTI */
+function launchConfetti() {
+  var colors = ['#22C55E', '#F97316', '#38BDF8', '#F59E0B', '#EF4444', '#A855F7', '#EC4899'];
+  for (var i = 0; i < 60; i++) {
+    (function(index) {
+      setTimeout(function() {
+        var piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.top = '-10px';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width = (Math.random() * 8 + 6) + 'px';
+        piece.style.height = (Math.random() * 8 + 6) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.style.animation = 'confettiDrop ' + (Math.random() * 2 + 2) + 's linear forwards';
+        document.body.appendChild(piece);
+        setTimeout(function() { piece.remove(); }, 4500);
+      }, index * 30);
+    })(i);
+  }
+}
+
+/* SAVE WORKOUT (converted from async to Promise.then) */
+function saveWorkout() {
+  var user = JSON.parse(localStorage.getItem('sportlife_user'));
+  if (!user) {
+    showToast('请先登录', 'error');
+    setTimeout(function() { navigateTo('login.html'); }, 1200);
+    return;
+  }
+  var elapsed = Math.floor((Date.now() - workoutStartTime - pausedDuration) / 1000);
+  var distKm = calculateDistance(trackPoints);
+  if (distKm < 0.01 && totalSteps > 0) { distKm = Math.round(totalSteps * 0.0007 * 100) / 100; }
+  var saveConfig = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+  var cals = Math.round(elapsed / 60 * saveConfig.calPerMin + totalSteps * 0.04 + distKm * 60);
+  var workoutPayload = JSON.stringify({ userId: user.id, type: selectedType, name: selectedType + '训练', duration_minutes: Math.floor(elapsed / 60), duration_seconds: elapsed % 60, calories_burned: cals, steps: totalSteps, distance_km: distKm });
+  fetch('/api/workouts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: workoutPayload }).then(function(res) {
+    return res.json();
+  }).then(function(data) {
+    var chain = Promise.resolve();
+    if (data.workout && trackPoints.length > 0) {
+      chain = fetch('/api/tracks', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ workoutId: data.workout.id, userId: user.id, points: trackPoints }) }).then(function() { return Promise.resolve(); });
+    }
+    chain = chain.then(function() {
+      return fetch('/api/steps', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, steps: totalSteps, distance_km: distKm, calories: cals }) });
+    });
+    chain = chain.then(function() {
+      var xpEarned = Math.max(10, Math.round(cals / 5 + elapsed / 60 * 2));
+      return fetch('/api/xp/' + user.id + '/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xp: xpEarned, workout_type: selectedType, distance_km: distKm, calories: cals, duration_minutes: Math.round(elapsed / 60) }) }).then(function() {
+        showToast('训练已保存! +' + xpEarned + ' XP', 'success');
+      }).catch(function() {
+        showToast('训练已保存!', 'success');
+      });
+    });
+    chain.then(function() {
+      hideSummaryModal();
+      setTimeout(function() { navigateTo('home.html'); }, 1500);
+    });
+  }).catch(function(err) {
+    showToast('保存失败，请检查网络连接', 'error');
+  });
+}
+
+/* DISCARD WORKOUT */
+function discardWorkout() {
+  hideSummaryModal();
+  showToast('训练已放弃', 'info');
+  setTimeout(function() { navigateTo('home.html'); }, 800);
+}
+
+/* TOAST */
+function showToast(msg, type) {
+  var t = document.createElement('div');
+  t.className = 'toast-anim';
+  var bg = type === 'success' ? '#22C55E' : type === 'error' ? '#EF4444' : '#38BDF8';
+  t.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;color:white;font-size:14px;z-index:10000;background:' + bg + ';font-family:var(--sf-font-sans);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.15);';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3000);
+}
+
+/* INIT */
+(function init() {
+  function waitAndInit() {
+    if (typeof L !== 'undefined' && typeof L.map === 'function') { doInit(); }
+    else { setTimeout(waitAndInit, 100); }
+  }
+  function doInit() {
+    getUserLocation(function(pos, err) {
+      var lat = 39.9042, lng = 116.4074;
+      var gpsOk = false;
+      if (pos && !err) { lat = pos.lat; lng = pos.lng; gpsOk = true; }
+      if (typeof initMap === 'function' && typeof L !== 'undefined') {
+        initMap(lat, lng);
+        if (gpsOk) {
+          setGpsStatus(true);
+          var banner = document.getElementById('manual-banner');
+          if (banner) banner.style.display = 'none';
+        } else {
+          setGpsStatus(false);
+          document.getElementById('gps-text').textContent = 'GPS未定位';
+          var banner = document.getElementById('manual-banner');
+          if (banner) {
+            banner.style.display = 'flex';
+            banner.style.opacity = '0.85';
+            banner.style.background = 'rgba(255,255,255,0.88)';
+            var titleEl = banner.querySelector('.manual-title');
+            if (titleEl) titleEl.textContent = 'GPS 未定位，使用模拟位置';
+            var descEl = banner.querySelector('.manual-desc');
+            if (descEl) descEl.textContent = '运动将使用模拟数据';
+          }
+        }
+      } else {
+        setGpsStatus(false);
+        document.getElementById('gps-text').textContent = '手动模式';
+        var banner = document.getElementById('manual-banner');
+        if (banner) banner.style.display = 'flex';
+      }
+      var emojiEl = document.getElementById('manual-emoji');
+      var titleEl2 = document.querySelector('.manual-title');
+      if (emojiEl && titleEl2) {
+        var initConfig = SPORT_CONFIGS[selectedType] || SPORT_CONFIGS['跑步'];
+        emojiEl.textContent = initConfig.emoji;
+        if (!gpsOk) { titleEl2.textContent = initConfig.manualLabel; }
+      }
+      /* 只在用户未手动选择其他类型时，才按默认类型设置地图/banner */
+      if (selectedType === '跑步') {
+        var defaultConfig = SPORT_CONFIGS['跑步'];
+        document.getElementById('map-container').style.display = 'block';
+        document.getElementById('manual-banner').style.display = 'none';
+      }
+    });
+  }
+  waitAndInit();
+})();
+
+/* Bind start button via addEventListener */
+var startBtn = document.getElementById('start-btn');
+if (startBtn) {
+  startBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); startWorkout(); }, true);
+}
+
+/* Bind all workout control buttons via JS */
+var btnBindings = [
+  { sel: '[onclick="toggleLock()"]', fn: toggleLock },
+  { sel: '[onclick="pauseWorkout()"]', fn: pauseWorkout },
+  { sel: '[onclick="resumeWorkout()"]', fn: resumeWorkout },
+  { sel: '[onclick="requestEndWorkout()"]', fn: requestEndWorkout },
+  { sel: '[onclick="closeEndModal()"]', fn: closeEndModal },
+  { sel: '[onclick="confirmEndWorkout()"]', fn: confirmEndWorkout },
+  { sel: '[onclick="discardWorkout()"]', fn: discardWorkout },
+  { sel: '[onclick="saveWorkout()"]', fn: saveWorkout }
+];
+btnBindings.forEach(function(b) {
+  var els = document.querySelectorAll(b.sel);
+  els.forEach(function(el) { el.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); b.fn(); }, true); });
+});</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>训练计划 - SportLife</title> <style id="theme-vars">
+:root { --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-active: #15803D; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4; --sf-accent: #F97316; --sf-accent-hover: #EA580C; --sf-accent-light: #FFF7ED; --sf-accent-surface: #FED7AA; --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF; --sf-sky-surface: #BAE6FD; --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9; --sf-bg-elevated: #FFFFFF; --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8; --sf-text-inverse: #FFFFFF; --sf-text-brand: #22C55E; --sf-border-light: #E2E8F0; --sf-border-default: #CBD5E1; --sf-border-brand: #22C55E; --sf-success: #22C55E; --sf-success-light: #DCFCE7; --sf-warning: #F59E0B; --sf-warning-light: #FEF3C7; --sf-error: #EF4444; --sf-error-light: #FEE2E2; --sf-info: #38BDF8; --sf-info-light: #E0F2FE; --sf-font-sans: 'Inter','PingFang SC','Noto Sans SC',system-ui,-apple-system,sans-serif; --sf-font-display: 'Inter','PingFang SC','Noto Sans SC',system-ui,-apple-system,sans-serif; --sf-radius-sm: 6px; --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px; --sf-space-xs: 4px; --sf-space-sm: 8px; --sf-space-md: 12px; --sf-space-lg: 16px; --sf-space-xl: 24px; --sf-space-2xl: 32px; --sf-space-3xl: 48px; --sf-shadow-xs: 0 1px 2px rgba(0,0,0,0.04); --sf-shadow-sm: 0 2px 4px rgba(0,0,0,0.04); --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05); --sf-shadow-lg: 0 8px 24px rgba(0,0,0,0.06); --sf-transition-fast: 150ms ease; --sf-transition-normal: 250ms ease; --sf-transition-slow: 400ms ease; --sf-z-sticky: 200; --sf-z-overlay: 300; --sf-z-modal: 400;
+}
+html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-bg-elevated: #1E293B; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155; --sf-primary-surface: rgba(34,197,94,0.12); --sf-primary-light: rgba(34,197,94,0.15); --sf-accent-light: rgba(249,115,22,0.12); --sf-sky-light: rgba(56,189,248,0.12); --sf-success-light: rgba(34,197,94,0.15); --sf-warning-light: rgba(245,158,11,0.15); --sf-error-light: rgba(239,68,68,0.15);
+} </style> <script src="/assets/vendor/tailwind.js" defer></script> <style type="text/tailwindcss"> @theme inline { --color-primary: var(--sf-primary); --color-accent: var(--sf-accent); } </style> <link rel="manifest" href="/manifest.json"> <meta name="theme-color" content="#22C55E"> <meta name="apple-mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <meta name="apple-mobile-web-app-title" content="SportLife"> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script> <script src="tab-prefetch.js"></script>
+
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sf-font-sans);background:var(--sf-bg-secondary);color:var(--sf-text-primary);max-width:430px;margin:0 auto;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+::-webkit-scrollbar{width:0;height:0} /* Header */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:0 var(--sf-space-lg);background:var(--sf-bg);position:sticky;top:0;z-index:var(--sf-z-sticky);border-bottom:1px solid var(--sf-border-light);height:56px}
+.header-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--sf-radius-full);background:var(--sf-bg-secondary);border:none;cursor:pointer;transition:background var(--sf-transition-fast);-webkit-tap-highlight-color:transparent}
+.header-btn:active{background:var(--sf-bg-tertiary)}
+.header-title{font-size:17px;font-weight:700;color:var(--sf-text-primary);font-family:var(--sf-font-display)} /* Card Sections */
+.card-section{margin:var(--sf-space-lg) var(--sf-space-xl) 0;background:var(--sf-bg-elevated);border-radius:var(--sf-radius-xl);padding:var(--sf-space-xl);box-shadow:0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);border:1px solid var(--sf-border-light)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sf-space-lg)}
+.section-title{font-size:16px;font-weight:700;color:var(--sf-text-primary);font-family:var(--sf-font-display)}
+.section-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--sf-radius-full);background:var(--sf-primary-light);color:var(--sf-primary)} /* Week Bar Chart */
+.week-chart{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:108px;padding-top:4px}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:5px}
+.bar-value{font-size:9px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--sf-text-tertiary);min-height:14px}
+.bar-track{width:100%;height:68px;border-radius:6px;background:var(--sf-bg-tertiary);overflow:hidden;display:flex;align-items:flex-end}
+.bar-fill{width:100%;border-radius:6px;height:0;transition:height 0.9s cubic-bezier(0.25,0.46,0.45,0.94)}
+.bar-day{font-size:10px;font-weight:500;color:var(--sf-text-tertiary)}
+.bar-col.is-today .bar-day{color:var(--sf-primary);font-weight:700}
+.bar-col.is-today .bar-value{color:var(--sf-primary)} /* Week Summary */
+.week-summary{display:flex;margin-top:var(--sf-space-lg);padding-top:var(--sf-space-lg);border-top:1px solid var(--sf-border-light)}
+.week-stat{flex:1;text-align:center;padding:var(--sf-space-xs) 0}
+.week-stat-num{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
+.week-stat-label{font-size:10px;font-weight:500;color:var(--sf-text-tertiary);margin-top:2px} /* Plan / Workout Cards */
+.plan-card{display:flex;align-items:center;gap:var(--sf-space-md);padding:var(--sf-space-md) var(--sf-space-lg);background:var(--sf-bg-secondary);border-radius:var(--sf-radius-lg);margin-bottom:var(--sf-space-sm);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.25s ease;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.plan-card:last-child{margin-bottom:0}
+.plan-card:active{transform:scale(0.97);box-shadow:0 1px 2px rgba(0,0,0,0.06)}
+.plan-icon{width:44px;height:44px;border-radius:var(--sf-radius-md);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.plan-info{flex:1;min-width:0}
+.plan-name{font-size:14px;font-weight:600;color:var(--sf-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plan-meta{font-size:11px;color:var(--sf-text-tertiary);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.plan-meta svg{flex-shrink:0} /* Status Badges */
+.plan-status{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:var(--sf-radius-full);font-size:11px;font-weight:600;flex-shrink:0;white-space:nowrap}
+.plan-status.completed{background:var(--sf-success-light);color:var(--sf-success)}
+.plan-status.in-progress{background:var(--sf-accent-light);color:var(--sf-accent)}
+.plan-status.planned{background:var(--sf-bg-tertiary);color:var(--sf-text-tertiary)}
+.plan-status.in-progress::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--sf-accent);animation:statusPulse 1.5s ease-in-out infinite}
+@keyframes statusPulse{0%,100%{opacity:1}50%{opacity:0.4}} /* Difficulty Tags */
+.diff-tag{display:inline-block;padding:1px 7px;border-radius:var(--sf-radius-sm);font-size:10px;font-weight:600}
+.diff-tag.beginner{background:var(--sf-success-light);color:var(--sf-success)}
+.diff-tag.medium{background:var(--sf-warning-light);color:var(--sf-warning)}
+.diff-tag.advanced{background:var(--sf-error-light);color:var(--sf-error)} /* Empty State */
+.empty-state{text-align:center;padding:var(--sf-space-2xl) var(--sf-space-xl)}
+.empty-icon{font-size:48px;margin-bottom:var(--sf-space-md)}
+.empty-text{font-size:14px;color:var(--sf-text-tertiary);margin-bottom:var(--sf-space-lg)} /* Create Button */
+.create-btn{display:flex;align-items:center;justify-content:center;gap:var(--sf-space-sm);width:100%;padding:var(--sf-space-md);border:2px dashed var(--sf-border-default);border-radius:var(--sf-radius-lg);background:transparent;color:var(--sf-text-secondary);font-size:14px;font-weight:600;cursor:pointer;transition:all var(--sf-transition-fast);-webkit-tap-highlight-color:transparent;font-family:var(--sf-font-sans)}
+.create-btn:active{transform:scale(0.98);border-color:var(--sf-primary);color:var(--sf-primary);background:var(--sf-primary-surface)} /* Form */
+.create-form{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.45s ease,opacity 0.3s ease,padding 0.3s ease;padding-top:0}
+.create-form.open{max-height:700px;opacity:1;padding-top:var(--sf-space-xl)}
+.form-group{margin-bottom:var(--sf-space-lg)}
+.form-label{font-size:13px;font-weight:600;color:var(--sf-text-secondary);margin-bottom:var(--sf-space-sm);display:block}
+.form-input{width:100%;padding:var(--sf-space-md) var(--sf-space-lg);border-radius:var(--sf-radius-lg);border:1.5px solid var(--sf-border-light);background:var(--sf-bg-secondary);color:var(--sf-text-primary);font-size:14px;font-family:var(--sf-font-sans);outline:none;transition:border-color var(--sf-transition-fast);-webkit-appearance:none}
+.form-input:focus{border-color:var(--sf-primary)}
+.form-input::placeholder{color:var(--sf-text-tertiary)} .type-selector{display:flex;flex-wrap:wrap;gap:var(--sf-space-sm)}
+.type-chip{padding:var(--sf-space-sm) var(--sf-space-lg);border-radius:var(--sf-radius-full);border:1.5px solid var(--sf-border-default);background:var(--sf-bg-secondary);color:var(--sf-text-secondary);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--sf-transition-fast);-webkit-tap-highlight-color:transparent;font-family:var(--sf-font-sans)}
+.type-chip:active{transform:scale(0.96)}
+.type-chip.active{border-color:var(--sf-primary);background:var(--sf-primary-light);color:var(--sf-primary);font-weight:600} .diff-selector{display:flex;gap:var(--sf-space-sm)}
+.diff-chip{flex:1;padding:var(--sf-space-sm) var(--sf-space-md);border-radius:var(--sf-radius-lg);border:1.5px solid var(--sf-border-default);background:var(--sf-bg-secondary);color:var(--sf-text-secondary);font-size:13px;font-weight:500;text-align:center;cursor:pointer;transition:all var(--sf-transition-fast);-webkit-tap-highlight-color:transparent;font-family:var(--sf-font-sans)}
+.diff-chip.active{border-color:var(--sf-primary);background:var(--sf-primary-light);color:var(--sf-primary);font-weight:600} /* Duration Slider */
+.slider-wrap{display:flex;align-items:center;gap:var(--sf-space-md)}
+.slider-wrap input[type="range"]{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--sf-bg-tertiary);outline:none}
+.slider-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--sf-primary);border:3px solid var(--sf-bg-elevated);box-shadow:0 2px 6px rgba(34,197,94,0.3);cursor:pointer}
+.slider-val{min-width:52px;text-align:center;font-size:15px;font-weight:700;color:var(--sf-primary);font-variant-numeric:tabular-nums} /* Save Button — Premium btn-primary */
+.save-btn{width:100%;padding:var(--sf-space-md) 0;border:none;border-radius:var(--sf-radius-lg);background:linear-gradient(135deg,#22C55E 0%,#16A34A 100%);color:var(--sf-text-inverse);font-size:15px;font-weight:700;font-family:var(--sf-font-sans);cursor:pointer;transition:all 0.25s ease;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 16px rgba(34,197,94,0.3);position:relative;overflow:hidden}
+.save-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 50%);pointer-events:none}
+.save-btn:active{transform:scale(0.97);box-shadow:0 2px 8px rgba(34,197,94,0.2)}
+.save-btn:disabled{opacity:0.5;cursor:not-allowed} /* Recent Workout Expand */
+.workout-detail{max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding 0.3s ease;padding:0 var(--sf-space-lg);background:var(--sf-bg-secondary);border-radius:0 0 var(--sf-radius-lg) var(--sf-radius-lg)}
+.workout-detail.expanded{max-height:200px;padding:var(--sf-space-md) var(--sf-space-lg);margin-top:-1px}
+.detail-row{display:flex;justify-content:space-between;padding:var(--sf-space-xs) 0;border-bottom:1px solid var(--sf-border-light);font-size:12px;color:var(--sf-text-secondary)}
+.detail-row:last-child{border-bottom:none}
+.detail-row span:last-child{font-weight:600;color:var(--sf-text-primary)} /* Stats Grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sf-space-md)}
+.stat-card{padding:var(--sf-space-lg);border-radius:var(--sf-radius-lg);text-align:center;background:var(--sf-bg-secondary);box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:transform 0.25s ease}
+.stat-card:active{transform:scale(0.97)}
+.stat-card-icon{width:40px;height:40px;border-radius:var(--sf-radius-md);display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto var(--sf-space-sm)}
+.stat-card-num{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat-card-label{font-size:11px;font-weight:500;color:var(--sf-text-tertiary);margin-top:3px} /* Toast */
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);padding:var(--sf-space-md) var(--sf-space-xl);background:var(--sf-text-primary);color:var(--sf-text-inverse);border-radius:var(--sf-radius-full);font-size:13px;font-weight:600;z-index:var(--sf-z-modal);opacity:0;transition:all 0.3s ease;pointer-events:none;white-space:nowrap;box-shadow:var(--sf-shadow-lg)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)} /* Tab Bar — Premium Glassmorphism (override local) */
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background: var(--sf-bg);border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-around;align-items:center;padding:var(--sf-space-sm) 0 calc(var(--sf-space-sm) + env(safe-area-inset-bottom,8px));z-index:var(--sf-z-sticky);box-shadow:0 -4px 24px rgba(0,0,0,0.04);transition: background 0.3s ease, border-color 0.3s ease}
+html.dark .tab-bar{background: var(--sf-bg);border-top-color:rgba(255,255,255,0.06);box-shadow:0 -4px 24px rgba(0,0,0,0.2)}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;position:relative;padding:var(--sf-space-xs) var(--sf-space-lg);transition:all 0.25s ease;user-select:none;-webkit-tap-highlight-color:transparent}
+.tab-item:active{transform:scale(0.9)}
+.tab-icon{color:var(--sf-text-tertiary);transition:all 0.25s ease}
+.tab-label{font-size:10px;font-weight:500;color:var(--sf-text-tertiary);transition:color 0.25s ease}
+.tab-item.active .tab-icon{color:var(--sf-primary);transform:scale(1.1) translateY(-1px)}
+.tab-item.active .tab-label{color:var(--sf-primary);font-weight:600}
+.tab-item.active::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--sf-primary);box-shadow:0 0 8px rgba(34,197,94,0.4)} </style> <!-- ==================== HEADER ==================== -->
+<header class="app-header"> <a href="home.html" class="header-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;" aria-label="返回"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> </a> <span class="header-title">训练计划</span> <button class="header-btn" id="header-share-btn" aria-label="分享"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> </button>
+</header> <!-- ==================== THIS WEEK SUMMARY (Bar Chart) ==================== -->
+<section class="card-section" id="weekSection"> <div class="section-head"> <span class="section-title">本周步数</span> <span class="section-badge" id="weekRangeLabel">本周</span> </div> <div class="week-chart" id="weekChart"> <!-- JS renders 7 bars --> </div> <div class="week-summary" id="weekSummary"> <!-- JS renders totals --> </div>
+</section> <!-- ==================== TODAY'S PLAN ==================== -->
+<section class="card-section" id="todayPlanSection"> <div class="section-head"> <span class="section-title">今日计划</span> <span class="section-badge" id="todayDateLabel">--</span> </div> <div id="todayPlanList"> <div class="empty-state"> <div class="empty-icon">📋</div> <div class="empty-text">加载中...</div> </div> </div> <div style="margin-top:var(--sf-space-md)"> <button class="create-btn" id="createPlanToggle"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> 创建计划 </button> </div> <!-- Inline Create Form --> <div class="create-form" id="createForm"> <div class="form-group"> <label class="form-label">训练名称</label> <input type="text" class="form-input" id="planNameInput" placeholder="例如：晨跑5公里" maxlength="30"> </div> <div class="form-group"> <label class="form-label">训练类型</label> <div class="type-selector" id="typeSelector"> <div class="type-chip active" data-type="跑步" data-icon="🏃">🏃 跑步</div> <div class="type-chip" data-type="骑行" data-icon="🚴">🚴 骑行</div> <div class="type-chip" data-type="HIIT" data-icon="🔥">🔥 HIIT</div> <div class="type-chip" data-type="瑜伽" data-icon="🧘">🧘 瑜伽</div> <div class="type-chip" data-type="力量" data-icon="💪">💪 力量</div> <div class="type-chip" data-type="拉伸" data-icon="🤸">🤸 拉伸</div> </div> </div> <div class="form-group"> <label class="form-label">难度等级</label> <div class="diff-selector" id="diffSelector"> <div class="diff-chip active" data-diff="beginner">初级</div> <div class="diff-chip" data-diff="medium">中级</div> <div class="diff-chip" data-diff="advanced">高级</div> </div> </div> <div class="form-group"> <label class="form-label">计划时间</label> <input type="time" class="form-input" id="planTimeInput" value="08:00"> </div> <div class="form-group"> <label class="form-label">训练时长</label> <div class="slider-wrap"> <input type="range" min="15" max="120" step="5" value="30" id="durationSlider"> <span class="slider-val" id="durationVal">30 分钟</span> </div> </div> <button class="save-btn" id="savePlanBtn">保存计划</button> </div>
+</section> <!-- ==================== RECENT WORKOUTS ==================== -->
+<section class="card-section" id="recentSection"> <div class="section-head"> <span class="section-title">最近训练</span> <span style="font-size:12px;color:var(--sf-text-tertiary)" id="recentCount"></span> </div> <div id="recentList"> <div class="empty-state"> <div class="empty-icon">🏃</div> <div class="empty-text">加载中...</div> </div> </div>
+</section> <!-- ==================== WORKOUT HISTORY STATS ==================== -->
+<section class="card-section" id="statsSection"> <div class="section-head"> <span class="section-title">累计数据</span> </div> <div class="stats-grid" id="statsGrid"> <div class="stat-card"> <div class="stat-card-icon" style="background:var(--sf-primary-surface)">📏</div> <div class="stat-card-num" style="color:var(--sf-primary)" id="statDistance">0</div> <div class="stat-card-label">总距离 (km)</div> </div> <div class="stat-card"> <div class="stat-card-icon" style="background:var(--sf-sky-light)">⏱</div> <div class="stat-card-num" style="color:var(--sf-sky)" id="statTime">0</div> <div class="stat-card-label">总时长 (min)</div> </div> <div class="stat-card"> <div class="stat-card-icon" style="background:var(--sf-accent-light)">🔥</div> <div class="stat-card-num" style="color:var(--sf-accent)" id="statCalories">0</div> <div class="stat-card-label">总消耗 (kcal)</div> </div> <div class="stat-card"> <div class="stat-card-icon" style="background:var(--sf-primary-surface)">🏅</div> <div class="stat-card-num" style="color:var(--sf-primary)" id="statWorkouts">0</div> <div class="stat-card-label">总训练次数</div> </div> </div>
+</section> <!-- ==================== BOTTOM TAB BAR ==================== -->
+<nav class="tab-bar"> <a href="home.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> <span class="tab-label">首页</span> </a> <a href="training-plan.html" class="tab-item active" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/><line x1="3" y1="16" x2="9" y2="16"/><line x1="15" y1="16" x2="21" y2="16"/></svg> <span class="tab-label">训练</span> </a> <a href="course-detail.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> <span class="tab-label">课程</span> </a> <a href="community.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> <span class="tab-label">社区</span> </a> <a href="profile.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span class="tab-label">我的</span> </a>
+</nav> <!-- Toast notification -->
+<div class="toast" id="toast"></div> <!-- ==================== JAVASCRIPT ==================== -->
+<script>
+(function() {
+  'use strict';
+
+  /* ===== Auth Guard ===== */
+  function getCurrentUser() {
+    try {
+      return JSON.parse(localStorage.getItem('sportlife_user'));
+    } catch(e) {
+      return null;
+    }
+  }
+
+  var user = getCurrentUser();
+  if (!user) {
+    navigateTo('login.html');
+    return;
+  }
+
+  /* ===== Toast ===== */
+  window.showToast = function(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() {
+      t.classList.remove('show');
+    }, 2500);
+  };
+
+  /* ===== Share ===== */
+  window.handleShare = function() {
+    if (navigator.share) {
+      navigator.share({
+        title: '我的训练计划 - SportLife',
+        text: '来看看我的训练计划吧！',
+        url: window.location.href
+      }).catch(function() {});
+    } else {
+      showToast('已复制链接到剪贴板');
+    }
+  };
+
+  /* ===== Helpers ===== */
+  function getTypeIcon(type) {
+    var m = {
+      '跑步': '🏃', '骑行': '🚴', '步行': '🚶', 'HIIT': '🔥',
+      '瑜伽': '🧘', '力量': '💪', '拉伸': '🤸', '游泳': '🏊'
+    };
+    return m[type] || '🏋️';
+  }
+
+  function getDiffLabel(d) {
+    return {
+      'beginner': '初级', 'medium': '中级', 'advanced': '高级'
+    }[d] || '中级';
+  }
+
+  function todayStr() {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  function dayNames() {
+    return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  }
+
+  function dayNamesShort() {
+    return ['日', '一', '二', '三', '四', '五', '六'];
+  }
+
+  function formatDate(d) {
+    if (!d) return '';
+    var dt = new Date(d);
+    if (isNaN(dt.getTime())) return d;
+    return (dt.getMonth() + 1) + '/' + dt.getDate() + ' ' + dayNames()[dt.getDay()];
+  }
+
+  function formatTime(t) {
+    if (!t) return '';
+    return t.substring(0, 5);
+  }
+
+  function animateNum(el, target) {
+    target = Math.max(0, Math.floor(target));
+    if (target === 0) {
+      el.textContent = '0';
+      return;
+    }
+    var cur = 0;
+    var step = Math.max(1, Math.ceil(target / 25));
+    var timer = setInterval(function() {
+      cur += step;
+      if (cur >= target) {
+        cur = target;
+        clearInterval(timer);
+      }
+      el.textContent = cur.toLocaleString();
+    }, 30);
+  }
+
+  /* ===== Tab Bar ===== */
+  function initTabBar() {
+    document.querySelectorAll('.tab-item').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = this.getAttribute('data-target');
+        if (target) navigateTo(target);
+      });
+    });
+  }
+
+  /* ===== Create Form ===== */
+  var selectedType = '跑步';
+  var selectedDiff = 'beginner';
+
+  window.toggleCreateForm = function() {
+    var form = document.getElementById('createForm');
+    form.classList.toggle('open');
+  };
+
+  function initCreateForm() {
+    /* Type selector */
+    document.querySelectorAll('#typeSelector .type-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('#typeSelector .type-chip').forEach(function(c) {
+          c.classList.remove('active');
+        });
+        this.classList.add('active');
+        selectedType = this.getAttribute('data-type');
+      });
+    });
+
+    /* Difficulty selector */
+    document.querySelectorAll('#diffSelector .diff-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('#diffSelector .diff-chip').forEach(function(c) {
+          c.classList.remove('active');
+        });
+        this.classList.add('active');
+        selectedDiff = this.getAttribute('data-diff');
+      });
+    });
+
+    /* Duration slider */
+    var slider = document.getElementById('durationSlider');
+    var valEl = document.getElementById('durationVal');
+    slider.addEventListener('input', function() {
+      valEl.textContent = this.value + ' 分钟';
+    });
+  }
+
+  window.savePlan = async function() {
+    var name = document.getElementById('planNameInput').value.trim();
+    if (!name) {
+      showToast('请输入训练名称');
+      return;
+    }
+    var btn = document.getElementById('savePlanBtn');
+    btn.disabled = true;
+    btn.textContent = '保存中...';
+    try {
+      var res = await fetch('/api/plans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          name: name,
+          type: selectedType,
+          difficulty: selectedDiff,
+          scheduled_date: todayStr(),
+          scheduled_time: document.getElementById('planTimeInput').value,
+          duration_minutes: parseInt(document.getElementById('durationSlider').value)
+        })
+      });
+      var data = await res.json();
+      if (data.success) {
+        showToast('计划已创建');
+        document.getElementById('planNameInput').value = '';
+        document.getElementById('createForm').classList.remove('open');
+        await loadTodayPlan();
+      } else {
+        showToast(data.message || '创建失败');
+      }
+    } catch(e) {
+      showToast('网络错误，请重试');
+    }
+    btn.disabled = false;
+    btn.textContent = '保存计划';
+  };
+
+  /* ===== Render Empty Week Chart ===== */
+  function renderEmptyWeekChart(chartEl, summaryEl, rangeEl) {
+    var now = new Date();
+    var dayOfWeek = now.getDay();
+    var monday = new Date(now);
+    monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+    var todayDate = todayStr();
+    var dayLabels = ['一', '二', '三', '四', '五', '六', '日'];
+    var daysHtml = '';
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      var dateStr = d.toISOString().split('T')[0];
+      var isToday = dateStr === todayDate;
+      daysHtml += '<div class="bar-col' + (isToday ? ' is-today' : '') + '">' +
+        '<span class="bar-value">--</span>' +
+        '<div class="bar-track"><div class="bar-fill" data-height="0%" style="background:var(--sf-border-default)"></div></div>' +
+        '<span class="bar-day">' + dayLabels[i] + '</span>' +
+        '</div>';
+    }
+    chartEl.innerHTML = daysHtml;
+    setTimeout(function() {
+      chartEl.querySelectorAll('.bar-fill').forEach(function(bar) {
+        bar.style.height = bar.getAttribute('data-height');
+      });
+    }, 300);
+    var monStr = (monday.getMonth() + 1) + '/' + monday.getDate();
+    var sunD = new Date(monday);
+    sunD.setDate(monday.getDate() + 6);
+    var sunStr = (sunD.getMonth() + 1) + '/' + sunD.getDate();
+    rangeEl.textContent = monStr + ' - ' + sunStr;
+    summaryEl.innerHTML = '<div class="week-stat"><div class="week-stat-num green">0</div><div class="week-stat-label">总步数</div></div>' +
+      '<div class="week-stat"><div class="week-stat-num orange">0</div><div class="week-stat-label">总卡路里</div></div>' +
+      '<div class="week-stat"><div class="week-stat-num blue">0</div><div class="week-stat-label">日均步数</div></div>';
+  }
+
+  /* ===== Load Week Steps ===== */
+  async function loadWeekSteps() {
+    var chartEl = document.getElementById('weekChart');
+    var summaryEl = document.getElementById('weekSummary');
+    var rangeEl = document.getElementById('weekRangeLabel');
+    try {
+      var res = await fetch('/api/steps/' + user.id + '/week');
+      var data = await res.json();
+      if (!data.success) {
+        renderEmptyWeekChart(chartEl, summaryEl, rangeEl);
+        return;
+      }
+      var records = data.records || [];
+      if (records.length === 0) {
+        renderEmptyWeekChart(chartEl, summaryEl, rangeEl);
+        return;
+      }
+      var todayDate = todayStr();
+      /* Build map date -> steps */
+      var stepMap = {};
+      var calMap = {};
+      var totalSteps = 0, totalCals = 0;
+      records.forEach(function(r) {
+        stepMap[r.date] = r.steps || 0;
+        calMap[r.date] = r.calories || 0;
+        totalSteps += (r.steps || 0);
+        totalCals += (r.calories || 0);
+      });
+      /* Find max steps for scaling */
+      var maxSteps = 0;
+      records.forEach(function(r) {
+        if (r.steps > maxSteps) maxSteps = r.steps;
+      });
+      if (maxSteps === 0) maxSteps = 10000;
+      /* Generate 7 days (Mon-Sun) */
+      var now = new Date();
+      var dayOfWeek = now.getDay();
+      var monday = new Date(now);
+      monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+      var daysHtml = '';
+      var dayLabels = ['一', '二', '三', '四', '五', '六', '日'];
+      for (var i = 0; i < 7; i++) {
+        var d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        var dateStr = d.toISOString().split('T')[0];
+        var steps = stepMap[dateStr] || 0;
+        var pct = Math.round((steps / maxSteps) * 100);
+        var isToday = dateStr === todayDate;
+        var color = steps > 0 ? 'var(--sf-primary)' : 'var(--sf-border-default)';
+        if (isToday && steps > 0) color = 'var(--sf-accent)';
+        var valueText = steps > 0 ? (steps >= 1000 ? (steps / 1000).toFixed(1) + 'k' : steps) : '--';
+        daysHtml += '<div class="bar-col' + (isToday ? ' is-today' : '') + '">' +
+          '<span class="bar-value">' + valueText + '</span>' +
+          '<div class="bar-track"><div class="bar-fill" data-height="' + pct + '%" style="background:' + color + '"></div></div>' +
+          '<span class="bar-day">' + dayLabels[i] + '</span>' +
+          '</div>';
+      }
+      chartEl.innerHTML = daysHtml;
+      /* Animate bars */
+      setTimeout(function() {
+        chartEl.querySelectorAll('.bar-fill').forEach(function(bar) {
+          bar.style.height = bar.getAttribute('data-height');
+        });
+      }, 300);
+      /* Week range label */
+      var monStr = (monday.getMonth() + 1) + '/' + monday.getDate();
+      var sunD = new Date(monday);
+      sunD.setDate(monday.getDate() + 6);
+      var sunStr = (sunD.getMonth() + 1) + '/' + sunD.getDate();
+      rangeEl.textContent = monStr + ' - ' + sunStr;
+      /* Summary */
+      var avgSteps = records.length > 0 ? Math.round(totalSteps / records.length) : 0;
+      summaryEl.innerHTML = '<div class="week-stat"><div class="week-stat-num green">' + totalSteps.toLocaleString() + '</div><div class="week-stat-label">总步数</div></div>' +
+        '<div class="week-stat"><div class="week-stat-num orange">' + totalCals.toLocaleString() + '</div><div class="week-stat-label">总卡路里</div></div>' +
+        '<div class="week-stat"><div class="week-stat-num blue">' + avgSteps.toLocaleString() + '</div><div class="week-stat-label">日均步数</div></div>';
+    } catch(e) {
+      renderEmptyWeekChart(chartEl, summaryEl, rangeEl);
+    }
+  }
+
+  /* ===== Load Today's Plan ===== */
+  window.loadTodayPlan = async function() {
+    var container = document.getElementById('todayPlanList');
+    var dateLabel = document.getElementById('todayDateLabel');
+    var now = new Date();
+    dateLabel.textContent = (now.getMonth() + 1) + '月' + now.getDate() + '日 ' + dayNames()[now.getDay()];
+    try {
+      var res = await fetch('/api/plans/' + user.id + '?date=' + todayStr());
+      var data = await res.json();
+      var plans = data.plans || [];
+      if (plans.length === 0) {
+        container.innerHTML = '<div class="empty-state">' +
+          '<div class="empty-icon">📋</div>' +
+          '<div class="empty-text">今天没有计划</div>' +
+          '</div>';
+        return;
+      }
+      var html = '';
+      plans.forEach(function(p) {
+        var iconBg = 'var(--sf-primary-surface)';
+        var statusClass = 'planned';
+        var statusText = '待开始';
+        if (p.status === 'completed') {
+          statusClass = 'completed';
+          statusText = '已完成';
+        } else if (p.status === 'in-progress') {
+          statusClass = 'in-progress';
+          statusText = '进行中';
+        }
+        html += '<div class="plan-card" data-plan-id="' + p.id + '">' +
+          '<div class="plan-icon" style="background:' + iconBg + '">' + getTypeIcon(p.type) + '</div>' +
+          '<div class="plan-info">' +
+          '<div class="plan-name">' + escapeHtml(p.name) + '</div>' +
+          '<div class="plan-meta">' +
+          '<span>' + (p.duration_minutes || 30) + ' min</span>' +
+          '<span style="color:var(--sf-border-default)">|</span>' +
+          '<span class="diff-tag ' + (p.difficulty || 'medium') + '">' + getDiffLabel(p.difficulty) + '</span>' +
+          (p.scheduled_time ? '<span style="color:var(--sf-border-default)">|</span><span>' + formatTime(p.scheduled_time) + '</span>' : '') +
+          '</div>' +
+          '</div>' +
+          '<div class="plan-status ' + statusClass + '">' + statusText + '</div>' +
+          '</div>';
+      });
+      container.innerHTML = html;
+      /* Attach click handlers to cycle status */
+      container.querySelectorAll('.plan-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          cyclePlanStatus(this.getAttribute('data-plan-id'));
+        });
+      });
+    } catch(e) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">今天没有计划</div></div>';
+    }
+  };
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function cyclePlanStatus(planId) {
+    try {
+      var res = await fetch('/api/plans/' + user.id + '?date=' + todayStr());
+      var data = await res.json();
+      var plan = null;
+      (data.plans || []).forEach(function(p) {
+        if (p.id === planId) plan = p;
+      });
+      if (!plan) return;
+      var next = 'in-progress';
+      if (plan.status === 'planned') next = 'in-progress';
+      else if (plan.status === 'in-progress') next = 'completed';
+      else next = 'planned';
+      await fetch('/api/plans/' + planId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: next })
+      });
+      showToast(
+        next === 'completed' ? '已标记完成' :
+        next === 'in-progress' ? '已开始训练' : '已重置为待开始'
+      );
+      await loadTodayPlan();
+    } catch(e) {
+      /* silent */
+    }
+  }
+
+  /* ===== Load Recent Workouts ===== */
+  async function loadRecentWorkouts() {
+    var container = document.getElementById('recentList');
+    var countEl = document.getElementById('recentCount');
+    try {
+      var res = await fetch('/api/workouts/' + user.id + '?limit=10');
+      var data = await res.json();
+      var workouts = data.workouts || [];
+      countEl.textContent = workouts.length > 0 ? workouts.length + ' 条' : '';
+      if (workouts.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-icon">🏃</div><div class="empty-text">暂无训练记录</div></div>';
+        return;
+      }
+      var html = '';
+      workouts.forEach(function(w, idx) {
+        var id = 'recent-' + idx;
+        html += '<div class="plan-card" data-detail-id="' + id + '" style="margin-bottom:0">' +
+          '<div class="plan-icon" style="background:var(--sf-primary-surface)">' + getTypeIcon(w.type) + '</div>' +
+          '<div class="plan-info">' +
+          '<div class="plan-name">' + escapeHtml(w.name) + '</div>' +
+          '<div class="plan-meta">' +
+          '<span>' + (w.duration_minutes || 0) + ' min</span>' +
+          '<span style="color:var(--sf-border-default)">|</span>' +
+          '<span>' + (w.calories_burned || 0) + ' kcal</span>' +
+          '</div>' +
+          '</div>' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-tertiary)" stroke-width="2" stroke-linecap="round" id="chevron-' + id + '" style="transition:transform 0.3s ease;flex-shrink:0"><path d="M6 9l6 6 6-6"/></svg>' +
+          '</div>' +
+          '<div class="workout-detail" id="' + id + '">' +
+          '<div class="detail-row"><span>类型</span><span>' + (w.type || '--') + '</span></div>' +
+          '<div class="detail-row"><span>时长</span><span>' + (w.duration_minutes || 0) + ' 分钟</span></div>' +
+          '<div class="detail-row"><span>卡路里</span><span>' + (w.calories_burned || 0) + ' kcal</span></div>' +
+          (w.distance_km ? '<div class="detail-row"><span>距离</span><span>' + parseFloat(w.distance_km).toFixed(2) + ' km</span></div>' : '') +
+          (w.steps ? '<div class="detail-row"><span>步数</span><span>' + w.steps.toLocaleString() + '</span></div>' : '') +
+          '<div class="detail-row"><span>完成时间</span><span>' + formatDate(w.completed_at) + '</span></div>' +
+          '</div>';
+        if (idx < workouts.length - 1) html += '<div style="height:var(--sf-space-sm)"></div>';
+      });
+      container.innerHTML = html;
+    } catch(e) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">🏃</div><div class="empty-text">暂无训练记录</div></div>';
+    }
+  }
+
+  window.toggleDetail = function(id) {
+    var detail = document.getElementById(id);
+    var chevron = document.getElementById('chevron-' + id);
+    if (!detail) return;
+    var wasExpanded = detail.classList.contains('expanded');
+    /* Close all others */
+    document.querySelectorAll('.workout-detail.expanded').forEach(function(d) {
+      d.classList.remove('expanded');
+    });
+    document.querySelectorAll('[id^="chevron-recent-"]').forEach(function(c) {
+      c.style.transform = 'rotate(0deg)';
+    });
+    if (!wasExpanded) {
+      detail.classList.add('expanded');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+  };
+
+  /* ===== Load Workout Stats ===== */
+  async function loadStats() {
+    try {
+      var res = await fetch('/api/workouts/' + user.id + '/stats');
+      var data = await res.json();
+      if (data.success && data.stats) {
+        var s = data.stats;
+        animateNum(document.getElementById('statDistance'), parseFloat(s.totalDistance || 0));
+        animateNum(document.getElementById('statTime'), parseInt(s.totalDurationMin || 0));
+        animateNum(document.getElementById('statCalories'), parseInt(s.totalCalories || 0));
+        animateNum(document.getElementById('statWorkouts'), parseInt(s.totalWorkouts || 0));
+      }
+    } catch(e) {
+      /* 网络错误时显示 demo 数据 */
+      animateNum(document.getElementById('statDistance'), 12.5);
+      animateNum(document.getElementById('statTime'), 180);
+      animateNum(document.getElementById('statCalories'), 2400);
+      animateNum(document.getElementById('statWorkouts'), 8);
+    }
+  }
+
+  /* ===== Init ===== */
+  function init() {
+    initCreateForm();
+    loadWeekSteps();
+    loadTodayPlan();
+    loadRecentWorkouts();
+    loadStats();
+
+    /* Backup event bindings (mobile Safari + ngrok compatibility) */
+    document.querySelectorAll('[onclick]').forEach(function(el) {
+      var onclickAttr = el.getAttribute('onclick');
+      if (onclickAttr && onclickAttr.indexOf('window.location') === -1) {
+        var fnMatch = onclickAttr.match(/^(\w+)\(/);
+        if (fnMatch) {
+          var fnName = fnMatch[1];
+          el.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof window[fnName] === 'function') window[fnName]();
+          }, true);
+        }
+      }
+    });
+
+    /* addEventListener for buttons that had onclick removed */
+    var shareBtn = document.getElementById('header-share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof handleShare === 'function') handleShare();
+      }, true);
+    }
+
+    var createToggle = document.getElementById('createPlanToggle');
+    if (createToggle) {
+      createToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof toggleCreateForm === 'function') toggleCreateForm();
+      }, true);
+    }
+
+    var saveBtn = document.getElementById('savePlanBtn');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof savePlan === 'function') savePlan();
+      }, true);
+    }
+
+    /* Event delegation for dynamically created workout detail cards */
+    var recentList = document.getElementById('recentList');
+    if (recentList) {
+      recentList.addEventListener('click', function(e) {
+        var card = e.target.closest('.plan-card[data-detail-id]');
+        if (card) {
+          e.preventDefault();
+          e.stopPropagation();
+          var detailId = card.getAttribute('data-detail-id');
+          if (typeof toggleDetail === 'function') toggleDetail(detailId);
+        }
+      }, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script>
+</body>
+</html>

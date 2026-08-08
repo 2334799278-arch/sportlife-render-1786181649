@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>社区 - SportLife</title>
+    <script src="/assets/vendor/tailwind.js" defer></script>
+    <style id="theme-vars">
+/* ============================================
+   SportLife Brand Design System
+   ============================================ */
+:root {
+  /* Primary Green */
+  --sf-primary: #22C55E;
+  --sf-primary-hover: #16A34A;
+  --sf-primary-active: #15803D;
+  --sf-primary-light: #DCFCE7;
+  --sf-primary-surface: #F0FDF4;
+
+  /* Accent Orange */
+  --sf-accent: #F97316;
+  --sf-accent-hover: #EA580C;
+  --sf-accent-light: #FFF7ED;
+  --sf-accent-surface: #FED7AA;
+
+  /* Sky Blue */
+  --sf-sky: #38BDF8;
+  --sf-sky-light: #F0F9FF;
+  --sf-sky-surface: #BAE6FD;
+
+  /* Background */
+  --sf-bg: #FFFFFF;
+  --sf-bg-secondary: #F8FAFC;
+  --sf-bg-tertiary: #F1F5F9;
+  --sf-bg-elevated: #FFFFFF;
+
+  /* Text */
+  --sf-text-primary: #0F172A;
+  --sf-text-secondary: #475569;
+  --sf-text-tertiary: #94A3B8;
+  --sf-text-inverse: #FFFFFF;
+  --sf-text-brand: #22C55E;
+
+  /* Border */
+  --sf-border-light: #E2E8F0;
+  --sf-border-default: #CBD5E1;
+  --sf-border-brand: #22C55E;
+
+  /* Status */
+  --sf-success: #22C55E;
+  --sf-success-light: #DCFCE7;
+  --sf-warning: #F59E0B;
+  --sf-warning-light: #FEF3C7;
+  --sf-error: #EF4444;
+  --sf-error-light: #FEE2E2;
+  --sf-info: #38BDF8;
+  --sf-info-light: #E0F2FE;
+
+  /* Typography */
+  --sf-font-sans: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  --sf-font-display: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+
+  /* Radius */
+  --sf-radius-sm: 6px;
+  --sf-radius-md: 10px;
+  --sf-radius-lg: 14px;
+  --sf-radius-xl: 20px;
+  --sf-radius-full: 9999px;
+
+  /* Spacing */
+  --sf-space-xs: 4px;
+  --sf-space-sm: 8px;
+  --sf-space-md: 12px;
+  --sf-space-lg: 16px;
+  --sf-space-xl: 24px;
+  --sf-space-2xl: 32px;
+  --sf-space-3xl: 48px;
+
+  /* Shadows */
+  --sf-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --sf-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --sf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --sf-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+  /* Transitions */
+  --sf-transition-fast: 150ms ease;
+  --sf-transition-normal: 250ms ease;
+
+  /* Z-index */
+  --sf-z-dropdown: 100;
+  --sf-z-sticky: 200;
+  --sf-z-overlay: 300;
+  --sf-z-modal: 400;
+  --sf-z-toast: 500;
+}
+
+html.dark {
+  --sf-bg: #0F172A;
+  --sf-bg-secondary: #1E293B;
+  --sf-bg-tertiary: #334155;
+  --sf-bg-elevated: #1E293B;
+  --sf-text-primary: #F8FAFC;
+  --sf-text-secondary: #CBD5E1;
+  --sf-text-tertiary: #64748B;
+  --sf-border-light: #334155;
+}
+    </style>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: var(--sf-font-sans);
+        background: var(--sf-bg-secondary);
+        color: var(--sf-text-primary);
+        max-width: 430px;
+        margin: 0 auto !important;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Floating decorative gradient circles */
+      .floating-bg-circle {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.1;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .floating-bg-circle.circle-1 {
+        width: 200px; height: 200px;
+        background: var(--sf-primary);
+        top: -40px; right: -60px;
+        animation: floatCircle 12s ease-in-out infinite alternate;
+      }
+      .floating-bg-circle.circle-2 {
+        width: 160px; height: 160px;
+        background: var(--sf-sky);
+        top: 300px; left: -50px;
+        animation: floatCircle 15s ease-in-out infinite alternate-reverse;
+      }
+      .floating-bg-circle.circle-3 {
+        width: 180px; height: 180px;
+        background: var(--sf-accent);
+        bottom: 200px; right: -70px;
+        animation: floatCircle 18s ease-in-out infinite alternate;
+      }
+      @keyframes floatCircle {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(20px, -15px) scale(1.1); }
+        100% { transform: translate(-10px, 20px) scale(0.95); }
+      }
+
+      /* Story ring rotation */
+      @keyframes rotateRing {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Story bounce */
+      @keyframes storyBounce {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.88); }
+        100% { transform: scale(1); }
+      }
+      .story-avatar-wrapper:active {
+        animation: storyBounce 0.3s ease;
+      }
+
+      /* No scrollbar utility */
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Post card fade-in */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .post-card-anim {
+        animation: fadeInUp 0.4s var(--sf-transition-normal) forwards;
+      }
+
+      /* FAB pulse */
+      @keyframes fabPulse {
+        0% { box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35); }
+        50% { box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
+        100% { box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35); }
+      }
+
+      /* Composer slide up */
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .composer-anim {
+        animation: slideUp 0.35s ease forwards;
+      }
+
+      /* Heart pop */
+      @keyframes heartPop {
+        0% { transform: scale(1); }
+        30% { transform: scale(1.3); }
+        60% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+      }
+      .heart-bounce {
+        animation: heartPop 0.4s ease;
+      }
+
+      /* Overlay backdrop */
+      .composer-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.4);
+        z-index: var(--sf-z-overlay);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+
+      /* Workout tag pills */
+      .workout-tag-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: var(--sf-radius-full);
+        background: var(--sf-bg-tertiary);
+        color: var(--sf-text-secondary);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--sf-transition-fast);
+        border: 1.5px solid transparent;
+        white-space: nowrap;
+      }
+      .workout-tag-pill:hover {
+        background: var(--sf-primary-light);
+        color: var(--sf-primary);
+      }
+      .workout-tag-pill.selected {
+        background: var(--sf-primary-surface);
+        color: var(--sf-primary);
+        border-color: var(--sf-primary);
+        font-weight: 600;
+      }
+
+      /* Safe area for tab bar */
+      .bottom-tab-bar {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      /* Loading skeleton */
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      .skeleton {
+        background: linear-gradient(90deg, var(--sf-bg-tertiary) 25%, var(--sf-bg-secondary) 50%, var(--sf-bg-tertiary) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: var(--sf-radius-md);
+      }
+
+      /* Dark mode: post card backgrounds */
+      html.dark .post-card-dark-bg {
+        background: var(--sf-bg-secondary) !important;
+      }
+      html.dark .feed-skeleton-bg {
+        background: var(--sf-bg-secondary) !important;
+      }
+      html.dark .post-card-dark-bg img {
+        background: transparent !important;
+      }
+      /* Dark mode: bottom tab bar */
+      html.dark .bottom-tab-bar {
+        background: var(--sf-bg) !important;
+      }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#22C55E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SportLife">
+    <script src="theme-init.js"></script>
+    <script src="ngrok-fix.js"></script>
+  <script src="tab-prefetch.js"></script>
+
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body>
+  <div id="main-content">
+
+  <!-- Floating decorative circles -->
+  <div class="floating-bg-circle circle-1"></div>
+  <div class="floating-bg-circle circle-2"></div>
+  <div class="floating-bg-circle circle-3"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header style="background: var(--sf-bg); box-shadow: var(--sf-shadow-xs); position: sticky; top: 0; z-index: var(--sf-z-sticky); border-bottom: 1px solid var(--sf-border-light);">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--sf-space-md) var(--sf-space-lg); height: 56px;">
+      <div style="display: flex; align-items: center; gap: var(--sf-space-md);">
+        <a href="home.html" style="width:36px;height:36px;min-width:36px;background:var(--sf-bg-secondary);border:1px solid var(--sf-border-light);border-radius:var(--sf-radius-full);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform 0.25s ease;" aria-label="返回">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <h1 style="font-family: var(--sf-font-display); font-size: 20px; font-weight: 800; color: var(--sf-text-primary);">社区</h1>
+      </div>
+      <button id="header-publish-btn" style="padding: 8px 20px; background: var(--sf-primary); color: var(--sf-text-inverse); border: none; border-radius: var(--sf-radius-full); font-size: 14px; font-weight: 600; font-family: var(--sf-font-sans); cursor: pointer; transition: background var(--sf-transition-fast); box-shadow: var(--sf-shadow-sm);">
+        发布
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main style="position: relative; z-index: 1; padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));">
+
+    <!-- ===== FRIENDS & FOLLOWING BAR ===== -->
+    <div id="friends-following-bar" style="padding:12px 16px;overflow-x:auto;display:flex;gap:16px;-webkit-overflow-scrolling:touch;" class="no-scrollbar">
+      <!-- Skeleton loading -->
+      <div style="display:flex;gap:16px;min-width:max-content;">
+        <div class="skeleton" style="width:56px;height:72px;border-radius:14px;flex-shrink:0;"></div>
+        <div class="skeleton" style="width:56px;height:72px;border-radius:14px;flex-shrink:0;"></div>
+        <div class="skeleton" style="width:56px;height:72px;border-radius:14px;flex-shrink:0;"></div>
+      </div>
+    </div>
+
+    <!-- ===== POST FEED ===== -->
+    <section style="padding: 0 var(--sf-space-lg);">
+      <!-- Loading skeleton -->
+      <div id="feed-loading">
+        <div class="feed-skeleton-bg" style="background: var(--sf-bg-secondary); border-radius: 16px; padding: var(--sf-space-lg); margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: var(--sf-space-md); margin-bottom: var(--sf-space-md);">
+            <div class="skeleton" style="width: 40px; height: 40px; border-radius: var(--sf-radius-full); flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+              <div class="skeleton" style="width: 80px; height: 14px; margin-bottom: 6px;"></div>
+              <div class="skeleton" style="width: 50px; height: 10px;"></div>
+            </div>
+          </div>
+          <div class="skeleton" style="width: 100%; height: 14px; margin-bottom: 8px;"></div>
+          <div class="skeleton" style="width: 75%; height: 14px; margin-bottom: 16px;"></div>
+          <div class="skeleton" style="width: 100%; height: 180px; border-radius: 14px;"></div>
+        </div>
+        <div class="feed-skeleton-bg" style="background: var(--sf-bg-secondary); border-radius: 16px; padding: var(--sf-space-lg); margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: var(--sf-space-md); margin-bottom: var(--sf-space-md);">
+            <div class="skeleton" style="width: 40px; height: 40px; border-radius: var(--sf-radius-full); flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+              <div class="skeleton" style="width: 90px; height: 14px; margin-bottom: 6px;"></div>
+              <div class="skeleton" style="width: 40px; height: 10px;"></div>
+            </div>
+          </div>
+          <div class="skeleton" style="width: 100%; height: 14px; margin-bottom: 8px;"></div>
+          <div class="skeleton" style="width: 60%; height: 14px;"></div>
+        </div>
+      </div>
+
+      <!-- Post feed container -->
+      <div id="post-feed"></div>
+    </section>
+  </main>
+
+  <!-- ===== FAB BUTTON ===== -->
+  <button id="fab-post" style="position: fixed; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); right: max(calc((100vw - 430px) / 2 + 20px), 20px); width: 56px; height: 56px; border-radius: var(--sf-radius-full); background: var(--sf-primary); color: var(--sf-text-inverse); border: none; cursor: pointer; z-index: var(--sf-z-dropdown); display: flex; align-items: center; justify-content: center; animation: fabPulse 2.5s ease-in-out infinite; transition: transform 0.25s ease;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </button>
+
+  <!-- ===== POST COMPOSER OVERLAY ===== -->
+  <div id="composer-overlay" class="composer-overlay" style="display: none;"></div>
+  <div id="post-composer" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 430px; background: var(--sf-bg); border-radius: var(--sf-radius-xl) var(--sf-radius-xl) 0 0; z-index: var(--sf-z-modal); box-shadow: var(--sf-shadow-lg); padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <!-- Composer handle bar -->
+    <div style="display: flex; justify-content: center; padding: var(--sf-space-md) 0 var(--sf-space-sm);">
+      <div style="width: 36px; height: 4px; border-radius: var(--sf-radius-full); background: var(--sf-border-light);"></div>
+    </div>
+
+    <!-- Composer header -->
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--sf-space-sm) var(--sf-space-lg) var(--sf-space-md); border-bottom: 1px solid var(--sf-border-light);">
+      <button id="composer-cancel" style="background: none; border: none; font-size: 15px; font-weight: 500; color: var(--sf-text-tertiary); cursor: pointer; padding: var(--sf-space-sm); font-family: var(--sf-font-sans);">取消</button>
+      <span style="font-size: 16px; font-weight: 700; color: var(--sf-text-primary);">发布动态</span>
+      <button id="composer-submit" style="padding: 8px 20px; background: var(--sf-primary); color: var(--sf-text-inverse); border: none; border-radius: var(--sf-radius-full); font-size: 14px; font-weight: 600; font-family: var(--sf-font-sans); cursor: pointer; transition: background var(--sf-transition-fast);">发布动态</button>
+    </div>
+
+    <!-- Composer body -->
+    <div style="padding: var(--sf-space-lg);">
+      <!-- User info -->
+      <div style="display: flex; align-items: center; gap: var(--sf-space-md); margin-bottom: var(--sf-space-md);">
+        <div id="composer-avatar" style="width: 40px; height: 40px; border-radius: var(--sf-radius-full); background: var(--sf-primary-light); color: var(--sf-primary); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; flex-shrink: 0;">U</div>
+        <span id="composer-username" style="font-size: 14px; font-weight: 600; color: var(--sf-text-primary);">用户</span>
+      </div>
+
+      <!-- Textarea -->
+      <textarea id="post-content" placeholder="分享你的运动日常..." style="width: 100%; min-height: 100px; border: none; outline: none; resize: none; font-size: 15px; line-height: 1.6; color: var(--sf-text-primary); font-family: var(--sf-font-sans); background: transparent;"></textarea>
+
+      <!-- Image upload area -->
+      <div style="margin-top: var(--sf-space-md);">
+        <input type="file" id="post-image-input" accept="image/*" style="display: none;">
+        <div id="image-preview" style="display: none; margin-bottom: var(--sf-space-md); position: relative;">
+          <img id="image-preview-img" src="" style="width: 100%; border-radius: var(--sf-radius-md); max-height: 200px; object-fit: cover;">
+          <button id="image-preview-remove" style="position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: var(--sf-radius-full); background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;">x</button>
+        </div>
+        <button id="image-upload-btn" style="display: flex; align-items: center; gap: var(--sf-space-sm); padding: var(--sf-space-sm) var(--sf-space-md); background: var(--sf-bg-tertiary); border: 1.5px dashed var(--sf-border-default); border-radius: var(--sf-radius-md); color: var(--sf-text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--sf-font-sans); transition: border-color var(--sf-transition-fast);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          添加图片
+        </button>
+      </div>
+
+      <!-- Workout tag selector -->
+      <div style="margin-top: var(--sf-space-lg); border-top: 1px solid var(--sf-border-light); padding-top: var(--sf-space-md);">
+        <div style="font-size: 13px; font-weight: 600; color: var(--sf-text-secondary); margin-bottom: var(--sf-space-sm);">关联训练</div>
+        <div id="workout-tags" class="no-scrollbar" style="display: flex; gap: var(--sf-space-sm); overflow-x: auto; padding-bottom: var(--sf-space-xs);">
+          <span class="workout-tag-pill" data-tag="跑步">跑步</span>
+          <span class="workout-tag-pill" data-tag="力量训练">力量训练</span>
+          <span class="workout-tag-pill" data-tag="瑜伽">瑜伽</span>
+          <span class="workout-tag-pill" data-tag="HIIT">HIIT</span>
+          <span class="workout-tag-pill" data-tag="游泳">游泳</span>
+          <span class="workout-tag-pill" data-tag="骑行">骑行</span>
+          <span class="workout-tag-pill" data-tag="拉伸">拉伸</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BOTTOM TAB BAR ===== -->
+  <nav class="bottom-tab-bar" style="position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 430px; background: var(--sf-bg); border-top: 1px solid var(--sf-border-light); z-index: 100; display: flex; align-items: center; justify-content: space-around; padding-top: var(--sf-space-sm); padding-bottom: var(--sf-space-sm);">
+
+    <!-- Tab: 首页 -->
+    <a href="home.html" class="tab-item" style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; padding: var(--sf-space-xs) var(--sf-space-lg); color: var(--sf-text-tertiary); transition: color 0.25s ease;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span style="font-size: 11px; font-weight: 500;">首页</span>
+    </a>
+
+    <!-- Tab: 训练 -->
+    <a href="training-plan.html" class="tab-item" style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; padding: var(--sf-space-xs) var(--sf-space-lg); color: var(--sf-text-tertiary); transition: color 0.25s ease;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6.5 6.5h11M5 8h2m10 0h2M7 14h10M5 12h2m10 0h2M5 10v4M19 10v4M3 8h2v8H3zM19 8h2v8h-2z"/>
+      </svg>
+      <span style="font-size: 11px; font-weight: 500;">训练</span>
+    </a>
+
+    <!-- Tab: 课程 -->
+    <a href="course-detail.html" class="tab-item" style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; padding: var(--sf-space-xs) var(--sf-space-lg); color: var(--sf-text-tertiary); transition: color 0.25s ease;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <span style="font-size: 11px; font-weight: 500;">课程</span>
+    </a>
+
+    <!-- Tab: 社区 (Active) -->
+    <a href="community.html" class="tab-item" style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; padding: var(--sf-space-xs) var(--sf-space-lg); color: var(--sf-primary);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="var(--sf-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      <span style="font-size: 11px; font-weight: 600; color: var(--sf-primary);">社区</span>
+    </a>
+
+    <!-- Tab: 我的 -->
+    <a href="profile.html" class="tab-item" style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; padding: var(--sf-space-xs) var(--sf-space-lg); color: var(--sf-text-tertiary); transition: color 0.25s ease;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span style="font-size: 11px; font-weight: 500;">我的</span>
+    </a>
+  </nav>
+
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ========================================
+    // Auth check
+    // ========================================
+    function getCurrentUser() {
+      try { return JSON.parse(localStorage.getItem('sportlife_user')); }
+      catch (e) { return null; }
+    }
+    if (!getCurrentUser()) { navigateTo('login.html'); }
+
+    var user = getCurrentUser();
+    var posts = [];
+    var likedPosts = new Set();
+    var selectedWorkoutTag = '';
+
+    // ========================================
+    // Load posts from API
+    // ========================================
+    async function loadPosts() {
+      var loadingEl = document.getElementById('feed-loading');
+      try {
+        var res = await fetch('/api/posts?limit=20');
+        var data = await res.json();
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (data.success) {
+          posts = data.posts || [];
+          // Restore liked state
+          likedPosts.clear();
+          posts.forEach(function(p) {
+            if (p.is_liked) likedPosts.add(p.id);
+          });
+          renderPosts();
+        } else {
+          renderEmptyFeed();
+        }
+      } catch (e) {
+        console.error('Failed to load posts:', e);
+        if (loadingEl) loadingEl.style.display = 'none';
+        renderEmptyFeed();
+      }
+    }
+
+    // ========================================
+    // Render posts
+    // ========================================
+    function renderPosts() {
+      var feed = document.getElementById('post-feed');
+      if (!posts || posts.length === 0) {
+        feed.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--sf-text-tertiary)">' +
+          '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-tertiary)" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:0.5">' +
+          '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>' +
+          '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
+          '</svg>' +
+          '<p style="font-size:15px;font-weight:500;margin-bottom:4px">暂无动态</p>' +
+          '<p style="font-size:13px">来发布第一条吧！</p></div>';
+        return;
+      }
+
+      feed.innerHTML = posts.map(function(post, index) {
+        var postUser = post.author || post.user || {};
+        var userId = postUser.id || post.user_id || '';
+        var initial = (postUser.nickname || postUser.username || 'U').charAt(0);
+        var name = postUser.nickname || postUser.username || '用户';
+        var avatarColor = postUser.avatar_color || '#DCFCE7';
+        var avatarTextColor = postUser.avatar_text_color || 'var(--sf-primary)';
+        var isLiked = likedPosts.has(post.id);
+
+        var workoutTagHtml = '';
+        if (post.workout_type) {
+          var tagParts = [post.workout_type];
+          if (post.workout_name) tagParts.push(post.workout_name);
+          if (post.duration_minutes) tagParts.push(post.duration_minutes + 'min');
+          if (post.calories_burned) tagParts.push(post.calories_burned + 'kcal');
+          workoutTagHtml = '<div style="display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:var(--sf-radius-full);background:var(--sf-primary-surface);color:var(--sf-primary);font-size:12px;font-weight:600;margin-top:8px;">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>' +
+            tagParts.join(' &middot; ') + '</div>';
+        }
+
+        return '<div class="post-card-anim post-card-dark-bg" style="background:var(--sf-bg-secondary);border-radius:16px;padding:var(--sf-space-lg);margin-bottom:14px;box-shadow:var(--sf-shadow-sm);border:1px solid var(--sf-border-light);animation-delay:' + (index * 0.08) + 's;">' +
+
+          // User header
+          '<div style="display:flex;align-items:center;margin-bottom:10px">' +
+            '<a href="user-profile.html?uid=' + escapeHtml(userId) + '" style="text-decoration:none;display:flex;align-items:center">' +
+            (postUser.avatar_url
+              ? '<img src="' + postUser.avatar_url + '" style="width:40px;height:40px;border-radius:var(--sf-radius-full);object-fit:cover;flex-shrink:0" alt="">'
+              : '<div style="width:40px;height:40px;border-radius:var(--sf-radius-full);background:' + avatarColor + ';color:' + avatarTextColor + ';display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;flex-shrink:0">' + initial + '</div>') +
+            '</a>' +
+            '<div style="margin-left:10px;flex:1;min-width:0">' +
+              '<a href="user-profile.html?uid=' + escapeHtml(userId) + '" style="text-decoration:none;color:var(--sf-text-primary)">' +
+              '<div style="font-weight:600;font-size:14px;color:inherit">' + escapeHtml(name) + '</div>' +
+              '</a>' +
+              '<div style="font-size:11px;color:var(--sf-text-tertiary)">' + formatTime(post.created_at) + '</div>' +
+            '</div>' +
+          '</div>' +
+
+          // Content
+          '<p style="font-size:14px;color:var(--sf-text-primary);line-height:1.7;margin:0">' + escapeHtml(post.content) + '</p>' +
+
+          // Image
+          (post.image_url ? '<img src="' + escapeHtml(post.image_url) + '" style="width:100%;border-radius:var(--sf-radius-md);margin-top:10px;" loading="lazy" onerror="this.style.display=\'none\'">' : '') +
+
+          // Workout tag
+          workoutTagHtml +
+
+          // Action row
+          '<div style="display:flex;align-items:center;padding-top:12px;margin-top:12px;border-top:1px solid var(--sf-border-light)">' +
+
+            // Like
+            '<button data-action="like" data-post-id="' + post.id + '" style="display:flex;align-items:center;gap:4px;background:none;border:none;font-size:13px;color:' + (isLiked ? '#EF4444' : 'var(--sf-text-tertiary)') + ';cursor:pointer;padding:4px 8px;transition:color 0.25s ease">' +
+              '<svg width="20" height="20" viewBox="0 0 24 24" fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="' + (isLiked ? '#EF4444' : 'currentColor') + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' +
+              '</svg>' +
+              '<span>' + (post.likes_count || '') + '</span>' +
+            '</button>' +
+
+            // Comment
+            '<button data-action="comment" data-post-id="' + post.id + '" style="display:flex;align-items:center;gap:4px;background:none;border:none;font-size:13px;color:var(--sf-text-tertiary);cursor:pointer;padding:4px 8px;margin-left:4px">' +
+              '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' +
+              '</svg>' +
+              '<span>' + (post.comments_count || '') + '</span>' +
+            '</button>' +
+
+            // Share
+            '<button data-action="share" data-post-id="' + post.id + '" style="margin-left:auto;display:flex;align-items:center;gap:4px;background:none;border:none;font-size:13px;color:var(--sf-text-tertiary);cursor:pointer;padding:4px 8px">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>' +
+                '<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>' +
+              '</svg>' +
+              '<span>分享</span>' +
+            '</button>' +
+
+          '</div>' +
+
+          // Comments section (hidden by default)
+          '<div id="comments-' + post.id + '" style="display:none;padding-top:12px;border-top:1px solid var(--sf-border-light);margin-top:8px">' +
+            '<div id="comments-list-' + post.id + '" style="margin-bottom:8px"></div>' +
+            '<div style="display:flex;gap:8px">' +
+              '<input type="text" id="comment-input-' + post.id + '" placeholder="写评论..." style="flex:1;padding:8px 14px;border:1px solid var(--sf-border-light);border-radius:var(--sf-radius-full);font-size:13px;outline:none;font-family:var(--sf-font-sans);color:var(--sf-text-primary);transition:border-color var(--sf-transition-fast)" onfocus="this.style.borderColor=\'var(--sf-primary)\'" onblur="this.style.borderColor=\'var(--sf-border-light)\'">' +
+              '<button data-action="submit-comment" data-post-id="' + post.id + '" style="padding:8px 18px;background:var(--sf-primary);color:white;border:none;border-radius:var(--sf-radius-full);font-size:13px;cursor:pointer;font-family:var(--sf-font-sans);font-weight:600;transition:background var(--sf-transition-fast);flex-shrink:0">发送</button>' +
+            '</div>' +
+          '</div>' +
+
+        '</div>';
+      }).join('');
+    }
+
+    function renderEmptyFeed() {
+      var feed = document.getElementById('post-feed');
+      feed.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--sf-text-tertiary)">' +
+        '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-tertiary)" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:0.5">' +
+        '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>' +
+        '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
+        '</svg>' +
+        '<p style="font-size:15px;font-weight:500;margin-bottom:4px">暂无动态</p>' +
+        '<p style="font-size:13px">来发布第一条吧！</p></div>';
+    }
+
+    // ========================================
+    // Like toggle
+    // ========================================
+    async function toggleLike(postId) {
+      try {
+        var res = await fetch('/api/posts/' + postId + '/like', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id })
+        });
+        var data = await res.json();
+        if (data.success) {
+          if (data.liked) {
+            likedPosts.add(postId);
+          } else {
+            likedPosts.delete(postId);
+          }
+          // Update button visual immediately
+          var btn = document.querySelector('[data-action="like"][data-post-id="' + postId + '"]');
+          if (btn) {
+            var svg = btn.querySelector('svg path');
+            var isNowLiked = likedPosts.has(postId);
+            if (isNowLiked) {
+              svg.setAttribute('fill', '#EF4444');
+              svg.setAttribute('stroke', '#EF4444');
+              btn.style.color = '#EF4444';
+              // Heart-pulse animation on like
+              var heartSvg = btn.querySelector('svg');
+              if (heartSvg) {
+                heartSvg.style.animation = 'none';
+                void heartSvg.offsetHeight;
+                heartSvg.style.animation = 'heartPop 0.4s ease';
+              }
+            } else {
+              svg.setAttribute('fill', 'none');
+              svg.setAttribute('stroke', 'currentColor');
+              btn.style.color = 'var(--sf-text-tertiary)';
+            }
+            // Update count with returned likes_count
+            var countSpan = btn.querySelector('span');
+            if (countSpan && data.likes_count !== undefined) {
+              countSpan.textContent = data.likes_count || '';
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Like failed:', e);
+      }
+    }
+
+    // ========================================
+    // Toggle comments visibility
+    // ========================================
+    async function toggleComments(postId) {
+      var el = document.getElementById('comments-' + postId);
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+        // Load comments from API
+        try {
+          var res = await fetch('/api/posts/' + postId + '/comments');
+          var data = await res.json();
+          var list = document.getElementById('comments-list-' + postId);
+          if (data.success && data.comments && data.comments.length > 0) {
+            list.innerHTML = data.comments.map(function(c) {
+              var cUser = c.user || {};
+              var cInitial = (cUser.nickname || cUser.username || 'U').charAt(0);
+              var cName = cUser.nickname || cUser.username || '用户';
+              var cColor = cUser.avatar_color || '#DCFCE7';
+              var cTextColor = cUser.avatar_text_color || 'var(--sf-primary)';
+              return '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">' +
+                (cUser.avatar_url
+                  ? '<img src="' + cUser.avatar_url + '" style="width:28px;height:28px;border-radius:var(--sf-radius-full);object-fit:cover;flex-shrink:0" alt="">'
+                  : '<div style="width:28px;height:28px;border-radius:var(--sf-radius-full);background:' + cColor + ';color:' + cTextColor + ';display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;flex-shrink:0">' + cInitial + '</div>') +
+                '<div style="flex:1;min-width:0">' +
+                  '<span style="font-weight:600;font-size:12px;color:var(--sf-text-primary)">' + escapeHtml(cName) + '</span>' +
+                  '<p style="font-size:13px;color:var(--sf-text-secondary);margin:2px 0;line-height:1.5">' + escapeHtml(c.content) + '</p>' +
+                '</div>' +
+              '</div>';
+            }).join('');
+          } else {
+            list.innerHTML = '<p style="font-size:12px;color:var(--sf-text-tertiary);text-align:center;padding:8px 0">暂无评论</p>';
+          }
+        } catch (e) {
+          console.error('Load comments failed:', e);
+        }
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    // ========================================
+    // Submit comment
+    // ========================================
+    async function submitComment(postId) {
+      var input = document.getElementById('comment-input-' + postId);
+      var content = input.value.trim();
+      if (!content) return;
+
+      try {
+        var res = await fetch('/api/posts/' + postId + '/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, content: content })
+        });
+        var data = await res.json();
+        if (data.success) {
+          input.value = '';
+          // Toggle twice to refresh comment list
+          var el = document.getElementById('comments-' + postId);
+          el.style.display = 'none';
+          await toggleComments(postId);
+          loadPosts(); // refresh counts
+        }
+      } catch (e) {
+        console.error('Submit comment failed:', e);
+      }
+    }
+
+    // ========================================
+    // Share (copy to clipboard)
+    // ========================================
+    function sharePost(postId) {
+      if (navigator.share) {
+        navigator.share({
+          title: 'SportLife动态',
+          text: '来看看这条运动动态！',
+          url: window.location.href
+        });
+      } else {
+        // Fallback: copy URL to clipboard
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(window.location.href).then(function() {
+            showToast('链接已复制到剪贴板');
+          }).catch(function() {
+            showToast('链接已复制');
+          });
+        } else {
+          showToast('分享功能暂不可用');
+        }
+      }
+    }
+
+    // ========================================
+    // Create post
+    // ========================================
+    async function createPost() {
+      var content = document.getElementById('post-content').value.trim();
+      if (!content) {
+        showToast('请输入内容');
+        return;
+      }
+
+      // Show loading state on submit button
+      var submitBtn = document.getElementById('composer-submit');
+      var originalText = submitBtn.textContent;
+      submitBtn.textContent = '发布中...';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.6';
+
+      var imageUrl = '';
+      var fileInput = document.getElementById('post-image-input');
+
+      // Upload image if selected
+      if (fileInput.files && fileInput.files.length > 0) {
+        var formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        try {
+          var uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+          var uploadData = await uploadRes.json();
+          if (uploadData.success) imageUrl = uploadData.url;
+        } catch (e) {
+          console.error('Image upload failed:', e);
+        }
+      }
+
+      // Build post payload
+      var payload = { userId: user.id, content: content };
+      if (imageUrl) payload.image_url = imageUrl;
+      if (selectedWorkoutTag) payload.workout_type = selectedWorkoutTag;
+
+      try {
+        var res = await fetch('/api/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        if (data.success) {
+          // Reset composer
+          document.getElementById('post-content').value = '';
+          document.getElementById('image-preview').style.display = 'none';
+          document.getElementById('post-image-input').value = '';
+          selectedWorkoutTag = '';
+          document.querySelectorAll('.workout-tag-pill').forEach(function(pill) {
+            pill.classList.remove('selected');
+          });
+          hideComposer();
+          showToast('发布成功！', 'success');
+          loadPosts();
+        } else {
+          showToast('发布失败，请重试');
+        }
+      } catch (e) {
+        console.error('Create post failed:', e);
+        showToast('网络错误，请重试');
+      }
+
+      // Restore submit button
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+    }
+
+    // ========================================
+    // Composer show/hide
+    // ========================================
+    function showComposer() {
+      document.getElementById('composer-overlay').style.display = 'block';
+      document.getElementById('post-composer').style.display = 'block';
+      document.getElementById('post-composer').classList.add('composer-anim');
+      document.body.style.overflow = 'hidden';
+
+      // Set user info in composer
+      var composerAvatar = document.getElementById('composer-avatar');
+      if (user.avatar_url) {
+        composerAvatar.outerHTML = '<img id="composer-avatar" src="' + user.avatar_url + '" style="width: 40px; height: 40px; border-radius: var(--sf-radius-full); object-fit: cover; flex-shrink: 0;" alt="">';
+      } else {
+        var initial = (user.nickname || user.username || 'U').charAt(0);
+        composerAvatar.textContent = initial;
+        composerAvatar.style.background = user.avatar_color || 'var(--sf-primary-light)';
+        composerAvatar.style.color = user.avatar_text_color || 'var(--sf-primary)';
+      }
+      document.getElementById('composer-username').textContent = user.nickname || user.username || '用户';
+      document.getElementById('post-content').focus();
+    }
+
+    function hideComposer() {
+      document.getElementById('composer-overlay').style.display = 'none';
+      document.getElementById('post-composer').style.display = 'none';
+      document.getElementById('post-composer').classList.remove('composer-anim');
+      document.body.style.overflow = '';
+    }
+
+    // ========================================
+    // Time formatter
+    // ========================================
+    function formatTime(dateStr) {
+      if (!dateStr) return '';
+      var d = new Date(dateStr);
+      var now = new Date();
+      var diff = now - d;
+      if (diff < 60000) return '刚刚';
+      if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+      if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+      if (d.getFullYear() === now.getFullYear()) {
+        return month + '月' + day + '日';
+      }
+      return d.getFullYear() + '年' + month + '月' + day + '日';
+    }
+
+    // ========================================
+    // HTML escape utility
+    // ========================================
+    function escapeHtml(text) {
+      if (!text) return '';
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(text));
+      return div.innerHTML;
+    }
+
+    // ========================================
+    // Toast notification
+    // ========================================
+    function showToast(msg, type) {
+      // Remove existing toasts
+      document.querySelectorAll('.toast-msg').forEach(function(t) { t.remove(); });
+
+      var t = document.createElement('div');
+      t.className = 'toast-msg';
+      t.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);padding:10px 24px;border-radius:var(--sf-radius-full);color:white;font-size:14px;z-index:10000;font-family:var(--sf-font-sans);font-weight:500;box-shadow:var(--sf-shadow-lg);white-space:nowrap;' +
+        'background:' + (type === 'success' ? 'var(--sf-primary)' : 'var(--sf-error)') + ';';
+      t.textContent = msg;
+      document.body.appendChild(t);
+
+      // Fade in
+      t.style.opacity = '0';
+      t.style.transition = 'opacity 0.2s ease';
+      requestAnimationFrame(function() {
+        t.style.opacity = '1';
+      });
+
+      setTimeout(function() {
+        t.style.opacity = '0';
+        setTimeout(function() { t.remove(); }, 200);
+      }, 2500);
+    }
+
+    // ========================================
+    // Load friends & following bar
+    // ========================================
+    function loadFriendsFollowing() {
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (!user.id) return;
+      
+      var container = document.getElementById('friends-following-bar');
+      if (!container) return;
+      
+      Promise.all([
+        fetch('/api/friends/' + user.id).then(r=>r.json()),
+        fetch('/api/following/' + user.id).then(r=>r.json())
+      ]).then(function(results) {
+        var friendsData = results[0];
+        var followingData = results[1];
+        var friends = (friendsData.friends || []);
+        var following = (followingData.following || []);
+        
+        // Merge: friends first, then following (deduplicate)
+        var allUsers = [];
+        var seen = {};
+        friends.forEach(function(u) { if (!seen[u.id]) { seen[u.id]=true; u._type='friend'; allUsers.push(u); } });
+        following.forEach(function(u) { if (!seen[u.id]) { seen[u.id]=true; u._type='following'; allUsers.push(u); } });
+        
+        if (allUsers.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--sf-text-tertiary);font-size:13px;width:100%">关注好友，在这里快速查看他们的动态</div>';
+          return;
+        }
+        
+        container.innerHTML = '<div style="display:flex;gap:16px;min-width:max-content;">' +
+          allUsers.map(function(u) {
+            var initial = (u.nickname || 'U').charAt(0);
+            var color = u.avatar_color || '#DCFCE7';
+            var textColor = '#22C55E';
+            var badge = u._type === 'friend' ? '<span style="font-size:9px;color:var(--sf-primary);font-weight:600;">好友</span>' : '<span style="font-size:9px;color:var(--sf-text-tertiary);">关注</span>';
+            return '<a href="user-profile.html?uid=' + u.id + '" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:56px;transition:transform 0.25s ease;">' +
+              (u.avatar_url
+                ? '<img src="' + u.avatar_url + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.1);" alt="">'
+                : '<div style="width:48px;height:48px;border-radius:50%;background:' + color + ';color:' + textColor + ';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">' + initial + '</div>') +
+              '<span style="font-size:11px;color:var(--sf-text-primary);font-weight:500;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(u.nickname || '用户') + '</span>' +
+              badge +
+            '</a>';
+          }).join('') +
+        '</div>';
+      }).catch(function(err) {
+        console.warn('Failed to load friends/following', err);
+        container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--sf-text-tertiary);font-size:13px;width:100%">关注好友，在这里快速查看他们的动态</div>';
+      });
+    }
+
+    // ========================================
+    // Init on DOM ready
+    // ========================================
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // Load posts
+      loadPosts();
+
+      // Load friends & following bar
+      loadFriendsFollowing();
+
+      // Reload data when page becomes visible (e.g. returning from another user's profile after following)
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          loadPosts();
+          loadFriendsFollowing();
+        }
+      });
+
+      // FAB button -> open composer
+      document.getElementById('fab-post').addEventListener('click', function() {
+        showComposer();
+      });
+
+      // Header publish button -> open composer
+      document.getElementById('header-publish-btn').addEventListener('click', function() {
+        showComposer();
+      });
+
+      // Cancel composer
+      document.getElementById('composer-cancel').addEventListener('click', function() {
+        hideComposer();
+      });
+
+      // Overlay click -> close composer
+      document.getElementById('composer-overlay').addEventListener('click', function() {
+        hideComposer();
+      });
+
+      // Submit post
+      document.getElementById('composer-submit').addEventListener('click', createPost);
+
+      // Image upload button -> trigger file input
+      document.getElementById('image-upload-btn').addEventListener('click', function() {
+        document.getElementById('post-image-input').click();
+      });
+
+      // Image preview on file select
+      document.getElementById('post-image-input').addEventListener('change', function() {
+        var file = this.files[0];
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('image-preview-img').src = e.target.result;
+            document.getElementById('image-preview').style.display = 'block';
+            document.getElementById('image-upload-btn').style.display = 'none';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Remove image preview
+      document.getElementById('image-preview-remove').addEventListener('click', function() {
+        document.getElementById('image-preview').style.display = 'none';
+        document.getElementById('image-upload-btn').style.display = 'flex';
+        document.getElementById('post-image-input').value = '';
+      });
+
+      // Workout tag selection
+      document.querySelectorAll('.workout-tag-pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+          var tag = this.getAttribute('data-tag');
+          if (selectedWorkoutTag === tag) {
+            // Deselect
+            this.classList.remove('selected');
+            selectedWorkoutTag = '';
+          } else {
+            // Select new tag
+            document.querySelectorAll('.workout-tag-pill').forEach(function(p) {
+              p.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            selectedWorkoutTag = tag;
+          }
+        });
+      });
+
+      // Story avatar tap feedback
+      document.querySelectorAll('.story-avatar-wrapper').forEach(function(avatar) {
+        avatar.addEventListener('click', function() {
+          var self = this;
+          this.style.animation = 'none';
+          void this.offsetHeight;
+          this.style.animation = 'storyBounce 0.3s ease';
+          setTimeout(function() { self.style.animation = ''; }, 300);
+        });
+      });
+
+      // Keyboard shortcut: Enter to submit comment
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          var active = document.activeElement;
+          if (active && active.id && active.id.startsWith('comment-input-')) {
+            var postId = active.id.replace('comment-input-', '');
+            submitComment(postId);
+          }
+        }
+      });
+
+      // Ctrl/Cmd + Enter to submit post in composer
+      document.getElementById('post-content').addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          createPost();
+        }
+      });
+
+      // Backup event bindings (mobile Safari + ngrok compatibility)
+      document.querySelectorAll('[onclick]').forEach(function(el) {
+        var onclickAttr = el.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.indexOf('window.location') === -1) {
+          var fnMatch = onclickAttr.match(/^(\w+)\(/);
+          if (fnMatch) {
+            var fnName = fnMatch[1];
+            el.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (typeof window[fnName] === 'function') window[fnName]();
+            }, true);
+          }
+        }
+      });
+
+      // Event delegation for dynamically created buttons in post feed
+      var feed = document.getElementById('post-feed');
+      if (feed) {
+        feed.addEventListener('click', function(e) {
+          var btn = e.target.closest('button[data-action]');
+          if (btn) {
+            e.preventDefault();
+            e.stopPropagation();
+            var action = btn.dataset.action;
+            var postId = btn.dataset.postId;
+            if (action === 'like' && typeof toggleLike === 'function') toggleLike(postId);
+            if (action === 'comment' && typeof toggleComments === 'function') toggleComments(postId);
+            if (action === 'share' && typeof sharePost === 'function') sharePost(postId);
+            if (action === 'submit-comment' && typeof submitComment === 'function') submitComment(postId);
+          }
+        }, true);
+      }
+    });
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

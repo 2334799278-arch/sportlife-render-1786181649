@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>我的成就 — SportLife</title> <style id="theme-vars">
+/* ============================================ SportLife — 品牌设计系统 清新自然运动风格 · Fresh Natural Athletic ============================================ */ :root { /* ── Color System ── */ /* Primary — 清新绿 */ --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-active: #15803D; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4; /* Accent — 活力橙 */ --sf-accent: #F97316; --sf-accent-hover: #EA580C; --sf-accent-light: #FFF7ED; --sf-accent-surface: #FED7AA; /* Sky — 天空蓝 */ --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF; --sf-sky-surface: #BAE6FD; /* Background */ --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9; --sf-bg-elevated: #FFFFFF; /* Text */ --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8; --sf-text-inverse: #FFFFFF; --sf-text-brand: #22C55E; /* Border */ --sf-border-light: #E2E8F0; --sf-border-default: #CBD5E1; --sf-border-brand: #22C55E; /* Status */ --sf-success: #22C55E; --sf-success-light: #DCFCE7; --sf-warning: #F59E0B; --sf-warning-light: #FEF3C7; --sf-error: #EF4444; --sf-error-light: #FEE2E2; --sf-info: #38BDF8; --sf-info-light: #E0F2FE; /* ── Typography ── */ --sf-font-sans: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-font-display: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace; /* Heading Scale */ --sf-h1-font-size: 40px; --sf-h1-line-height: 48px; --sf-h1-weight: 800; --sf-h2-font-size: 32px; --sf-h2-line-height: 40px; --sf-h2-weight: 700; --sf-h3-font-size: 24px; --sf-h3-line-height: 32px; --sf-h3-weight: 700; --sf-h4-font-size: 20px; --sf-h4-line-height: 28px; --sf-h4-weight: 600; --sf-h5-font-size: 16px; --sf-h5-line-height: 24px; --sf-h5-weight: 600; /* Body Scale */ --sf-body-lg-font-size: 16px; --sf-body-lg-line-height: 24px; --sf-body-lg-weight: 400; --sf-body-md-font-size: 14px; --sf-body-md-line-height: 20px; --sf-body-md-weight: 400; --sf-body-sm-font-size: 12px; --sf-body-sm-line-height: 16px; --sf-body-sm-weight: 400; --sf-body-xs-font-size: 11px; --sf-body-xs-line-height: 14px; --sf-body-xs-weight: 400; /* Label */ --sf-label-font-size: 13px; --sf-label-line-height: 18px; --sf-label-weight: 600; --sf-label-letter-spacing: 0.02em; /* ── Radius ── */ --sf-radius-sm: 6px; --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px; /* ── Spacing ── */ --sf-space-xs: 4px; --sf-space-sm: 8px; --sf-space-md: 12px; --sf-space-lg: 16px; --sf-space-xl: 24px; --sf-space-2xl: 32px; --sf-space-3xl: 48px; --sf-space-4xl: 64px; /* ── Shadows ── */ --sf-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04); --sf-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04); --sf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05); --sf-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06); --sf-shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.08); /* ── Transitions ── */ --sf-transition-fast: 150ms ease; --sf-transition-normal: 250ms ease; --sf-transition-slow: 400ms ease; /* ── Z-index ── */ --sf-z-dropdown: 100; --sf-z-sticky: 200; --sf-z-overlay: 300; --sf-z-modal: 400; --sf-z-toast: 500;
+}
+html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155;
+} </style> <script src="/assets/vendor/tailwind.js" defer></script> <style type="text/tailwindcss"> @theme inline { --color-primary: var(--sf-primary); --color-accent: var(--sf-accent); } @layer base { body { background: var(--sf-bg-secondary); color: var(--sf-text-primary); } } </style> <style> /* ── Base Reset ── */ *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: var(--sf-font-sans); background-color: var(--sf-bg-secondary); color: var(--sf-text-primary); max-width: 480px; margin: 0 auto !important; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; } ::-webkit-scrollbar { width: 0; height: 0; } .page-wrapper { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); min-height: 100vh; } /* ── Header ── */ .app-header { display: flex; align-items: center; gap: var(--sf-space-md); padding: var(--sf-space-lg) var(--sf-space-xl); background: var(--sf-bg); position: sticky; top: 0; z-index: var(--sf-z-sticky); box-shadow: var(--sf-shadow-xs); } .back-btn { width: 36px; height: 36px; border-radius: var(--sf-radius-md); border: 1px solid var(--sf-border-light); background: var(--sf-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--sf-transition-fast); -webkit-tap-highlight-color: transparent; } .back-btn:active { background: var(--sf-bg-tertiary); transform: scale(0.94); } .header-title { font-size: 18px; font-weight: 700; color: var(--sf-text-primary); font-family: var(--sf-font-display); } /* ── Activity Rings Section (Dark Card) ── */ .rings-card { margin: var(--sf-space-xl); padding: var(--sf-space-2xl) var(--sf-space-xl); border-radius: var(--sf-radius-xl); background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%); box-shadow: var(--sf-shadow-lg); text-align: center; position: relative; overflow: hidden; } .rings-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, rgba(34,197,94,0.08) 0%, transparent 60%); pointer-events: none; } .rings-card-title { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: var(--sf-space-lg); position: relative; } .rings-container { position: relative; width: 200px; height: 200px; margin: 0 auto var(--sf-space-xl); } .rings-container svg { filter: drop-shadow(0 0 8px rgba(239,68,68,0.2)) drop-shadow(0 0 8px rgba(34,197,94,0.2)) drop-shadow(0 0 8px rgba(56,189,248,0.2)); } .ring-stats { display: flex; justify-content: center; gap: var(--sf-space-xl); position: relative; } .ring-stat-item { display: flex; align-items: center; gap: var(--sf-space-sm); } .ring-dot { width: 8px; height: 8px; border-radius: var(--sf-radius-full); flex-shrink: 0; } .ring-dot--move { background: #EF4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); } .ring-dot--exercise { background: #22C55E; box-shadow: 0 0 6px rgba(34,197,94,0.5); } .ring-dot--stand { background: #38BDF8; box-shadow: 0 0 6px rgba(56,189,248,0.5); } .ring-stat-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.85); font-variant-numeric: tabular-nums; } /* ── Weekly Chart Section ── */ .section-card { margin: 0 var(--sf-space-xl) var(--sf-space-xl); padding: var(--sf-space-xl); border-radius: var(--sf-radius-xl); background: var(--sf-bg-elevated); box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease; } .section-title { font-size: 16px; font-weight: 700; color: var(--sf-text-primary); font-family: var(--sf-font-display); margin-bottom: var(--sf-space-lg); } .weekly-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 120px; gap: var(--sf-space-sm); padding-top: var(--sf-space-md); } .weekly-bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--sf-space-sm); height: 100%; justify-content: flex-end; } .weekly-bar { width: 100%; max-width: 32px; border-radius: var(--sf-radius-sm); min-height: 6px; transition: height 1s cubic-bezier(0.4, 0, 0.2, 1); position: relative; } .weekly-bar--green { background: linear-gradient(to top, #16A34A, #22C55E); } .weekly-bar--orange { background: linear-gradient(to top, #EA580C, #F97316); } .weekly-bar--gray { background: #CBD5E1; } .weekly-day-label { font-size: 11px; font-weight: 500; color: var(--sf-text-tertiary); } .weekly-day-label.today { color: var(--sf-primary); font-weight: 700; } /* ── Achievement Badges ── */ .badges-earned, .badges-locked { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sf-space-lg); justify-items: center; } .badge-item { display: flex; flex-direction: column; align-items: center; gap: var(--sf-space-sm); opacity: 0; transform: scale(0.7); animation: badgePopIn 0.4s ease forwards; } .badge-item:nth-child(1) { animation-delay: 0.05s; } .badge-item:nth-child(2) { animation-delay: 0.1s; } .badge-item:nth-child(3) { animation-delay: 0.15s; } .badge-item:nth-child(4) { animation-delay: 0.2s; } .badge-item:nth-child(5) { animation-delay: 0.25s; } .badge-item:nth-child(6) { animation-delay: 0.3s; } .badge-item:nth-child(7) { animation-delay: 0.35s; } @keyframes badgePopIn { to { opacity: 1; transform: scale(1); } } .badge-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; position: relative; box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06); transition: transform 0.3s ease, box-shadow 0.3s ease; } .badge-circle:active { transform: scale(0.92); } .badge-circle--earned { box-shadow: 0 4px 16px rgba(34,197,94,0.2), 0 8px 24px rgba(34,197,94,0.1); } .badge-circle--green { background: linear-gradient(135deg, #16A34A, #22C55E); } .badge-circle--orange { background: linear-gradient(135deg, #EA580C, #F97316); } .badge-circle--blue { background: linear-gradient(135deg, #2563EB, #38BDF8); } .badge-circle--purple { background: linear-gradient(135deg, #7C3AED, #A78BFA); } .badge-circle--gold { background: linear-gradient(135deg, #D97706, #FBBF24); } .badge-circle--green-blue { background: linear-gradient(135deg, #22C55E, #38BDF8); } .badge-circle--orange-red { background: linear-gradient(135deg, #F97316, #EF4444); } .badge-circle--locked { background: var(--sf-bg-tertiary); opacity: 0.45; filter: grayscale(1); box-shadow: none; } .badge-circle--locked::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; border: 2px dashed var(--sf-border-default); } .badge-circle--earned::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.6) 100%); animation: badgeShine 3s ease-in-out infinite; } @keyframes badgeShine { 0%, 100% { opacity: 0; } 50% { opacity: 1; } } .badge-name { font-size: 11px; font-weight: 500; color: var(--sf-text-secondary); white-space: nowrap; text-align: center; } .badge-name--locked { color: var(--sf-text-tertiary); } .section-subtitle { font-size: 13px; font-weight: 600; color: var(--sf-text-secondary); margin-bottom: var(--sf-space-md); display: flex; align-items: center; gap: var(--sf-space-sm); } .section-subtitle .count-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--sf-radius-full); background: var(--sf-primary-light); color: var(--sf-primary); font-size: 11px; font-weight: 700; } .empty-badges { text-align: center; padding: var(--sf-space-xl) 0; color: var(--sf-text-tertiary); font-size: 13px; } .empty-badges-icon { font-size: 36px; margin-bottom: var(--sf-space-sm); opacity: 0.5; } /* ── Personal Records ── */ .pr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sf-space-md); } .pr-item { background: var(--sf-bg-secondary); border-radius: var(--sf-radius-lg); padding: var(--sf-space-lg); text-align: center; transition: transform var(--sf-transition-fast), box-shadow 0.25s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.03); } .pr-item:active { transform: scale(0.96); box-shadow: 0 1px 2px rgba(0,0,0,0.04); } .pr-icon { font-size: 24px; margin-bottom: var(--sf-space-sm); } .pr-value { font-size: 20px; font-weight: 800; color: var(--sf-text-primary); font-family: var(--sf-font-display); font-variant-numeric: tabular-nums; line-height: 1.2; } .pr-label { font-size: 12px; color: var(--sf-text-tertiary); margin-top: var(--sf-space-xs); font-weight: 500; } /* ── Divider ── */ .section-divider { height: 1px; background: var(--sf-bg-tertiary); margin: var(--sf-space-lg) 0; } /* ── Fade-in on scroll ── */ /* ── Bottom Tab Bar ── */ .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--sf-bg); border-top: 1px solid rgba(0,0,0,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.04); display: flex; justify-content: space-around; align-items: center; padding: var(--sf-space-sm) 0 calc(var(--sf-space-sm) + env(safe-area-inset-bottom, 8px)); z-index: var(--sf-z-sticky); transition: background 0.3s ease, border-color 0.3s ease; } html.dark .tab-bar { background: var(--sf-bg); border-top: 1px solid rgba(255,255,255,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.2); } .tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; position: relative; padding: var(--sf-space-xs) var(--sf-space-lg); transition: all var(--sf-transition-fast); user-select: none; -webkit-tap-highlight-color: transparent; } .tab-item:active { transform: scale(0.92); } .tab-icon { color: var(--sf-text-tertiary); transition: color var(--sf-transition-fast); } .tab-label { font-size: 10px; font-weight: 500; color: var(--sf-text-tertiary); transition: color var(--sf-transition-fast); } .tab-item.active .tab-icon { color: var(--sf-primary); } .tab-item.active .tab-label { color: var(--sf-primary); font-weight: 600; } .tab-item.active::before { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%) scale(1); width: 5px; height: 5px; border-radius: var(--sf-radius-full); background: var(--sf-primary); animation: dotScaleIn 0.3s ease-out forwards; } @keyframes dotScaleIn { 0% { transform: translateX(-50%) scale(0); } 60% { transform: translateX(-50%) scale(1.3); } 100% { transform: translateX(-50%) scale(1); } } /* ── Responsive ── */ @media (min-width: 768px) { body { max-width: 768px; } .tab-bar { max-width: 768px; } } </style> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script> <script src="tab-prefetch.js"></script>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body> <div class="page-wrapper"> <!-- ===== HEADER ===== --> <header class="app-header"> <a href="home.html" class="back-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;" aria-label="返回"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="15 18 9 12 15 6"/> </svg> </a> <span class="header-title">我的成就</span> </header> <!-- ===== ACTIVITY RINGS (Apple Watch Style) ===== --> <section > <div class="rings-card"> <p class="rings-card-title">今日活动</p> <div class="rings-container"> <svg viewBox="0 0 200 200" width="200" height="200"> <!-- Stand ring background (inner, blue) --> <circle cx="100" cy="100" r="65" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round"/> <!-- Stand ring progress --> <circle id="ring-stand" cx="100" cy="100" r="65" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round" stroke-dasharray="408.4" stroke-dashoffset="408.4" transform="rotate(-90 100 100)"/> <!-- Exercise ring background (middle, green) --> <circle cx="100" cy="100" r="80" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round"/> <!-- Exercise ring progress --> <circle id="ring-exercise" cx="100" cy="100" r="80" fill="none" stroke="#22C55E" stroke-width="12" stroke-linecap="round" stroke-dasharray="502.6" stroke-dashoffset="502.6" transform="rotate(-90 100 100)"/> <!-- Move ring background (outer, red) --> <circle cx="100" cy="100" r="95" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round"/> <!-- Move ring progress --> <circle id="ring-move" cx="100" cy="100" r="95" fill="none" stroke="#EF4444" stroke-width="12" stroke-linecap="round" stroke-dasharray="596.9" stroke-dashoffset="596.9" transform="rotate(-90 100 100)"/> </svg> </div> <div class="ring-stats"> <div class="ring-stat-item"> <span class="ring-dot ring-dot--move"></span> <span class="ring-stat-label">活动 <span id="move-label">0/500 千卡</span></span> </div> <div class="ring-stat-item"> <span class="ring-dot ring-dot--exercise"></span> <span class="ring-stat-label">运动 <span id="exercise-label">0/30 分钟</span></span> </div> <div class="ring-stat-item"> <span class="ring-dot ring-dot--stand"></span> <span class="ring-stat-label">站立 <span id="stand-label">0/12 小时</span></span> </div> </div> </div> </section> <!-- ===== WEEKLY SUMMARY ===== --> <section class="section-card"> <h2 class="section-title">本周活动</h2> <div class="weekly-chart" id="weekly-chart"> <!-- 7 bars rendered by JS --> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周一</span></div> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周二</span></div> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周三</span></div> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周四</span></div> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周五</span></div> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周六</span></div> <div class="weekly-bar-wrapper"><div class="weekly-bar weekly-bar--gray" style="height: 6px;"></div><span class="weekly-day-label">周日</span></div> </div> </section> <!-- ===== ACHIEVEMENT BADGES ===== --> <section class="section-card"> <h2 class="section-title">成就徽章</h2> <!-- Earned badges --> <div id="earned-section"> <p class="section-subtitle"> <span>已获得成就</span> <span class="count-badge" id="earned-count">0</span> </p> <div class="badges-earned" id="badges-earned"> <div class="empty-badges" style="grid-column: 1 / -1;"> <div class="empty-badges-icon">🏆</div> <p>还没有获得成就，继续加油！</p> </div> </div> </div> <div class="section-divider"></div> <!-- Locked badges --> <div id="locked-section"> <p class="section-subtitle"> <span>待解锁</span> <span class="count-badge" id="locked-count" style="background: var(--sf-bg-tertiary); color: var(--sf-text-tertiary);">7</span> </p> <div class="badges-locked" id="badges-locked"> <!-- Rendered by JS --> </div> </div> </section> <!-- ===== PERSONAL RECORDS ===== --> <section class="section-card" style="margin-bottom: var(--sf-space-2xl);"> <h2 class="section-title">个人最佳</h2> <div class="pr-grid"> <div class="pr-item"> <div class="pr-icon">📏</div> <div class="pr-value" id="pr-distance">--</div> <div class="pr-label">最长单次距离</div> </div> <div class="pr-item"> <div class="pr-icon">👣</div> <div class="pr-value" id="pr-steps">--</div> <div class="pr-label">最多步数</div> </div> <div class="pr-item"> <div class="pr-icon">⏱️</div> <div class="pr-value" id="pr-duration">--</div> <div class="pr-label">最长运动时间</div> </div> <div class="pr-item"> <div class="pr-icon">🔥</div> <div class="pr-value" id="pr-calories">--</div> <div class="pr-label">最多消耗卡路里</div> </div> </div> </section> </div><!-- /.page-wrapper --> <!-- ===== BOTTOM TAB BAR ===== --> <nav class="tab-bar"> <a href="home.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/> </svg> <span class="tab-label">首页</span> </a> <a href="training-plan.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M6.5 6.5h11v11h-11z"/> <path d="M3 9.5V6a1 1 0 011-1h3.5"/> <path d="M16.5 5H20a1 1 0 011 1v3.5"/> <path d="M21 14.5V18a1 1 0 01-1 1h-3.5"/> <path d="M7.5 19H4a1 1 0 01-1-1v-3.5"/> </svg> <span class="tab-label">训练</span> </a> <a href="course-detail.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/> <line x1="8" y1="21" x2="16" y2="21"/> <line x1="12" y1="17" x2="12" y2="21"/> </svg> <span class="tab-label">课程</span> </a> <a href="community.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/> <circle cx="9" cy="7" r="4"/> <path d="M23 21v-2a4 4 0 0 0-3-3.87"/> <path d="M16 3.13a4 4 0 0 1 0 7.75"/> </svg> <span class="tab-label">社区</span> </a> <a href="profile.html" class="tab-item active" style="text-decoration:none;"> <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/> </svg> <span class="tab-label">我的</span> </a> </nav> <!-- ===== JAVASCRIPT ===== --> <script>
+(function() { 'use strict';
+
+  function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem('sportlife_user')); }
+    catch (e) { return null; }
+  }
+  if (!getCurrentUser()) { navigateTo('login.html'); }
+  var user = getCurrentUser();
+
+  /* ---- System Badge Definitions ---- */
+  var SYSTEM_BADGES = [
+    { id: 'running_expert', name: '\u8DD1\u6B65\u8FBE\u4EBA', emoji: '\uD83C\uDFC3', gradient: 'badge-circle--green' },
+    { id: '7day_streak', name: '\u8FDE\u7EED7\u5929', emoji: '\uD83D\uDD25', gradient: 'badge-circle--orange' },
+    { id: 'strength_star', name: '\u529B\u91CF\u4E4B\u661F', emoji: '\uD83D\uDCAA', gradient: 'badge-circle--blue' },
+    { id: 'yoga_beginner', name: '\u745C\u4F3D\u65B0\u624B', emoji: '\uD83E\uDDD8', gradient: 'badge-circle--purple' },
+    { id: '100day_commit', name: '\u767E\u65E5\u575A\u6301', emoji: '\u2B50', gradient: 'badge-circle--gold' },
+    { id: '10k_steps', name: '\u4E07\u6B65\u8FBE\u4EBA', emoji: '\uD83C\uDFC5', gradient: 'badge-circle--green-blue' },
+    { id: 'half_marathon', name: '\u534A\u7A0B\u9A6C\u62C9\u677E', emoji: '\uD83C\uDFC3\u200D\u2640\uFE0F', gradient: 'badge-circle--orange-red' }
+  ];
+
+  /* ---- Init ---- */
+  document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+  });
+
+  /* ---- Load All Data ---- */
+  async function loadData() {
+    try {
+      var stepsRes = await fetch('/api/steps/' + user.id);
+      var workoutsRes = await fetch('/api/workouts/' + user.id + '/today');
+      var statsRes = await fetch('/api/workouts/' + user.id + '/stats');
+      var weekRes = await fetch('/api/steps/' + user.id + '/week');
+      var achRes = await fetch('/api/achievements/' + user.id);
+
+      var stepsData = await stepsRes.json();
+      var workoutsData = await workoutsRes.json();
+      var statsData = await statsRes.json();
+      var weekData = await weekRes.json();
+      var achData = await achRes.json();
+
+      var steps = (stepsData.success) ? (stepsData.steps || 0) : 0;
+      var workouts = (workoutsData.success) ? (workoutsData.workouts || []) : [];
+      var stats = (statsData.success) ? (statsData.stats || {}) : {};
+      var week = (weekData.success) ? (weekData.records || []) : [];
+      var earned = (achData.success && achData.earned) ? achData.earned : [];
+
+      /* totals for rings */
+      var totalMin = workouts.reduce(function(sum, w) { return sum + (w.duration_minutes || 0); }, 0);
+      var totalCal = workouts.reduce(function(sum, w) { return sum + (w.calories_burned || 0); }, 0) + Math.round(steps * 0.04);
+
+      /* rings */
+      animateRing('ring-move', 596.9, totalCal / 500);
+      animateRing('ring-exercise', 502.6, totalMin / 30);
+      animateRing('ring-stand', 408.4, steps > 100 ? 1 : steps / 100);
+
+      /* ring labels */
+      document.getElementById('move-label').textContent = Math.round(totalCal) + '/500 \u5343\u5361';
+      document.getElementById('exercise-label').textContent = totalMin + '/30 \u5206\u949F';
+      document.getElementById('stand-label').textContent = (steps > 100 ? '1' : '0') + '/12 \u5C0F\u65F6';
+
+      /* chart */
+      renderWeeklyChart(week);
+
+      /* badges */
+      renderAchievements(earned);
+
+      /* records */
+      document.getElementById('pr-distance').textContent = stats.totalDistance ? stats.totalDistance + ' km' : '--';
+      document.getElementById('pr-steps').textContent = stats.totalSteps ? stats.totalSteps.toLocaleString() : '--';
+      document.getElementById('pr-duration').textContent = stats.totalDurationMin ? Math.round(stats.totalDurationMin / 60) + ' \u5C0F\u65F6' : '--';
+      document.getElementById('pr-calories').textContent = stats.totalCalories ? stats.totalCalories.toLocaleString() + ' \u5343\u5361' : '--';
+    } catch (e) {
+      console.error('Failed to load data:', e);
+      /* render locked badges as fallback */
+      renderAchievements([]);
+    }
+  }
+
+  /* ---- Animate Activity Ring ---- */
+  function animateRing(id, circumference, progress) {
+    setTimeout(function() {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var offset = circumference - (circumference * Math.min(progress, 1));
+      el.style.transition = 'stroke-dashoffset 1.5s ease-out';
+      el.style.strokeDashoffset = offset;
+    }, 300);
+  }
+
+  /* ---- Render Weekly Chart ---- */
+  function renderWeeklyChart(records) {
+    var container = document.getElementById('weekly-chart');
+    var days = ['\u5468\u4E00', '\u5468\u4E8C', '\u5468\u4E09', '\u5468\u56DB', '\u5468\u4E94', '\u5468\u516D', '\u5468\u65E5'];
+    var todayIndex = (new Date().getDay() + 6) % 7;
+
+    /* build a map of steps by day index */
+    var daySteps = {};
+    if (records && records.length > 0) {
+      records.forEach(function(r) {
+        if (r.date) {
+          var d = new Date(r.date);
+          var idx = (d.getDay() + 6) % 7;
+          daySteps[idx] = (daySteps[idx] || 0) + (r.steps || 0);
+        }
+      });
+    }
+
+    var maxSteps = 10000;
+
+    var html = '';
+    for (var i = 0; i < 7; i++) {
+      var steps = daySteps[i] || 0;
+      var heightPct = Math.max(steps / maxSteps, 0.05);
+      var heightPx = Math.round(heightPct * 100) + 6;
+      var colorClass = steps >= 5000 ? 'weekly-bar--green' : (steps >= 2000 ? 'weekly-bar--orange' : 'weekly-bar--gray');
+      var isToday = (i === todayIndex) ? ' today' : '';
+      html += '<div class="weekly-bar-wrapper">' +
+        '<div class="weekly-bar ' + colorClass + '" style="height: ' + heightPx + 'px;"></div>' +
+        '<span class="weekly-day-label' + isToday + '">' + days[i] + '</span>' +
+        '</div>';
+    }
+    container.innerHTML = html;
+  }
+
+  /* ---- Render Achievements ---- */
+  function renderAchievements(earnedBadges) {
+    var earnedContainer = document.getElementById('badges-earned');
+    var lockedContainer = document.getElementById('badges-locked');
+    var earnedCountEl = document.getElementById('earned-count');
+    var lockedCountEl = document.getElementById('locked-count');
+
+    /* build a set of earned badge IDs */
+    var earnedIds = {};
+    if (earnedBadges && earnedBadges.length > 0) {
+      earnedBadges.forEach(function(b) {
+        earnedIds[b.id || b.achievement_id || b.name] = true;
+      });
+    }
+
+    var earnedHtml = '';
+    var lockedHtml = '';
+    var earnedCount = 0;
+    var lockedCount = 0;
+
+    SYSTEM_BADGES.forEach(function(badge) {
+      var isEarned = earnedIds[badge.id] || earnedIds[badge.name];
+      if (isEarned) {
+        earnedCount++;
+        earnedHtml += '<div class="badge-item">' +
+          '<div class="badge-circle ' + badge.gradient + ' badge-circle--earned">' + badge.emoji + '</div>' +
+          '<span class="badge-name">' + badge.name + '</span>' +
+          '</div>';
+      } else {
+        lockedCount++;
+        lockedHtml += '<div class="badge-item">' +
+          '<div class="badge-circle badge-circle--locked">' + badge.emoji + '</div>' +
+          '<span class="badge-name badge-name--locked">' + badge.name + '</span>' +
+          '</div>';
+      }
+    });
+
+    /* earned */
+    if (earnedCount > 0) {
+      earnedContainer.innerHTML = earnedHtml;
+    } else {
+      earnedContainer.innerHTML = '<div class="empty-badges" style="grid-column: 1 / -1;">' +
+        '<div class="empty-badges-icon">\uD83C\uDFC6</div>' +
+        '<p>\u8FD8\u6CA1\u6709\u83B7\u5F97\u6210\u5C31\uFF0C\u7EE7\u7EED\u52A0\u6CB9\uFF01</p>' +
+        '</div>';
+    }
+
+    /* locked */
+    if (lockedCount > 0) {
+      lockedContainer.innerHTML = lockedHtml;
+    } else {
+      document.getElementById('locked-section').style.display = 'none';
+    }
+
+    /* counts */
+    earnedCountEl.textContent = earnedCount;
+    lockedCountEl.textContent = lockedCount;
+  }
+
+})();
+
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+
+  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

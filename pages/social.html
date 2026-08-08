@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>动态 - SportLife</title> <style id="theme-vars"> :root { --sf-primary: #22C55E; --sf-primary-hover: #16A34A; --sf-primary-active: #15803D; --sf-primary-light: #DCFCE7; --sf-primary-surface: #F0FDF4; --sf-accent: #F97316; --sf-accent-hover: #EA580C; --sf-accent-light: #FFF7ED; --sf-accent-surface: #FED7AA; --sf-sky: #38BDF8; --sf-sky-light: #F0F9FF; --sf-sky-surface: #BAE6FD; --sf-purple: #A78BFA; --sf-purple-light: #F5F3FF; --sf-red: #EF4444; --sf-red-light: #FEF2F2; --sf-bg: #FFFFFF; --sf-bg-secondary: #F8FAFC; --sf-bg-tertiary: #F1F5F9; --sf-bg-elevated: #FFFFFF; --sf-text-primary: #0F172A; --sf-text-secondary: #475569; --sf-text-tertiary: #94A3B8; --sf-text-inverse: #FFFFFF; --sf-text-brand: #22C55E; --sf-border-light: #E2E8F0; --sf-border-default: #CBD5E1; --sf-border-brand: #22C55E; --sf-success: #22C55E; --sf-success-light: #DCFCE7; --sf-warning: #F59E0B; --sf-warning-light: #FEF3C7; --sf-error: #EF4444; --sf-error-light: #FEE2E2; --sf-info: #38BDF8; --sf-info-light: #E0F2FE; --sf-font-sans: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-font-display: 'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif; --sf-radius-sm: 6px; --sf-radius-md: 10px; --sf-radius-lg: 14px; --sf-radius-xl: 20px; --sf-radius-full: 9999px; --sf-space-xs: 4px; --sf-space-sm: 8px; --sf-space-md: 12px; --sf-space-lg: 16px; --sf-space-xl: 24px; --sf-space-2xl: 32px; --sf-space-3xl: 48px; --sf-shadow-xs: 0 1px 2px rgba(0,0,0,0.04); --sf-shadow-sm: 0 2px 4px rgba(0,0,0,0.04); --sf-shadow-md: 0 4px 12px rgba(0,0,0,0.05); --sf-shadow-lg: 0 8px 24px rgba(0,0,0,0.06); --sf-shadow-xl: 0 16px 40px rgba(0,0,0,0.08); --sf-transition-fast: 150ms ease; --sf-transition-normal: 250ms ease; --sf-transition-slow: 400ms ease; --sf-z-dropdown: 100; --sf-z-sticky: 200; --sf-z-overlay: 300; --sf-z-modal: 400; --sf-z-toast: 500; } html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155; } </style> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script> <script src="tab-prefetch.js"></script> <script src="/assets/vendor/tailwind.js" defer></script> <link rel="manifest" href="/manifest.json"> <meta name="theme-color" content="#22C55E"> <meta name="apple-mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <meta name="apple-mobile-web-app-title" content="SportLife"> <style> *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: var(--sf-font-sans); background: var(--sf-bg-secondary); color: var(--sf-text-primary); max-width: 430px; margin: 0 auto !important; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-tap-highlight-color: transparent; padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); } ::-webkit-scrollbar { width: 0; height: 0; } .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } /* ========== HEADER ========== */ .social-header { position: sticky; top: 0; z-index: var(--sf-z-sticky); background: var(--sf-bg); box-shadow: var(--sf-shadow-xs); } .social-header-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--sf-space-md) var(--sf-space-lg); height: 56px; } .social-header-left { display: flex; align-items: center; gap: var(--sf-space-md); } .back-btn { width: 36px; height: 36px; min-width: 36px; background: var(--sf-bg-secondary); border: 1px solid var(--sf-border-light); border-radius: var(--sf-radius-full); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--sf-text-primary); transition: background var(--sf-transition-fast); } .back-btn:active { background: var(--sf-bg-tertiary); } .social-header h1 { font-family: var(--sf-font-display); font-size: 20px; font-weight: 800; color: var(--sf-text-primary); } /* ========== SUB-TABS ========== */ .sub-tabs { display: flex; padding: 0 var(--sf-space-lg); gap: var(--sf-space-xl); border-bottom: 1px solid var(--sf-border-light); background: var(--sf-bg); } .sub-tab { position: relative; padding: var(--sf-space-sm) 0 var(--sf-space-md); font-size: 15px; font-weight: 600; color: var(--sf-text-tertiary); cursor: pointer; background: none; border: none; font-family: var(--sf-font-sans); transition: color var(--sf-transition-fast); -webkit-tap-highlight-color: transparent; padding-top: var(--sf-space-sm); padding-bottom: var(--sf-space-md); } .sub-tab.active { color: var(--sf-primary); } .sub-tab-indicator { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; border-radius: 2px; background: var(--sf-primary); transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); opacity: 0; } .sub-tab.active .sub-tab-indicator { opacity: 1; } /* ========== PULL TO REFRESH ========== */ .pull-indicator { display: flex; align-items: center; justify-content: center; height: 0; overflow: hidden; transition: height 0.3s ease; background: var(--sf-bg); } .pull-indicator.visible { height: 48px; } .pull-spinner { width: 24px; height: 24px; border: 2.5px solid var(--sf-bg-tertiary); border-top-color: var(--sf-primary); border-radius: 50%; animation: spin 0.8s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } /* ========== SKELETON LOADING ========== */ @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } } .skeleton { background: linear-gradient(90deg, var(--sf-bg-tertiary) 25%, var(--sf-bg-secondary) 50%, var(--sf-bg-tertiary) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--sf-radius-md); } /* ========== FEED CARD ANIMATIONS ========== */ @keyframes feedCardEnter { from { opacity: 0; transform: translateY(24px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } } .feed-card { background: var(--sf-bg); border-radius: var(--sf-radius-lg); padding: var(--sf-space-lg); margin-bottom: var(--sf-space-md); box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); opacity: 0; animation: feedCardEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards; transition: box-shadow 0.3s ease; } .feed-card:nth-child(1) { animation-delay: 0.02s; } .feed-card:nth-child(2) { animation-delay: 0.08s; } .feed-card:nth-child(3) { animation-delay: 0.14s; } .feed-card:nth-child(4) { animation-delay: 0.20s; } .feed-card:nth-child(5) { animation-delay: 0.26s; } .feed-card:nth-child(6) { animation-delay: 0.32s; } /* ========== CARD AUTHOR ========== */ .card-author { display: flex; align-items: center; margin-bottom: var(--sf-space-md); cursor: pointer; } .author-avatar { width: 42px; height: 42px; border-radius: var(--sf-radius-full); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; flex-shrink: 0; transition: transform var(--sf-transition-fast); } .card-author:active .author-avatar { transform: scale(0.93); } .author-info { margin-left: var(--sf-space-md); flex: 1; min-width: 0; } .author-name { font-size: 14px; font-weight: 700; color: var(--sf-text-primary); line-height: 1.3; } .author-time { font-size: 11px; color: var(--sf-text-tertiary); font-weight: 500; margin-top: 2px; } /* ========== CARD CONTENT ========== */ .card-text { font-size: 14px; color: var(--sf-text-primary); line-height: 1.7; margin: 0; word-break: break-word; white-space: pre-wrap; } .card-image { width: 100%; border-radius: var(--sf-radius-md); margin-top: var(--sf-space-md); display: block; object-fit: cover; max-height: 300px; transition: transform 0.3s ease; } /* ========== WORKOUT BADGE ========== */ .workout-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--sf-radius-full); background: var(--sf-primary-surface); color: var(--sf-primary); font-size: 12px; font-weight: 600; margin-top: var(--sf-space-md); border: 1px solid rgba(34,197,94,0.15); } .workout-badge-icon { flex-shrink: 0; } .workout-badge-sep { width: 1px; height: 12px; background: rgba(34,197,94,0.3); } /* ========== ACTION BAR ========== */ .action-bar { display: flex; align-items: center; padding-top: var(--sf-space-md); margin-top: var(--sf-space-md); border-top: 1px solid var(--sf-border-light); } .action-btn { display: flex; align-items: center; gap: 5px; background: none; border: none; font-size: 13px; color: var(--sf-text-tertiary); cursor: pointer; padding: 6px 10px; border-radius: var(--sf-radius-full); transition: all var(--sf-transition-fast); font-family: var(--sf-font-sans); -webkit-tap-highlight-color: transparent; position: relative; } .action-btn:active { background: var(--sf-bg-tertiary); transform: scale(0.94); } .action-btn svg { transition: transform var(--sf-transition-fast); } .action-share { margin-left: auto; } /* ========== LIKE ANIMATION ========== */ @keyframes heartBurst { 0% { transform: scale(1); } 25% { transform: scale(1.35); } 50% { transform: scale(0.9); } 75% { transform: scale(1.1); } 100% { transform: scale(1); } } .like-animating svg { animation: heartBurst 0.4s cubic-bezier(0.22, 1, 0.36, 1); } /* ========== FLOATING COMMENT BAR ========== */ .floating-comment-bar { position: fixed; bottom: calc(68px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; padding: var(--sf-space-sm) var(--sf-space-lg); background: var(--sf-bg); border-top: 1px solid var(--sf-border-light); box-shadow: 0 -2px 12px rgba(0,0,0,0.05); z-index: var(--sf-z-sticky); display: flex; align-items: center; gap: var(--sf-space-sm); } .comment-input-wrapper { flex: 1; position: relative; } .comment-input { width: 100%; padding: 10px 16px; border: 1.5px solid var(--sf-border-light); border-radius: var(--sf-radius-full); font-size: 14px; font-family: var(--sf-font-sans); color: var(--sf-text-primary); background: var(--sf-bg-secondary); outline: none; transition: all var(--sf-transition-fast); } .comment-input::placeholder { color: var(--sf-text-tertiary); } .comment-input:focus { border-color: var(--sf-primary); background: var(--sf-bg); box-shadow: 0 0 0 3px rgba(34,197,94,0.1); } .comment-send-btn { width: 38px; height: 38px; min-width: 38px; border-radius: var(--sf-radius-full); background: var(--sf-primary); color: var(--sf-text-inverse); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--sf-transition-fast); box-shadow: var(--sf-shadow-sm); } .comment-send-btn:active { transform: scale(0.9); background: var(--sf-primary-hover); } .comment-send-btn:disabled { opacity: 0.4; cursor: default; transform: none; } /* Target post indicator */ .comment-target { display: none; align-items: center; gap: 8px; padding: 6px 12px; background: var(--sf-primary-surface); border-radius: var(--sf-radius-full) var(--sf-radius-full) 0 0; border: 1px solid rgba(34,197,94,0.15); border-bottom: none; margin: 0 var(--sf-space-lg); font-size: 12px; color: var(--sf-primary); font-weight: 500; } .comment-target.visible { display: flex; } .comment-target-close { background: none; border: none; color: var(--sf-text-tertiary); cursor: pointer; padding: 2px; display: flex; align-items: center; } /* ========== BOTTOM TAB BAR ========== */ .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--sf-bg); border-top: 1px solid rgba(0,0,0,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.04); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 8px)); z-index: var(--sf-z-sticky); transition: background 0.3s ease, border-color 0.3s ease; } html.dark .tab-bar { background: var(--sf-bg); border-top-color: rgba(255,255,255,0.06); box-shadow: 0 -4px 24px rgba(0,0,0,0.2); } .tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; text-decoration: none; padding: 4px 16px; transition: all 150ms ease; user-select: none; -webkit-tap-highlight-color: transparent; } .tab-item:active { transform: scale(0.9); } .tab-icon { color: var(--sf-text-tertiary); transition: color 150ms ease; } .tab-label { font-size: 10px; font-weight: 500; color: var(--sf-text-tertiary); transition: all 150ms ease; } .tab-item.active .tab-icon { color: var(--sf-primary); } .tab-item.active .tab-label { color: var(--sf-primary); font-weight: 700; } /* ========== EMPTY STATE ========== */ .empty-state { text-align: center; padding: 60px 24px; color: var(--sf-text-tertiary); } .empty-state-icon { margin: 0 auto 16px; opacity: 0.4; } .empty-state-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: var(--sf-text-secondary); } .empty-state-desc { font-size: 13px; } /* ========== TOAST ========== */ .toast-msg { position: fixed; top: 70px; left: 50%; transform: translateX(-50%) translateY(-8px); padding: 10px 24px; border-radius: var(--sf-radius-full); color: white; font-size: 14px; z-index: 10000; font-family: var(--sf-font-sans); font-weight: 500; box-shadow: var(--sf-shadow-lg); white-space: nowrap; opacity: 0; transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; } .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); } /* ========== RESPONSIVE ========== */ @media (min-width: 768px) { body { max-width: 768px; } .tab-bar { max-width: 768px; } .floating-comment-bar { max-width: 768px; } } </style>
+
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body> <!-- ===== HEADER ===== --> <header class="social-header"> <div class="social-header-inner"> <div class="social-header-left"> <a href="home.html" class="back-btn" aria-label="返回"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M15 18l-6-6 6-6"/> </svg> </a> <h1>动态</h1> </div> </div> <!-- Sub Tabs --> <div class="sub-tabs"> <button class="sub-tab active" data-tab="recommend"> 推荐 <span class="sub-tab-indicator"></span> </button> <button class="sub-tab" data-tab="following"> 关注 <span class="sub-tab-indicator"></span> </button> </div> </header> <!-- ===== PULL TO REFRESH ===== --> <div class="pull-indicator" id="pull-indicator"> <div class="pull-spinner"></div> </div> <!-- ===== MAIN FEED ===== --> <main style="padding: var(--sf-space-sm) var(--sf-space-lg) 0;"> <!-- Loading Skeletons --> <div id="feed-loading"> <div style="background:var(--sf-bg);border-radius:var(--sf-radius-lg);padding:var(--sf-space-lg);margin-bottom:var(--sf-space-md);"> <div style="display:flex;align-items:center;gap:var(--sf-space-md);margin-bottom:var(--sf-space-md);"> <div class="skeleton" style="width:42px;height:42px;border-radius:var(--sf-radius-full);flex-shrink:0;"></div> <div style="flex:1;"> <div class="skeleton" style="width:80px;height:14px;margin-bottom:6px;"></div> <div class="skeleton" style="width:50px;height:10px;"></div> </div> </div> <div class="skeleton" style="width:100%;height:14px;margin-bottom:8px;"></div> <div class="skeleton" style="width:75%;height:14px;margin-bottom:var(--sf-space-md);"></div> <div class="skeleton" style="width:100%;height:180px;border-radius:var(--sf-radius-md);"></div> </div> <div style="background:var(--sf-bg);border-radius:var(--sf-radius-lg);padding:var(--sf-space-lg);margin-bottom:var(--sf-space-md);"> <div style="display:flex;align-items:center;gap:var(--sf-space-md);margin-bottom:var(--sf-space-md);"> <div class="skeleton" style="width:42px;height:42px;border-radius:var(--sf-radius-full);flex-shrink:0;"></div> <div style="flex:1;"> <div class="skeleton" style="width:90px;height:14px;margin-bottom:6px;"></div> <div class="skeleton" style="width:40px;height:10px;"></div> </div> </div> <div class="skeleton" style="width:100%;height:14px;margin-bottom:8px;"></div> <div class="skeleton" style="width:60%;height:14px;"></div> </div> <div style="background:var(--sf-bg);border-radius:var(--sf-radius-lg);padding:var(--sf-space-lg);margin-bottom:var(--sf-space-md);"> <div style="display:flex;align-items:center;gap:var(--sf-space-md);margin-bottom:var(--sf-space-md);"> <div class="skeleton" style="width:42px;height:42px;border-radius:var(--sf-radius-full);flex-shrink:0;"></div> <div style="flex:1;"> <div class="skeleton" style="width:70px;height:14px;margin-bottom:6px;"></div> <div class="skeleton" style="width:55px;height:10px;"></div> </div> </div> <div class="skeleton" style="width:90%;height:14px;margin-bottom:8px;"></div> <div class="skeleton" style="width:45%;height:14px;"></div> </div> </div> <!-- Post Feed Container --> <div id="post-feed"></div> </main> <!-- ===== COMMENT TARGET INDICATOR ===== --> <div class="comment-target" id="comment-target"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/> </svg> <span id="comment-target-text">回复评论</span> <button class="comment-target-close" id="comment-target-close" aria-label="取消回复"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> </button> </div> <!-- ===== FLOATING COMMENT BAR ===== --> <div class="floating-comment-bar" id="floating-comment-bar"> <div class="comment-input-wrapper"> <input type="text" class="comment-input" id="comment-input" placeholder="写评论..." maxlength="500"> </div> <button class="comment-send-btn" id="comment-send-btn" disabled aria-label="发送"> <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"> <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/> </svg> </button> </div> <!-- ===== BOTTOM TAB BAR ===== --> <nav class="tab-bar"> <a href="home.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/> </svg> <span class="tab-label">首页</span> </a> <a href="training-plan.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M6.5 6.5h11M5 8h2m10 0h2M7 14h10M5 12h2m10 0h2M5 10v4M19 10v4M3 8h2v8H3zM19 8h2v8h-2z"/> </svg> <span class="tab-label">训练</span> </a> <a href="course-detail.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/> </svg> <span class="tab-label">课程</span> </a> <a href="social.html" class="tab-item active" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="var(--sf-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/> </svg> <span class="tab-label">动态</span> </a> <a href="profile.html" class="tab-item" style="text-decoration:none;"> <svg class="tab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/> </svg> <span class="tab-label">我的</span> </a> </nav> <!-- ===== JAVASCRIPT ===== --> <script>
+(function() {
+  'use strict';
+
+  /* ===== Auth ===== */
+  var user = getCurrentUser();
+  if (!user) {
+    navigateTo('login.html');
+    return;
+  }
+
+  /* ===== State ===== */
+  var currentTab = 'recommend';
+  var posts = [];
+  var likedPosts = new Set();
+  var commentTargetPostId = null;
+  var autoRefreshTimer = null;
+
+  /* ===== Utility: format time ===== */
+  function formatTime(dateStr) {
+    if (!dateStr) return '';
+    var d = new Date(dateStr);
+    var now = new Date();
+    var diff = now - d;
+    if (diff < 60000) return '刚刚';
+    if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+    if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    if (d.getFullYear() === now.getFullYear()) {
+      return month + '月' + day + '日';
+    }
+    return d.getFullYear() + '年' + month + '月' + day + '日';
+  }
+
+  /* ===== Utility: escape HTML ===== */
+  function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
+  }
+
+  /* ===== Utility: toast ===== */
+  function showToast(msg, type) {
+    document.querySelectorAll('.toast-msg').forEach(function(t) { t.remove(); });
+    var t = document.createElement('div');
+    t.className = 'toast-msg';
+    t.style.background = (type === 'success') ? 'var(--sf-primary)' :
+                         (type === 'error' ? 'var(--sf-error)' : 'var(--sf-text-secondary)');
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { t.classList.add('show'); });
+    });
+    setTimeout(function() {
+      t.classList.remove('show');
+      setTimeout(function() { t.remove(); }, 300);
+    }, 2500);
+  }
+
+  /* ===== Workout type icon map ===== */
+  function getWorkoutTypeIcon(type) {
+    var icons = {
+      '跑步': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><path d="M13.5 5.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.1 7.1 0 0 0 21 13.2V11.1a5.1 5.1 0 0 1-4.5-2.8l-1-1.6a2 2 0 0 0-1.7-1 2 2 0 0 0-.9.2L7 8.3V13h2V9.6l1.8-.7"/></svg>',
+      'HIIT': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+      '瑜伽': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><circle cx="12" cy="4" r="2"/><path d="M12 6v6l-4 8h2l2-4 2 4h2l-4-8V6z"/></svg>',
+      '力量训练': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><path d="M6.5 6.5h11M5 8h2m10 0h2M7 14h10M5 12h2m10 0h2M5 10v4M19 10v4M3 8h2v8H3zM19 8h2v8h-2z"/></svg>',
+      '游泳': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><path d="M2 20c2-1 4-1 6 0s4 1 6 0 4-1 6 0"/><path d="M2 16c2-1 4-1 6 0s4 1 6 0 4-1 6 0"/><circle cx="12" cy="8" r="3"/><path d="M12 11v3"/></svg>',
+      '骑行': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6l-4 6h4l-3 5.5M5.5 17.5L10 8l3 2.5"/></svg>',
+      '拉伸': '<svg class="workout-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="var(--sf-primary)" stroke="none"><path d="M6 4l12 8-12 8V4z"/></svg>'
+    };
+    return icons[type] || icons['HIIT'];
+  }
+
+  /* ===== Load Feed ===== */
+  async function loadFeed(showPullRefresh) {
+    if (showPullRefresh) {
+      var indicator = document.getElementById('pull-indicator');
+      indicator.classList.add('visible');
+    }
+    try {
+      if (currentTab === 'following') {
+        /* Following tab: directly show empty state */
+        var loadingEl = document.getElementById('feed-loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        posts = [];
+        likedPosts.clear();
+        renderEmpty();
+        return;
+      }
+      var url = '/api/feed';
+      var res = await fetch(url);
+      var data = await res.json();
+      var loadingEl = document.getElementById('feed-loading');
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (data.success) {
+        posts = data.feed || data.posts || [];
+        likedPosts.clear();
+        posts.forEach(function(p) {
+          if (p.is_liked) likedPosts.add(p.id);
+        });
+        renderPosts();
+      } else {
+        renderEmpty();
+      }
+    } catch (e) {
+      var loadingEl = document.getElementById('feed-loading');
+      if (loadingEl) loadingEl.style.display = 'none';
+      renderEmpty();
+    } finally {
+      if (showPullRefresh) {
+        setTimeout(function() {
+          document.getElementById('pull-indicator').classList.remove('visible');
+        }, 400);
+      }
+    }
+  }
+
+  /* ===== Render Posts ===== */
+  function renderPosts() {
+    var feed = document.getElementById('post-feed');
+    if (!posts || posts.length === 0) {
+      renderEmpty();
+      return;
+    }
+    feed.innerHTML = posts.map(function(post, index) {
+      var postUser = post.author || post.user || {};
+      var initial = (postUser.nickname || postUser.username || 'U').charAt(0);
+      var name = postUser.nickname || postUser.username || '用户';
+      var avatarColor = postUser.avatar_color || '#DCFCE7';
+      var avatarTextColor = postUser.avatar_text_color || '#22C55E';
+      var isLiked = likedPosts.has(post.id);
+
+      /* Workout badge */
+      var badgeHtml = '';
+      if (post.workout_type) {
+        var parts = [post.workout_type];
+        if (post.calories_burned) parts.push(post.calories_burned + 'kcal');
+        if (post.duration_minutes) parts.push(post.duration_minutes + '分钟');
+        badgeHtml = '<div class="workout-badge">' + getWorkoutTypeIcon(post.workout_type) +
+                    '<span>' + escapeHtml(parts.join(' ')) + '</span></div>';
+      }
+
+      return '<div class="feed-card" style="animation-delay:' + (index * 0.06) + 's">' +
+        /* Author */
+        '<div class="card-author" data-user-id="' + (postUser.id || '') + '">' +
+          '<a href="user-profile.html?uid=' + (postUser.id || '') + '" style="text-decoration:none;">' +
+            '<div class="author-avatar" style="background:' + escapeHtml(avatarColor) + ';color:' + escapeHtml(avatarTextColor) + '">' + escapeHtml(initial) + '</div>' +
+          '</a>' +
+          '<div class="author-info">' +
+            '<a href="user-profile.html?uid=' + (postUser.id || '') + '" style="text-decoration:none;color:var(--sf-text-primary);">' + escapeHtml(name) + '</a>' +
+            '<div class="author-time">' + formatTime(post.created_at) + '</div>' +
+          '</div>' +
+        '</div>' +
+        /* Text */
+        '<p class="card-text">' + escapeHtml(post.content) + '</p>' +
+        /* Image */
+        (post.image_url ? '<img class="card-image" src="' + escapeHtml(post.image_url) + '" loading="lazy" alt="post image">' : '') +
+        /* Badge */
+        badgeHtml +
+        /* Action bar */
+        '<div class="action-bar">' +
+          /* Like button */
+          '<button class="action-btn like-btn' + (isLiked ? ' is-liked' : '') + '" data-action="like" data-post-id="' + post.id + '" style="' + (isLiked ? 'color:#EF4444;' : '') + '">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="' + (isLiked ? '#EF4444' : 'currentColor') + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' +
+            '</svg>' +
+            '<span>' + (post.likes_count > 0 ? post.likes_count : '') + '</span>' +
+          '</button>' +
+          /* Comment button */
+          '<button class="action-btn" data-action="comment" data-post-id="' + post.id + '">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' +
+            '</svg>' +
+            '<span>' + (post.comments_count > 0 ? post.comments_count : '') + '</span>' +
+          '</button>' +
+          /* Share button */
+          '<button class="action-btn action-share" data-action="share" data-post-id="' + post.id + '">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>' +
+              '<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>' +
+            '</svg>' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* ===== Render Empty State ===== */
+  function renderEmpty() {
+    var feed = document.getElementById('post-feed');
+    var msg = currentTab === 'following' ?
+      { title: '还没有关注的人', desc: '关注你感兴趣的用户，查看他们的动态' } :
+      { title: '暂无动态', desc: '来发布第一条吧！' };
+    feed.innerHTML = '<div class="empty-state">' +
+      '<div class="empty-state-icon">' +
+        '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
+          '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>' +
+          '<circle cx="9" cy="7" r="4"/>' +
+          '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' +
+          '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div class="empty-state-title">' + msg.title + '</div>' +
+      '<div class="empty-state-desc">' + msg.desc + '</div>' +
+    '</div>';
+  }
+
+  /* ===== Toggle Like ===== */
+  async function toggleLike(postId) {
+    var btn = document.querySelector('.like-btn[data-post-id="' + postId + '"]');
+    if (!btn) return;
+
+    /* Optimistic UI update */
+    var isLiked = likedPosts.has(postId);
+    if (isLiked) {
+      likedPosts.delete(postId);
+      btn.classList.remove('is-liked');
+      btn.style.color = 'var(--sf-text-tertiary)';
+      btn.querySelector('svg').setAttribute('fill', 'none');
+      btn.querySelector('svg').setAttribute('stroke', 'currentColor');
+    } else {
+      likedPosts.add(postId);
+      btn.classList.add('is-liked');
+      btn.style.color = '#EF4444';
+      btn.querySelector('svg').setAttribute('fill', '#EF4444');
+      btn.querySelector('svg').setAttribute('stroke', '#EF4444');
+      /* Heart burst animation */
+      btn.classList.remove('like-animating');
+      void btn.offsetWidth;
+      btn.classList.add('like-animating');
+      setTimeout(function() { btn.classList.remove('like-animating'); }, 400);
+    }
+
+    /* Optimistic count display */
+    var countSpan = btn.querySelector('span');
+    var post = posts.find(function(p) { return p.id === postId; });
+    if (post) {
+      if (isLiked) {
+        post.likes_count = Math.max(0, (post.likes_count || 1) - 1);
+        post.is_liked = false;
+      } else {
+        post.likes_count = (post.likes_count || 0) + 1;
+        post.is_liked = true;
+      }
+      countSpan.textContent = post.likes_count > 0 ? post.likes_count : '';
+    }
+
+    /* Send to server */
+    try {
+      var res = await fetch('/api/posts/' + postId + '/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id })
+      });
+      var data = await res.json();
+      if (data.success) {
+        /* Confirmed: update with server count */
+        if (data.likes_count !== undefined && post) {
+          post.likes_count = data.likes_count;
+          countSpan.textContent = post.likes_count > 0 ? post.likes_count : '';
+        }
+        if (data.liked) { likedPosts.add(postId); }
+        else { likedPosts.delete(postId); }
+      } else {
+        /* Rollback on failure */
+        if (isLiked) {
+          likedPosts.add(postId);
+          btn.classList.add('is-liked');
+          btn.style.color = '#EF4444';
+          btn.querySelector('svg').setAttribute('fill', '#EF4444');
+          btn.querySelector('svg').setAttribute('stroke', '#EF4444');
+        } else {
+          likedPosts.delete(postId);
+          btn.classList.remove('is-liked');
+          btn.style.color = 'var(--sf-text-tertiary)';
+          btn.querySelector('svg').setAttribute('fill', 'none');
+          btn.querySelector('svg').setAttribute('stroke', 'currentColor');
+        }
+        if (post) {
+          post.likes_count = isLiked ? (post.likes_count || 0) + 1 : Math.max(0, (post.likes_count || 1) - 1);
+          post.is_liked = isLiked;
+          countSpan.textContent = post.likes_count > 0 ? post.likes_count : '';
+        }
+      }
+    } catch (e) {
+      /* Network error - silent rollback handled by optimistic state */
+    }
+  }
+
+  /* ===== Focus Comment ===== */
+  function focusComment(postId) {
+    commentTargetPostId = postId;
+    var post = posts.find(function(p) { return p.id === postId; });
+    var postUser = post ? (post.author || post.user || {}) : {};
+    var name = postUser.nickname || postUser.username || '用户';
+    var target = document.getElementById('comment-target');
+    var targetText = document.getElementById('comment-target-text');
+    targetText.textContent = '回复 ' + name;
+    target.classList.add('visible');
+    var input = document.getElementById('comment-input');
+    input.placeholder = '回复 ' + name + '...';
+    input.focus();
+  }
+
+  /* ===== Submit Comment ===== */
+  async function submitComment() {
+    var input = document.getElementById('comment-input');
+    var content = input.value.trim();
+    if (!content || !commentTargetPostId) return;
+    var sendBtn = document.getElementById('comment-send-btn');
+    sendBtn.disabled = true;
+    try {
+      var res = await fetch('/api/posts/' + commentTargetPostId + '/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, content: content })
+      });
+      var data = await res.json();
+      if (data.success) {
+        input.value = '';
+        sendBtn.disabled = true;
+        /* Update comment count */
+        var post = posts.find(function(p) { return p.id === commentTargetPostId; });
+        if (post) { post.comments_count = (post.comments_count || 0) + 1; }
+        clearCommentTarget();
+        renderPosts();
+        showToast('评论成功', 'success');
+      } else {
+        showToast('评论失败，请重试', 'error');
+      }
+    } catch (e) {
+      showToast('网络错误，请重试', 'error');
+      sendBtn.disabled = false;
+    }
+  }
+
+  /* ===== Clear Comment Target ===== */
+  function clearCommentTarget() {
+    commentTargetPostId = null;
+    var target = document.getElementById('comment-target');
+    target.classList.remove('visible');
+    var input = document.getElementById('comment-input');
+    input.placeholder = '写评论...';
+    input.value = '';
+    document.getElementById('comment-send-btn').disabled = true;
+  }
+
+  /* ===== Share Post ===== */
+  function sharePost(postId) {
+    if (navigator.share) {
+      navigator.share({ title: 'SportLife动态', text: '来看看这条运动动态！', url: window.location.href });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        showToast('链接已复制到剪贴板', 'success');
+      }).catch(function() {
+        showToast('链接已复制', 'success');
+      });
+    } else {
+      showToast('分享功能暂不可用');
+    }
+  }
+
+  /* ===== Switch Tab ===== */
+  function switchTab(tab) {
+    if (tab === currentTab) return;
+    currentTab = tab;
+
+    /* Update tab UI */
+    document.querySelectorAll('.sub-tab').forEach(function(t) {
+      t.classList.toggle('active', t.getAttribute('data-tab') === tab);
+    });
+
+    /* Reset state */
+    clearCommentTarget();
+    likedPosts.clear();
+
+    /* Show loading */
+    document.getElementById('post-feed').innerHTML = '';
+    document.getElementById('feed-loading').style.display = 'block';
+
+    /* Load feed for new tab */
+    loadFeed(false);
+  }
+
+  /* ===== Pull To Refresh ===== */
+  var touchStartY = 0;
+  var isPulling = false;
+
+  function initPullToRefresh() {
+    var feedArea = document.querySelector('main');
+    feedArea.addEventListener('touchstart', function(e) {
+      if (window.scrollY <= 0) {
+        touchStartY = e.touches[0].clientY;
+        isPulling = true;
+      }
+    }, { passive: true });
+    feedArea.addEventListener('touchmove', function(e) {
+      if (!isPulling) return;
+      var diff = e.touches[0].clientY - touchStartY;
+      if (diff > 60 && window.scrollY <= 0) {
+        document.getElementById('pull-indicator').classList.add('visible');
+      }
+    }, { passive: true });
+    feedArea.addEventListener('touchend', function() {
+      if (isPulling && document.getElementById('pull-indicator').classList.contains('visible')) {
+        loadFeed(true);
+      }
+      isPulling = false;
+    }, { passive: true });
+  }
+
+  /* ===== Auto Refresh ===== */
+  function startAutoRefresh() {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    autoRefreshTimer = setInterval(function() {
+      loadFeed(false);
+    }, 30000);
+  }
+
+  /* ===== Init ===== */
+  function init() {
+    /* Load initial feed */
+    loadFeed(false);
+
+    /* Start auto-refresh */
+    startAutoRefresh();
+
+    /* Init pull to refresh */
+    initPullToRefresh();
+
+    /* Tab switching */
+    document.querySelectorAll('.sub-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        switchTab(this.getAttribute('data-tab'));
+      });
+    });
+
+    /* Comment input: enable/disable send button */
+    var commentInput = document.getElementById('comment-input');
+    var commentSendBtn = document.getElementById('comment-send-btn');
+    commentInput.addEventListener('input', function() {
+      commentSendBtn.disabled = !this.value.trim();
+    });
+
+    /* Send button click */
+    commentSendBtn.addEventListener('click', function() {
+      submitComment();
+    });
+
+    /* Enter key to submit comment */
+    commentInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!commentSendBtn.disabled) submitComment();
+      }
+    });
+
+    /* Comment target close */
+    document.getElementById('comment-target-close').addEventListener('click', function() {
+      clearCommentTarget();
+    });
+
+    /* Event delegation for feed actions (like, comment, share) */
+    var feed = document.getElementById('post-feed');
+    feed.addEventListener('click', function(e) {
+      var btn = e.target.closest('button[data-action]');
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        var action = btn.getAttribute('data-action');
+        var postId = btn.getAttribute('data-post-id');
+        if (action === 'like') toggleLike(postId);
+        else if (action === 'comment') focusComment(postId);
+        else if (action === 'share') sharePost(postId);
+      }
+    }, true);
+
+    /* Visibility change: pause/resume auto-refresh */
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      } else {
+        startAutoRefresh();
+        loadFeed(false);
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+})();
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+ </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

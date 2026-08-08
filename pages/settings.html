@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>设置 - SportLife</title> <script src="/assets/vendor/tailwind.js" defer></script> <style> :root { --sf-bg: #F9FAFB; --sf-bg-secondary: #FFFFFF; --sf-bg-tertiary: #F3F4F6; --sf-text-primary: #111827; --sf-text-secondary: #4B5563; --sf-text-tertiary: #9CA3AF; --sf-border-light: #E5E7EB; } html.dark { --sf-bg: #0F172A; --sf-bg-secondary: #1E293B; --sf-bg-tertiary: #334155; --sf-text-primary: #F8FAFC; --sf-text-secondary: #CBD5E1; --sf-text-tertiary: #64748B; --sf-border-light: #334155; } * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--sf-bg); color: var(--sf-text-primary); min-height: 100vh; max-width: 430px; margin: 0 auto; padding-bottom: env(safe-area-inset-bottom, 20px); transition: background 0.3s, color 0.3s; } /* Toggle Switch */ .toggle-switch { width: 51px; height: 31px; border-radius: 16px; background: #CBD5E1; position: relative; cursor: pointer; transition: background 0.3s ease; flex-shrink: 0; } .toggle-switch.active { background: #22C55E; } .toggle-switch::after { content: ''; position: absolute; width: 27px; height: 27px; border-radius: 50%; background: white; top: 2px; left: 2px; transition: transform 0.3s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.15); pointer-events: none; } .toggle-switch.active::after { transform: translateX(20px); } /* Settings row */ .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--sf-bg-secondary); transition: background 0.3s, box-shadow 0.25s ease; } .settings-row:not(:last-child) { border-bottom: 1px solid var(--sf-border-light); } .settings-row:first-child { border-radius: 12px 12px 0 0; } .settings-row:last-child { border-radius: 0 0 12px 12px; } .settings-row:only-child { border-radius: 12px; } /* Radio style */ .lang-option input[type="radio"] { display: none; } .lang-option label { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; background: var(--sf-bg-secondary); transition: background 0.3s; } .lang-option:first-child label { border-radius: 12px 12px 0 0; border-bottom: 1px solid var(--sf-border-light); } .lang-option:last-child label { border-radius: 0 0 12px 12px; } .lang-option:only-child label { border-radius: 12px; } .lang-option input[type="radio"]:checked + label { color: #22C55E; font-weight: 600; } .radio-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #D1D5DB; position: relative; flex-shrink: 0; transition: border-color 0.2s; } .radio-dot::after { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #22C55E; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.2s; } .lang-option input[type="radio"]:checked + label .radio-dot { border-color: #22C55E; } .lang-option input[type="radio"]:checked + label .radio-dot::after { transform: translate(-50%, -50%) scale(1); } /* Toast */ .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--sf-bg-secondary); color: var(--sf-text-primary); padding: 12px 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); font-size: 14px; font-weight: 500; z-index: 9999; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; } .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); } /* Navigation arrow */ .nav-arrow { color: var(--sf-text-tertiary); } </style> <script src="theme-init.js"></script> <script src="ngrok-fix.js"></script>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body> <!-- Toast --> <div id="toast" class="toast"></div> <!-- Header --> <header style="background: var(--sf-bg-secondary); border-bottom: 1px solid var(--sf-border-light); transition: background 0.3s;" class="sticky top-0 z-50"> <div class="flex items-center px-4 h-14"> <a href="home.html" class="w-9 h-9 flex items-center justify-center rounded-full" style="color: var(--sf-text-primary); text-decoration:none; display:flex; align-items:center; justify-content:center;" aria-label="返回"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="15 18 9 12 15 6"></polyline> </svg> </a> <h1 class="flex-1 text-center text-lg font-semibold" style="color: var(--sf-text-primary); margin-right: 36px;">设置</h1> </div> </header> <!-- Main Content --> <main class="px-4 py-5 space-y-6" style="max-width: 430px; margin: 0 auto;"> <!-- Appearance Section --> <section> <h2 class="text-sm font-semibold mb-2 px-1" style="color: var(--sf-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">外观</h2> <div class="settings-row" style="border-radius: 12px;"> <div> <span class="text-base font-medium" style="color: var(--sf-text-primary);">深色模式</span> <p class="text-xs mt-0.5" style="color: var(--sf-text-tertiary);">切换深色/浅色主题</p> </div> <div id="theme-toggle" class="toggle-switch"></div> </div> <!-- Scheduled Dark Mode --> <div style="border-top:1px solid var(--sf-border-light);margin-top:12px;padding-top:16px;"> <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"> <div style="display:flex;align-items:center;gap:10px;"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sf-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span style="font-size:14px;font-weight:600;color:var(--sf-text-primary);">定时深色模式</span> </div> <div id="schedule-dark-toggle" class="toggle-switch"></div> </div> <div id="schedule-dark-config" style="display:none;padding:12px;background:var(--sf-bg-tertiary);border-radius:10px;"> <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"> <span style="font-size:13px;color:var(--sf-text-secondary);">开启时间</span> <input type="time" id="dark-start-time" value="19:00" style="border:1px solid var(--sf-border-light);border-radius:6px;padding:4px 8px;font-size:14px;background:var(--sf-bg);color:var(--sf-text-primary);"> </div> <div style="display:flex;align-items:center;justify-content:space-between;"> <span style="font-size:13px;color:var(--sf-text-secondary);">关闭时间</span> <input type="time" id="dark-end-time" value="07:00" style="border:1px solid var(--sf-border-light);border-radius:6px;padding:4px 8px;font-size:14px;background:var(--sf-bg);color:var(--sf-text-primary);"> </div> </div> </div> </section> <!-- Language Section --> <section> <h2 class="text-sm font-semibold mb-2 px-1" style="color: var(--sf-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">语言</h2> <div style="border-radius: 12px; overflow: hidden;"> <div class="lang-option"> <input type="radio" name="lang" id="lang-zh" value="zh" checked> <label for="lang-zh"> <span class="radio-dot"></span> <span>中文</span> </label> </div> <div class="lang-option"> <input type="radio" name="lang" id="lang-en" value="en"> <label for="lang-en"> <span class="radio-dot"></span> <span>English</span> </label> </div> </div> </section> <!-- Notification Section --> <section> <h2 class="text-sm font-semibold mb-2 px-1" style="color: var(--sf-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">通知</h2> <div style="border-radius: 12px; overflow: hidden;"> <div class="settings-row"> <span class="text-base font-medium" style="color: var(--sf-text-primary);">训练提醒</span> <div id="toggle-training" class="toggle-switch"></div> </div> <div class="settings-row"> <span class="text-base font-medium" style="color: var(--sf-text-primary);">社区消息</span> <div id="toggle-community" class="toggle-switch"></div> </div> </div> </section> <!-- Account & Security Section -->
+    <section>
+      <h2 class="text-sm font-semibold mb-2 px-1" style="color: var(--sf-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">账号与安全</h2>
+      <div style="border-radius: 12px; overflow: hidden;">
+        <div class="settings-row" id="uid-row" style="cursor: default;">
+          <div>
+            <span class="text-base font-medium" style="color: var(--sf-text-primary);">我的UID</span>
+            <p class="text-xs mt-0.5" style="color: var(--sf-text-tertiary);">你的唯一用户标识</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="uid-value" class="text-sm font-mono" style="color: var(--sf-text-secondary);letter-spacing:0.03em;">--</span>
+            <button id="copy-uid-btn" style="padding:4px 12px;border-radius:8px;border:1px solid var(--sf-border-light);background:var(--sf-bg-secondary);color:var(--sf-primary);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sf-font-sans);transition:all 0.2s;">复制</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section --> <section> <h2 class="text-sm font-semibold mb-2 px-1" style="color: var(--sf-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">关于</h2> <div style="border-radius: 12px; overflow: hidden;"> <div class="settings-row"> <span class="text-base font-medium" style="color: var(--sf-text-primary);">版本</span> <span class="text-sm" style="color: var(--sf-text-tertiary);">SportLife v2.1</span> </div> <div class="settings-row" style="cursor: pointer;"> <span class="text-base font-medium" style="color: var(--sf-text-primary);">隐私政策</span> <svg class="nav-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="9 18 15 12 9 6"></polyline> </svg> </div> <div class="settings-row" style="cursor: pointer;"> <span class="text-base font-medium" style="color: var(--sf-text-primary);">用户协议</span> <svg class="nav-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="9 18 15 12 9 6"></polyline> </svg> </div> <div class="settings-row" id="clear-cache" style="cursor: pointer;"> <span class="text-base font-medium" style="color: #EF4444;">清除缓存</span> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="9 18 15 12 9 6"></polyline> </svg> </div> <div class="settings-row" id="delete-account-btn" style="cursor: pointer;"> <span class="text-base font-medium" style="color: #EF4444;">注销账号</span> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <polyline points="9 18 15 12 9 6"></polyline> </svg> </div> </div> </section> <!-- Privacy Section --> <section> <h2 class="text-sm font-semibold mb-2 px-1" style="color: var(--sf-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">隐私设置</h2> <div style="border-radius: 12px; overflow: hidden;"> <div class="settings-row"> <div> <span class="text-base font-medium" style="color: var(--sf-text-primary);">公开个人资料</span> <p class="text-xs mt-0.5" style="color: var(--sf-text-tertiary);">允许其他用户查看你的年龄、身高、体重</p> </div> <div id="toggle-privacy-profile" class="toggle-switch active"></div> </div> <div class="settings-row"> <div> <span class="text-base font-medium" style="color: var(--sf-text-primary);">公开运动记录</span> <p class="text-xs mt-0.5" style="color: var(--sf-text-tertiary);">允许其他用户查看你的运动历史</p> </div> <div id="toggle-privacy-workouts" class="toggle-switch active"></div> </div> <div class="settings-row"> <div> <span class="text-base font-medium" style="color: var(--sf-text-primary);">公开成就</span> <p class="text-xs mt-0.5" style="color: var(--sf-text-tertiary);">允许其他用户查看你的成就徽章</p> </div> <div id="toggle-privacy-achievements" class="toggle-switch active"></div> </div> <div class="settings-row"> <div> <span class="text-base font-medium" style="color: var(--sf-text-primary);">允许陌生人打招呼</span> <p class="text-xs mt-0.5" style="color: var(--sf-text-tertiary);">关闭后只有你关注的人可以给你发消息</p> </div> <div id="toggle-privacy-message" class="toggle-switch active"></div> </div> </div> </section> <!-- Bottom spacing --> <div style="height: 80px;"></div> </main> <script>
+(function() {
+  'use strict';
+
+  /* ===== Toast Notification ===== */
+  function showToast(msg, type) {
+    var toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  /* ===== Auth ===== */
+  function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem('sportlife_user')); }
+    catch (e) { return null; }
+  }
+  if (!getCurrentUser()) {
+    navigateTo('login.html');
+    return;
+  }
+  var user = getCurrentUser();
+
+  /* ===== Display UID ===== */
+  var uidEl = document.getElementById('uid-value');
+  if (uidEl && user && user.id) {
+    uidEl.textContent = user.id;
+  }
+  var copyUidBtn = document.getElementById('copy-uid-btn');
+  if (copyUidBtn) {
+    copyUidBtn.addEventListener('click', function() {
+      if (!user || !user.id) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(String(user.id)).then(function() {
+          showToast('UID已复制到剪贴板');
+          copyUidBtn.textContent = '已复制';
+          setTimeout(function() { copyUidBtn.textContent = '复制'; }, 1500);
+        }).catch(function() {
+          fallbackCopyUid();
+        });
+      } else {
+        fallbackCopyUid();
+      }
+    });
+    function fallbackCopyUid() {
+      var ta = document.createElement('textarea');
+      ta.value = String(user.id);
+      ta.style.cssText = 'position:fixed;left:-9999px;';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast('UID已复制到剪贴板'); } catch(e) { showToast('复制失败'); }
+      document.body.removeChild(ta);
+      copyUidBtn.textContent = '已复制';
+      setTimeout(function() { copyUidBtn.textContent = '复制'; }, 1500);
+    }
+  }
+
+  /* ===== Init Toggle Sliders (CSS ::after handles rendering) ===== */
+
+  /* ===== Init Theme From Saved Setting ===== */
+  var savedTheme = localStorage.getItem('sportlife_theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.getElementById('theme-toggle').classList.add('active');
+  }
+
+  /* ===== Init Notification Toggles ===== */
+  var trainingReminder = localStorage.getItem('sportlife_notify_training') === 'true';
+  var communityMsg = localStorage.getItem('sportlife_notify_community') === 'true';
+  if (trainingReminder) document.getElementById('toggle-training').classList.add('active');
+  if (communityMsg) document.getElementById('toggle-community').classList.add('active');
+
+  /* ===== Theme Toggle ===== */
+  document.getElementById('theme-toggle').addEventListener('click', async function() {
+    this.classList.toggle('active');
+    var isDark = this.classList.contains('active');
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('sportlife_theme', isDark ? 'dark' : 'light');
+    try {
+      await fetch('/api/settings/' + user.id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: isDark ? 'dark' : 'light' })
+      });
+    } catch (e) { /* ignore */ }
+  });
+
+  /* ===== Scheduled Dark Mode ===== */
+  (function initScheduleDark() {
+    var raw = localStorage.getItem('sportlife_dark_schedule');
+    if (raw) {
+      try {
+        var schedule = JSON.parse(raw);
+        if (schedule.enabled) {
+          document.getElementById('schedule-dark-toggle').classList.add('active');
+          document.getElementById('schedule-dark-config').style.display = 'block';
+        }
+        if (schedule.startTime) document.getElementById('dark-start-time').value = schedule.startTime;
+        if (schedule.endTime) document.getElementById('dark-end-time').value = schedule.endTime;
+      } catch (e) { /* ignore */ }
+    }
+    applyScheduleDark();
+    setInterval(applyScheduleDark, 60000);
+  })();
+
+  document.getElementById('schedule-dark-toggle').addEventListener('click', function() {
+    toggleScheduleDark();
+  });
+  document.getElementById('dark-start-time').addEventListener('change', saveScheduleConfig);
+  document.getElementById('dark-end-time').addEventListener('change', saveScheduleConfig);
+
+  function saveScheduleConfig() {
+    var enabled = document.getElementById('schedule-dark-toggle').classList.contains('active');
+    var schedule = {
+      enabled: enabled,
+      startTime: document.getElementById('dark-start-time').value,
+      endTime: document.getElementById('dark-end-time').value
+    };
+    localStorage.setItem('sportlife_dark_schedule', JSON.stringify(schedule));
+  }
+
+  function toggleScheduleDark() {
+    var toggle = document.getElementById('schedule-dark-toggle');
+    toggle.classList.toggle('active');
+    var enabled = toggle.classList.contains('active');
+    document.getElementById('schedule-dark-config').style.display = enabled ? 'block' : 'none';
+    saveScheduleConfig();
+    applyScheduleDark();
+  }
+
+  function applyScheduleDark() {
+    var raw = localStorage.getItem('sportlife_dark_schedule');
+    if (!raw) return;
+    try {
+      var schedule = JSON.parse(raw);
+      if (!schedule.enabled) return;
+      var now = new Date();
+      var minutes = now.getHours() * 60 + now.getMinutes();
+      var startParts = schedule.startTime.split(':');
+      var endParts = schedule.endTime.split(':');
+      var startMin = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
+      var endMin = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+      var shouldBeDark;
+      if (startMin > endMin) {
+        /* Crosses midnight, e.g. 19:00 - 07:00 */
+        shouldBeDark = (minutes >= startMin || minutes < endMin);
+      } else {
+        shouldBeDark = (minutes >= startMin && minutes < endMin);
+      }
+      if (shouldBeDark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('sportlife_theme', 'dark');
+        document.getElementById('theme-toggle').classList.add('active');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('sportlife_theme', 'light');
+        document.getElementById('theme-toggle').classList.remove('active');
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ===== Language Radio ===== */
+  document.querySelectorAll('input[name="lang"]').forEach(function(radio) {
+    radio.addEventListener('change', async function() {
+      user.language = this.value;
+      localStorage.setItem('sportlife_user', JSON.stringify(user));
+      showToast(this.value === 'zh' ? '已切换为中文，请重新打开APP' : 'Switched to English. Please reopen the app.');
+      try {
+        await fetch('/api/settings/' + user.id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ language: user.language })
+        });
+      } catch (e) { /* ignore */ }
+    });
+  });
+
+  /* Load saved language */
+  if (user && user.language === 'en') {
+    document.querySelector('input[name="lang"][value="en"]').checked = true;
+  }
+
+  /* ===== Notification Toggles ===== */
+  document.getElementById('toggle-training').addEventListener('click', function() {
+    this.classList.toggle('active');
+    var isActive = this.classList.contains('active');
+    localStorage.setItem('sportlife_notify_training', isActive);
+    showToast(isActive ? '训练提醒已开启' : '训练提醒已关闭');
+  });
+
+  document.getElementById('toggle-community').addEventListener('click', function() {
+    this.classList.toggle('active');
+    var isActive = this.classList.contains('active');
+    localStorage.setItem('sportlife_notify_community', isActive);
+    showToast(isActive ? '社区消息已开启' : '社区消息已关闭');
+  });
+
+  /* ===== Clear Cache ===== */
+  document.getElementById('clear-cache').addEventListener('click', function() {
+    if (confirm('确定要清除所有缓存数据吗？清除后将退出登录。')) {
+      var theme = localStorage.getItem('sportlife_theme');
+      var darkSchedule = localStorage.getItem('sportlife_dark_schedule');
+      /* 退出登录时清除服务端 session */
+      var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      var sid = localStorage.getItem('sportlife_session_id') || '';
+      if (user.id) {
+        fetch('/api/session/logout', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, sessionId: sid })
+        }).catch(function(){});
+      }
+      localStorage.clear();
+      if (theme) localStorage.setItem('sportlife_theme', theme);
+      if (darkSchedule) localStorage.setItem('sportlife_dark_schedule', darkSchedule);
+      navigateTo('login.html');
+    }
+  });
+
+  /* ===== Delete Account ===== */
+  document.getElementById('delete-account-btn').addEventListener('click', function() {
+    var msg = '注销账号后，所有数据（运动记录、训练计划、社区帖子等）将被永久删除且无法恢复。\n\n确定要注销账号吗？';
+    if (!confirm(msg)) return;
+    var pw = prompt('请输入密码以确认注销：');
+    if (!pw) return;
+    var delUser = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    if (!delUser.id) {
+      navigateTo('login.html');
+      return;
+    }
+    var btn = this;
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+    fetch('/api/account/' + delUser.id, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': '1' },
+      body: JSON.stringify({ password: pw })
+    }).then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success) {
+          // 清除服务端 session
+          var sid = localStorage.getItem('sportlife_session_id') || '';
+          if (sid && delUser.id) {
+            fetch('/api/session/logout', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId: delUser.id, sessionId: sid })
+            }).catch(function(){});
+          }
+          var theme = localStorage.getItem('sportlife_theme');
+          var darkSchedule = localStorage.getItem('sportlife_dark_schedule');
+          localStorage.clear();
+          if (theme) localStorage.setItem('sportlife_theme', theme);
+          if (darkSchedule) localStorage.setItem('sportlife_dark_schedule', darkSchedule);
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              regs.forEach(function(reg) { reg.unregister(); });
+            });
+            if ('caches' in window) {
+              caches.keys().then(function(keys) {
+                keys.forEach(function(k) { caches.delete(k); });
+              });
+            }
+          }
+          alert('账号已成功注销');
+          navigateTo('login.html');
+        } else {
+          showToast(data.message || '注销失败，请检查密码', 'error');
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }
+      }).catch(function() {
+        showToast('网络错误，请重试', 'error');
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      });
+  });
+
+  /* ===== Privacy Toggle Settings ===== */
+  ['profile', 'workouts', 'achievements', 'message'].forEach(function(key) {
+    var el = document.getElementById('toggle-privacy-' + key);
+    if (!el) return;
+    el.addEventListener('click', function() {
+      this.classList.toggle('active');
+      var isActive = this.classList.contains('active');
+      var pUser = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+      if (pUser.id) {
+        var settings = {};
+        settings['show_' + key] = isActive ? 1 : 0;
+        fetch('/api/settings/' + pUser.id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(settings)
+        }).catch(function() { /* ignore */ });
+      }
+      showToast(isActive ? '已开启' : '已关闭', 'success');
+    });
+  });
+
+  /* ===== Load Privacy Settings ===== */
+  (function loadPrivacy() {
+    var pUser = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    if (!pUser.id) return;
+    fetch('/api/settings/' + pUser.id)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data.success) return;
+        var map = {
+          show_profile: 'profile',
+          show_workouts: 'workouts',
+          show_achievements: 'achievements',
+          show_message: 'message'
+        };
+        Object.keys(map).forEach(function(key) {
+          var el = document.getElementById('toggle-privacy-' + map[key]);
+          if (el && data[key] !== undefined) {
+            if (data[key]) { el.classList.add('active'); }
+            else { el.classList.remove('active'); }
+          }
+        });
+      }).catch(function() { /* ignore */ });
+  })();
+
+})();
+/* ====== 单点登录：被踢下线检测 ====== */
+(function() {
+  function checkKicked() {
+    var user = JSON.parse(localStorage.getItem('sportlife_user') || '{}');
+    var sid = localStorage.getItem('sportlife_session_id') || '';
+    if (!user.id || !sid) return;
+    fetch('/api/session/kicked/' + user.id + '/' + sid).then(function(r){return r.json();}).then(function(data) {
+      if (data.kicked) {
+        localStorage.removeItem('sportlife_user');
+        localStorage.removeItem('sportlife_session_id');
+        // 显示被踢提示
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center';
+        overlay.innerHTML = '<div style="background:white;border-radius:20px;padding:32px 24px;width:300px;max-width:85vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">' +
+          '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><circle cx="12" cy="12" r="10"/></svg></div>' +
+          '<h3 style="font-size:17px;font-weight:600;color:#1E293B;margin:0 0 8px">账号已在其他设备登录</h3>' +
+          '<p style="font-size:14px;color:#64748B;line-height:1.6;margin:0 0 24px">你的账号在其他设备上登录了，当前设备已下线。</p>' +
+          '<button onclick="this.closest(\'div\').parentElement.remove();window.location.href=\'login.html\'" style="width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#16A34A);color:white;box-shadow:0 4px 12px rgba(34,197,94,0.3)">重新登录</button></div>';
+        document.body.appendChild(overlay);
+      }
+    }).catch(function(){});
+  }
+  // 每 15 秒检测一次
+  setTimeout(function() { checkKicked(); setInterval(checkKicked, 15000); }, 5000);
+})();
+ </script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) { console.log('SW register fail:', err); });
+  });
+}
+</script></body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="theme-init.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SportLife - 登录</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #ffffff; min-height: 100vh; overflow-x: hidden; position: relative; }
+
+.bg-decoration { position: fixed; top: 0; right: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+.blob-1 { position: absolute; top: -80px; right: -60px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.08) 50%, transparent 70%); border-radius: 50%; filter: blur(40px); animation: blobPulse 6s ease-in-out infinite; }
+.blob-2 { position: absolute; top: -20px; right: -120px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(34, 197, 94, 0.18) 0%, rgba(16, 185, 129, 0.06) 60%, transparent 80%); border-radius: 50%; filter: blur(50px); animation: blobPulse 8s ease-in-out infinite 1s; }
+.blob-3 { position: absolute; top: 100px; right: -40px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(74, 222, 128, 0.2) 0%, transparent 70%); border-radius: 50%; filter: blur(35px); animation: blobPulse 7s ease-in-out infinite 2s; }
+@keyframes blobPulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
+
+.page-container { position: relative; z-index: 1; max-width: 375px; margin: 0 auto; padding: 48px 28px 32px; min-height: 100vh; display: flex; flex-direction: column; }
+
+.logo-area { display: flex; flex-direction: column; align-items: center; margin-bottom: 36px; opacity: 0; transform: translateY(16px); animation: fadeSlideUp 0.6s ease forwards 0.1s; }
+.logo-circle { width: 72px; height: 72px; background: linear-gradient(135deg, #22C55E, #16A34A); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3); margin-bottom: 14px; }
+.logo-circle svg { width: 38px; height: 38px; fill: #ffffff; }
+.logo-text { font-size: 22px; font-weight: 800; color: #1a1a1a; letter-spacing: -0.3px; }
+
+.welcome-section { text-align: center; margin-bottom: 32px; opacity: 0; transform: translateY(16px); animation: fadeSlideUp 0.6s ease forwards 0.25s; }
+.welcome-title { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+.welcome-subtitle { font-size: 14px; color: #888; font-weight: 400; }
+
+.form-card { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(34, 197, 94, 0.1); border-radius: 20px; padding: 28px 22px; margin-bottom: 20px; opacity: 0; transform: translateY(16px); animation: fadeSlideUp 0.6s ease forwards 0.4s; box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%); }
+
+.input-group { position: relative; margin-bottom: 18px; }
+.input-group:last-of-type { margin-bottom: 20px; }
+.input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: #aaa; pointer-events: none; transition: color 0.3s ease; }
+.input-field { width: 100%; height: 50px; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 0 14px 0 44px; font-size: 15px; font-family: 'Inter', sans-serif; color: #1a1a1a; background: #FFFFFF; outline: none; transition: all 0.25s ease; }
+.input-field::placeholder { color: #94A3B8; }
+.input-field:focus { border-color: #22C55E; background: #ffffff; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12); transform: translateY(-1px); }
+.input-field:focus ~ .input-icon { color: #22C55E; }
+
+.toggle-password { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: #aaa; transition: color 0.3s ease; display: flex; align-items: center; justify-content: center; }
+.toggle-password:hover { color: #22C55E; }
+.toggle-password svg { width: 20px; height: 20px; }
+
+.form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: #666; user-select: none; }
+.checkbox-label input[type="checkbox"] { display: none; }
+.custom-checkbox { width: 18px; height: 18px; border: 1.5px solid #d0d0d0; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; flex-shrink: 0; }
+.custom-checkbox svg { width: 12px; height: 12px; color: white; opacity: 0; transform: scale(0.5); transition: all 0.2s ease; }
+.checkbox-label input[type="checkbox"]:checked ~ .custom-checkbox { background: #22C55E; border-color: #22C55E; }
+.checkbox-label input[type="checkbox"]:checked ~ .custom-checkbox svg { opacity: 1; transform: scale(1); }
+.forgot-link { font-size: 13px; color: #22C55E; text-decoration: none; font-weight: 500; transition: opacity 0.2s ease; }
+.forgot-link:hover { opacity: 0.8; }
+
+.btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); border: none; border-radius: 12px; color: #ffffff; font-size: 16px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25), 0 8px 32px rgba(34, 197, 94, 0.15); display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; }
+.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+.btn-primary:hover { background: linear-gradient(135deg, #16A34A, #15803D); box-shadow: 0 6px 24px rgba(34, 197, 94, 0.35); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0) scale(0.97); box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2); }
+.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+.btn-primary .spinner { display: none; width: 20px; height: 20px; border: 2.5px solid rgba(255, 255, 255, 0.3); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+.btn-primary.loading .spinner { display: block; }
+.btn-primary.loading .btn-text { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.divider-section { text-align: center; margin: 24px 0; opacity: 0; animation: fadeSlideUp 0.6s ease forwards 0.55s; }
+.divider-line { display: flex; align-items: center; gap: 16px; }
+.divider-line::before, .divider-line::after { content: ''; flex: 1; height: 1px; background: #e8e8e8; }
+.divider-line span { font-size: 13px; color: #bbb; white-space: nowrap; }
+
+.quick-login { text-align: center; margin-bottom: 28px; opacity: 0; animation: fadeSlideUp 0.6s ease forwards 0.65s; }
+.quick-login a { font-size: 14px; color: #22C55E; text-decoration: none; font-weight: 500; transition: opacity 0.2s ease; }
+.quick-login a:hover { opacity: 0.8; text-decoration: underline; }
+
+.bottom-link { text-align: center; margin-top: auto; padding-top: 20px; opacity: 0; animation: fadeSlideUp 0.6s ease forwards 0.75s; }
+.bottom-link p { font-size: 14px; color: #888; }
+.bottom-link a { color: #22C55E; text-decoration: none; font-weight: 600; margin-left: 4px; transition: opacity 0.2s ease; }
+.bottom-link a:hover { opacity: 0.8; text-decoration: underline; }
+
+.toast-container { position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 9999; width: 100%; max-width: 375px; padding: 16px 20px 0; pointer-events: none; }
+.toast { background: #EF4444; color: #ffffff; padding: 14px 18px; border-radius: 10px; font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 500; box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3); transform: translateY(-100%); opacity: 0; transition: all 0.4s ease; pointer-events: auto; display: flex; align-items: center; gap: 10px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: #22C55E; box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3); }
+.toast svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+@keyframes fadeSlideUp { to { opacity: 1; transform: translateY(0); } }
+.form-card .input-group:nth-child(1) { animation: fadeSlideUp 0.6s ease forwards 0.45s; opacity: 0; transform: translateY(16px); }
+.form-card .input-group:nth-child(2) { animation: fadeSlideUp 0.6s ease forwards 0.52s; opacity: 0; transform: translateY(16px); }
+.form-card .form-options { animation: fadeSlideUp 0.6s ease forwards 0.59s; opacity: 0; transform: translateY(16px); }
+.form-card .btn-primary { animation: fadeSlideUp 0.6s ease forwards 0.66s; opacity: 0; transform: translateY(16px); }
+
+@media (max-width: 375px) { .page-container { padding: 40px 20px 24px; } .form-card { padding: 24px 18px; } }
+@media (min-width: 376px) { .page-container { padding-top: 64px; } }
+
+html.dark body { background: #0F172A; }
+html.dark .logo-text { color: #F8FAFC; }
+html.dark .welcome-title { color: #F8FAFC; }
+html.dark .welcome-subtitle { color: #94A3B8; }
+html.dark .form-card { background: rgba(30, 41, 59, 0.85); border-color: rgba(34, 197, 94, 0.15); }
+html.dark .input-field { background: #1E293B; border-color: #334155; color: #F8FAFC; }
+html.dark .input-field::placeholder { color: #64748B; }
+html.dark .input-field:focus { background: #334155; }
+html.dark .input-icon, html.dark .toggle-password { color: #64748B; }
+html.dark .checkbox-label { color: #94A3B8; }
+html.dark .custom-checkbox { border-color: #475569; }
+html.dark .divider { border-top-color: #334155; }
+html.dark .social-text, html.dark .bottom-text { color: #94A3B8; }
+
+/* 账号已登录弹窗 */
+.session-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  z-index: 10000; display: none; align-items: center; justify-content: center;
+  animation: fadeIn 0.25s ease;
+}
+.session-modal-overlay.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.session-modal {
+  background: white; border-radius: 20px; padding: 28px 24px 20px;
+  width: 320px; max-width: 85vw; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: slideUp 0.35s ease;
+}
+.session-modal-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.session-modal-icon svg { width: 28px; height: 28px; color: #EF4444; }
+.session-modal h3 { font-size: 17px; font-weight: 600; color: #1E293B; margin: 0 0 8px; }
+.session-modal p { font-size: 14px; color: #64748B; line-height: 1.6; margin: 0 0 20px; }
+.session-modal .device-info {
+  background: #F8FAFC; border-radius: 10px; padding: 10px 14px;
+  margin-bottom: 20px; font-size: 12px; color: #94A3B8;
+}
+.session-modal .device-info span { color: #475569; font-weight: 500; }
+.session-modal-btns { display: flex; gap: 10px; }
+.session-modal-btns button {
+  flex: 1; padding: 12px 0; border-radius: 12px; font-size: 14px;
+  font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease;
+}
+.session-modal-btns .btn-cancel {
+  background: #F1F5F9; color: #64748B;
+}
+.session-modal-btns .btn-cancel:hover { background: #E2E8F0; }
+.session-modal-btns .btn-force {
+  background: linear-gradient(135deg, #22C55E, #16A34A); color: white;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+}
+.session-modal-btns .btn-force:hover { box-shadow: 0 6px 20px rgba(34,197,94,0.4); transform: translateY(-1px); }
+html.dark .session-modal { background: #1E293B; }
+html.dark .session-modal h3 { color: #F8FAFC; }
+html.dark .session-modal .device-info { background: #0F172A; }
+html.dark .session-modal .btn-cancel { background: #334155; color: #94A3B8; }
+</style>
+
+  <meta name="theme-color" content="#22C55E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SportLife">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"></head>
+<body>
+
+<!-- 背景装饰 -->
+<div class="bg-decoration">
+  <div class="blob-1"></div>
+  <div class="blob-2"></div>
+  <div class="blob-3"></div>
+</div>
+
+<!-- Toast 容器 -->
+<div class="toast-container" id="toastContainer">
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- 主容器 -->
+<div class="page-container">
+
+  <!-- Logo 区域 -->
+  <div class="logo-area">
+    <div class="logo-circle">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/>
+      </svg>
+    </div>
+    <span class="logo-text">SportLife</span>
+  </div>
+
+  <!-- 欢迎文字 -->
+  <div class="welcome-section">
+    <h1 class="welcome-title">欢迎回来</h1>
+    <p class="welcome-subtitle">登录以继续你的健身之旅</p>
+  </div>
+
+  <!-- 表单卡片 -->
+  <div class="form-card">
+    <form id="loginForm" novalidate>
+      <!-- 用户名 -->
+      <div class="input-group">
+        <input type="text" class="input-field" id="username" placeholder="请输入用户名" autocomplete="username" required>
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <!-- 密码 -->
+      <div class="input-group">
+        <input type="password" class="input-field" id="password" placeholder="请输入密码" autocomplete="current-password" required>
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <button type="button" class="toggle-password" id="togglePassword" aria-label="切换密码可见性">
+          <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <!-- 记住我 & 忘记密码 -->
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="rememberMe">
+          <span class="custom-checkbox">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          <span>记住我</span>
+        </label>
+        <a href="#" class="forgot-link">忘记密码?</a>
+      </div>
+      <!-- 登录按钮 -->
+      <button type="submit" class="btn-primary" id="loginBtn">
+        <span class="btn-text">登录</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+    <!-- 账号已在其他设备登录提示弹窗 -->
+    <div class="session-modal-overlay" id="sessionModal">
+      <div class="session-modal">
+        <div class="session-modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 9v4m0 4h.01"/>
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        </div>
+        <h3>账号已在其他设备登录</h3>
+        <p>该账号正在其他设备上使用，如果你不是本人操作，建议修改密码。</p>
+        <div class="device-info" id="sessionDeviceInfo">
+          登录时间：<span id="sessionLoginTime">--</span>
+        </div>
+        <div class="session-modal-btns">
+          <button class="btn-cancel" id="sessionCancel">取消</button>
+          <button class="btn-force" id="sessionForceLogin">强制登录</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分隔线 -->
+  <div class="divider-section">
+    <div class="divider-line">
+      <span>或者</span>
+    </div>
+  </div>
+
+  <!-- 快捷登录 -->
+  <div class="quick-login">
+    <a href="#" style="font-size:14px;color:#22C55E;text-decoration:none;font-weight:500;">手机号快捷登录</a>
+  </div>
+
+  <!-- 底部链接 -->
+  <div class="bottom-link">
+    <p>还没有账号？<a href="register.html" style="background:transparent;color:#22C55E;border:none;border-radius:10px;padding:8px 16px;font-weight:600;font-size:14px;text-decoration:none;cursor:pointer;transition:all 0.2s ease;">立即注册</a></p>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var API_BASE = '/api';
+
+  // ===== DOM 元素 =====
+  var loginForm = document.getElementById('loginForm');
+  var usernameInput = document.getElementById('username');
+  var passwordInput = document.getElementById('password');
+  var togglePasswordBtn = document.getElementById('togglePassword');
+  var eyeIcon = document.getElementById('eyeIcon');
+  var loginBtn = document.getElementById('loginBtn');
+  var toastEl = document.getElementById('toast');
+
+  // ===== Toast 通知 =====
+  function showToast(message, type) {
+    toastEl.className = 'toast';
+    toastEl.classList.add(type || 'error');
+    var iconSvg = type === 'success'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    toastEl.innerHTML = iconSvg + '<span>' + message + '</span>';
+    requestAnimationFrame(function() {
+      toastEl.classList.add('show');
+    });
+    setTimeout(function() {
+      toastEl.classList.remove('show');
+    }, 3000);
+  }
+
+  // ===== 密码可见性切换 =====
+  togglePasswordBtn.addEventListener('click', function() {
+    var isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    if (isPassword) {
+      eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  });
+
+  // ===== 表单提交 =====
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var username = usernameInput.value.trim();
+    var password = passwordInput.value;
+
+    if (!username) { showToast('请输入用户名', 'error'); usernameInput.focus(); return; }
+    if (!password) { showToast('请输入密码', 'error'); passwordInput.focus(); return; }
+
+    loginBtn.classList.add('loading');
+    loginBtn.disabled = true;
+
+    // 生成本次登录的 session ID
+    var sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+    fetch(API_BASE + '/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username, password: password })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.success) {
+        // 登录成功，检测是否已在其他设备登录
+        var user = data.user;
+        fetch(API_BASE + '/session/check/' + user.id)
+          .then(function(r) { return r.json(); })
+          .then(function(sessionData) {
+            loginBtn.classList.remove('loading');
+            loginBtn.disabled = false;
+            if (sessionData.success && sessionData.online) {
+              // 显示 QQ 风格弹窗
+              document.getElementById('sessionLoginTime').textContent = sessionData.login_time || '未知';
+              document.getElementById('sessionModal').classList.add('show');
+              // 缓存登录信息，等用户选择
+              window._pendingLogin = { user: user, sessionId: sessionId };
+            } else {
+              // 没有其他设备登录，直接进入
+              doFinishLogin(user, sessionId);
+            }
+          })
+          .catch(function() {
+            // session 检测失败，直接登录
+            doFinishLogin(user, sessionId);
+          });
+      } else {
+        loginBtn.classList.remove('loading');
+        loginBtn.disabled = false;
+        showToast(data.message || '登录失败，请检查用户名和密码', 'error');
+      }
+    })
+    .catch(function(err) {
+      loginBtn.classList.remove('loading');
+      loginBtn.disabled = false;
+      showToast('网络错误，请检查网络连接', 'error');
+    });
+  });
+
+  // 完成登录并跳转
+  function doFinishLogin(user, sessionId) {
+    localStorage.setItem('sportlife_user', JSON.stringify(user));
+    localStorage.setItem('sportlife_session_id', sessionId);
+    // 注册 session 到服务器
+    var deviceInfo = navigator.userAgent.substring(0, 120);
+    fetch(API_BASE + '/session/force-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user.id, sessionId: sessionId, deviceInfo: deviceInfo })
+    }).catch(function() {});
+    showToast('登录成功！', 'success');
+    setTimeout(function() { navigateTo('home.html'); }, 800);
+  }
+
+  // 强制登录按钮
+  document.getElementById('sessionForceLogin').addEventListener('click', function() {
+    var pending = window._pendingLogin;
+    if (pending) {
+      document.getElementById('sessionModal').classList.remove('show');
+      doFinishLogin(pending.user, pending.sessionId);
+      window._pendingLogin = null;
+    }
+  });
+
+  // 取消按钮
+  document.getElementById('sessionCancel').addEventListener('click', function() {
+    document.getElementById('sessionModal').classList.remove('show');
+    window._pendingLogin = null;
+  });
+
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs) {
+    regs.forEach(function(reg) { reg.unregister(); });
+  });
+}
+</script></body>
+</html>
