@@ -35,12 +35,15 @@ app.use(helmet({
 // 2. CORS: 限制允许的来源
 app.use(cors({
   origin: function(origin, callback) {
-    // 允许 localhost、局域网、ngrok
+    // 允许 localhost、局域网、ngrok，以及 Capacitor APP 原生壳
     const allowed = [
       /^http:\/\/localhost/,
+      /^https:\/\/localhost/,       // Capacitor Android (androidScheme: https)
+      /^capacitor:\/\/localhost/,   // Capacitor Android 默认 scheme
+      /^ionic:\/\/localhost/,       // Capacitor iOS 默认 scheme
       /^http:\/\/127\.0\.0\.1/,
       /^http:\/\/192\.168\.\d+\.\d+/,
-      /^http:\/\/10\.\d+\.\d+\.\d+/,
+      /^http:\/\/10\.d+.d+.d+/,
       /^https:\/\/.*\.ngrok-free\.app$/,
       /^https:\/\/.*\.ngrok\.io$/,
     ];
@@ -1352,3 +1355,5 @@ app.listen(PORT, () => {
   console.error('Failed to start:', err);
   process.exit(1);
 });
+
+
